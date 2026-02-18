@@ -2,7 +2,7 @@ import random
 from datetime import datetime
 
 ideas = [
-    "Latih rindu sebelum Ramadhan menyapa",
+    "Awali perpuasa dengan niat yang ikhlas",
     "Allah tidak pernah terlambat",
     "Diam bukan berarti kalah",
     "Jangan tunggu hancur untuk berubah",
