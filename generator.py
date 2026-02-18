@@ -1,5 +1,6 @@
 import random
-from datetime import datetime
+filename = f"output_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+
 
 ideas = [
     "Latih rindu sebelum Ramadhan menyapa",
