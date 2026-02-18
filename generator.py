@@ -1,7 +1,6 @@
 import random
 from datetime import datetime
 
-# List ide, hook, dan closing
 ideas = [
     "Latih rindu sebelum Ramadhan menyapa",
     "Allah tidak pernah terlambat",
@@ -26,7 +25,6 @@ closings = [
     "Percaya prosesnya."
 ]
 
-# Fungsi untuk membuat script acak
 def generate_script():
     idea = random.choice(ideas)
     hook = random.choice(hooks)
@@ -47,7 +45,6 @@ CLOSING:
 # Buat nama file berdasarkan waktu
 filename = f"output_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
 
-# Tulis hasil ke file
 with open(filename, "w", encoding="utf-8") as f:
     for i in range(5):
         f.write(generate_script())
