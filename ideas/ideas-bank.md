@@ -1,7 +1,7 @@
 # Ideas Bank - Mimpact Media
 
 ## Motivasi Islami
-- Latih rindu sebelum Ramadhan menyapa
+- Awali perpuasa dengan niat yang ikhlas
 - Jangan tunggu hancur untuk berubah
 - Allah tidak pernah terlambat
 
