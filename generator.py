@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 
 ideas = [
     "Latih rindu sebelum Ramadhan menyapa",
@@ -29,7 +30,7 @@ def generate_script():
     hook = random.choice(hooks)
     closing = random.choice(closings)
 
-    script = f"""
+    return f"""
 IDE: {idea}
 
 HOOK:
@@ -41,8 +42,13 @@ INTI:
 CLOSING:
 {closing}
 """
-    return script
 
-for i in range(5):
-    print(generate_script())
-    print("------")
+# Buat nama file berdasarkan waktu
+filename = f"output_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+
+with open(filename, "w", encoding="utf-8") as f:
+    for i in range(5):
+        f.write(generate_script())
+        f.write("\n--------------------\n")
+
+print(f"File {filename} berhasil dibuat.")
