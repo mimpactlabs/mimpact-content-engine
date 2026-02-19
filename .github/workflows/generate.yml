@@ -1,0 +1,36 @@
+name: Generate AI Content
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Generate Content
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          curl https://api.openai.com/v1/chat/completions \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $OPENAI_API_KEY" \
+            -d '{
+              "model": "gpt-4o-mini",
+              "messages": [
+                {"role": "user", "content": "Buat artikel 300 kata tentang AI marketing"}
+              ]
+            }' > output.json
+
+          echo "Generated on $(date)" > content.txt
+          cat output.json >> content.txt
+
+      - name: Commit Content
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add content.txt
+          git commit -m "Auto generated content"
+          git push
