@@ -1,0 +1,9 @@
+Generated on Thu Feb 19 12:17:44 UTC 2026
+{
+    "error": {
+        "message": "Incorrect API key provided: Mimpact_SR. You can find your API key at https://platform.openai.com/account/api-keys.",
+        "type": "invalid_request_error",
+        "param": null,
+        "code": "invalid_api_key"
+    }
+}
