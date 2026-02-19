@@ -8,31 +8,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install jq
-        run: sudo apt-get install jq
-
-      - name: Generate Content from OpenAI
+      - name: Generate Content
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          RESPONSE=$(curl https://api.openai.com/v1/responses \
-            -s \
+          curl https://api.openai.com/v1/responses \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $OPENAI_API_KEY" \
             -d '{
               "model": "gpt-4.1-mini",
-              "input": "Buat artikel 300 kata tentang AI marketing"
-            }')
+              "input": "Buat artikel 200 kata tentang AI marketing"
+            }' \
+            -o response.json
 
-          echo "$RESPONSE" | jq -r '.output[0].content[0].text' > content.txt
+          cat response.json
 
-      - name: Commit & Push
+      - name: Save Output
+        run: |
+          echo "Generated on $(date)" > content.txt
+          cat response.json >> content.txt
+
+      - name: Commit
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add content.txt
-          git commit -m "Auto generated content" || echo "No changes to commit"
+          git commit -m "Auto generated content" || echo "No changes"
           git push
