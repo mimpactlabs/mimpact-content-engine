@@ -2,13 +2,12 @@ name: AI Content Engine
 
 on:
   schedule:
-    - cron: '0 3 * * *'   # 10:00 WIB
-    - cron: '0 14 * * *'  # 21:00 WIB
+    - cron: '0 3 * * *'
+    - cron: '0 14 * * *'
   workflow_dispatch:
 
-concurrency:
-  group: ai-content-engine
-  cancel-in-progress: false
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -29,16 +28,9 @@ jobs:
           mkdir -p night
 
           if [ "$HOUR" = "03" ]; then
-            echo "🚀 Morning AI Insight - $TODAY" > morning/$TODAY.txt
-            echo "" >> morning/$TODAY.txt
-            echo "Topik: Tren AI terbaru" >> morning/$TODAY.txt
-            echo "Insight: AI semakin berkembang ke arah automation & agents." >> morning/$TODAY.txt
+            echo "Morning AI Insight - $TODAY" > morning/$TODAY.txt
           else
-            echo "🌙 AI Night Recap - $TODAY" > night/$TODAY.txt
-            echo "" >> night/$TODAY.txt
-            echo "Highlight Hari Ini:" >> night/$TODAY.txt
-            echo "- Update model AI" >> night/$TODAY.txt
-            echo "- Tool AI trending" >> night/$TODAY.txt
+            echo "Night Recap - $TODAY" > night/$TODAY.txt
           fi
 
       - name: Commit and Push
