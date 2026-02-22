@@ -16,4 +16,3 @@ print(description)
 
 print("\n=== JSON OUTPUT ===")
 print('{"description": "' + description + '"}')
-Add reverse prompt engine v1
