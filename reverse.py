@@ -61,3 +61,14 @@ print(final_prompt)
 
 print("\n=== JSON OUTPUT V2 ===")
 print(json.dumps(analysis, indent=4))
+
+print("\n=== MIDJOURNEY VERSION ===")
+mj_prompt = f"{final_prompt} --ar 2:3 --v 6 --style raw"
+print(mj_prompt)
+
+print("\n=== STABLE DIFFUSION VERSION ===")
+sd_prompt = f"{final_prompt}, highly detailed, sharp focus"
+print(sd_prompt)
+
+print("\n=== CLEAN UNIVERSAL VERSION ===")
+print(final_prompt)
