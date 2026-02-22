@@ -1,10 +1,10 @@
-name: Test Workflow
+name: AI Content Generator
 
 on:
   workflow_dispatch:
 
 jobs:
-  test:
+  generate:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -12,10 +12,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create file
-        run: echo "Workflow works $(date)" > test.txt
+      - name: Generate AI Content
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          curl https://api.openai.com/v1/responses \
+            -s \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $OPENAI_API_KEY" \
+            -d '{
+              "model": "gpt-4.1-mini",
+              "input": "Buat artikel 200 kata tentang AI marketing untuk bisnis digital"
+            }' \
+            -o response.json
+
+          echo "Generated on $(date)" > content.txt
+          cat response.json >> content.txt
 
       - name: Auto Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Test commit"
+          commit_message: "AI generated content"
