@@ -86,4 +86,25 @@ result_data = {
 with open("output.json", "w") as f:
     json.dump(result_data, f, indent=4)
 
-print("\n=== FILE SAVED: output.json ===")
+import json
+import os
+from datetime import datetime
+
+# Pastikan folder history ada
+os.makedirs("history", exist_ok=True)
+
+timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
+
+result_data = {
+    "timestamp": timestamp,
+    "analysis": analysis,
+    "reconstructed_prompt": reconstructed_prompt,
+    "json_output": structured_output
+}
+
+filename = f"history/{timestamp}.json"
+
+with open(filename, "w") as f:
+    json.dump(result_data, f, indent=4)
+
+print(f"\n=== FILE SAVED: {filename} ===")
