@@ -24,10 +24,10 @@ jobs:
       - name: Run script
         run: echo "${{ github.event.inputs.prompt }}" | python reverse.py
 
-      - name: Commit output file
+      - name: Commit history files
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
-          git add output.json
-          git commit -m "Auto update output.json"
+          git add history/
+          git commit -m "Auto add history file" || echo "No changes to commit"
           git push
