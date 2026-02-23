@@ -1,0 +1,14 @@
+{
+    "timestamp": "2026-02-23T05-03-12",
+    "analysis": {
+        "subject": "elderly person",
+        "style": "ultra realistic",
+        "lighting": "",
+        "camera": "",
+        "mood": "",
+        "quality": ""
+    },
+    "final_prompt": "elderly person, ultra realistic",
+    "midjourney": "elderly person, ultra realistic --ar 2:3 --v 6 --style raw",
+    "stable_diffusion": "elderly person, ultra realistic, highly detailed, sharp focus"
+}
