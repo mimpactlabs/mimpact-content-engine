@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PromptUtility</title>
+<style>
+body {
+  background: #111;
+  color: #eee;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 40px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  height: 120px;
+  background: #1c1c1c;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 12px;
+  font-size: 14px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #333;
+}
+
+.output {
+  margin-top: 30px;
+  background: #1a1a1a;
+  padding: 20px;
+  border: 1px solid #333;
+}
+
+.section-title {
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.copy-btn {
+  margin-top: 5px;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>PromptUtility</h1>
+
+  <textarea id="inputPrompt" placeholder="Enter your Midjourney prompt..."></textarea>
+  <button onclick="optimizePrompt()">Optimize Prompt</button>
+
+  <div class="output" id="output" style="display:none;">
+    <div class="section-title">Analysis</div>
+    <div id="analysis"></div>
+
+    <div class="section-title">Optimized Prompt</div>
+    <div id="optimized"></div>
+
+    <div class="section-title">Midjourney Ready</div>
+    <div id="midjourney"></div>
+    <button class="copy-btn" onclick="copyText('midjourney')">Copy</button>
+  </div>
+</div>
+
+<script>
+function optimizePrompt() {
+  const input = document.getElementById("inputPrompt").value.toLowerCase();
+
+  if (!input) return;
+
+  let subject = "";
+  let style = "";
+  let lighting = "";
+  let mood = "";
+  let score = 50;
+
+  if (input.includes("portrait")) { style = "portrait"; score += 10; }
+  if (input.includes("cinematic")) { lighting = "cinematic lighting"; score += 15; }
+  if (input.includes("ultra realistic") || input.includes("realistic")) { score += 15; }
+  if (input.includes("dramatic")) { mood = "dramatic"; score += 10; }
+
+  subject = input.split(" ").slice(-2).join(" ");
+
+  let optimized = input + ", highly detailed, sharp focus";
+
+  let midjourney = optimized + " --ar 2:3 --v 6 --style raw";
+
+  document.getElementById("analysis").innerHTML =
+    "Subject: " + subject + "<br>" +
+    "Style: " + style + "<br>" +
+    "Lighting: " + lighting + "<br>" +
+    "Mood: " + mood + "<br>" +
+    "Quality Score: " + score + "/100";
+
+  document.getElementById("optimized").innerText = optimized;
+  document.getElementById("midjourney").innerText = midjourney;
+
+  document.getElementById("output").style.display = "block";
+}
+
+function copyText(id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text);
+}
+</script>
+
+</body>
+</html>
