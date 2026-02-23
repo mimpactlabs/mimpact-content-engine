@@ -2,6 +2,11 @@ name: Run Reverse Engine
 
 on:
   workflow_dispatch:
+    inputs:
+      prompt:
+        description: "Masukkan deskripsi gambar AI"
+        required: true
+        default: "Ultra realistic cinematic portrait of an old man"
 
 jobs:
   run-script:
