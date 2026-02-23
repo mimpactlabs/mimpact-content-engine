@@ -97,3 +97,26 @@ with open(filename, "w") as f:
     json.dump(history_data, f, indent=4)
 
 print(f"\n=== FILE SAVED: {filename} ===")
+
+# ===============================
+# ANALYTICS GENERATOR (LEVEL 3)
+# ===============================
+
+from datetime import date
+
+history_files = os.listdir("history")
+total_runs = len(history_files)
+
+today_str = date.today().strftime("%Y-%m-%d")
+runs_today = len([f for f in history_files if f.startswith(today_str)])
+
+analytics_data = {
+    "total_runs": total_runs,
+    "runs_today": runs_today,
+    "last_updated": timestamp
+}
+
+with open("analytics.json", "w") as f:
+    json.dump(analytics_data, f, indent=4)
+
+print("\n=== ANALYTICS UPDATED ===")
