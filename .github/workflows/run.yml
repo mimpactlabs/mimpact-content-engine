@@ -22,5 +22,5 @@ jobs:
           python-version: '3.10'
 
       - name: Run script
-        run: |
-          echo "Ultra realistic cinematic portrait of an elderly man, dramatic lighting, 85mm lens, shallow depth of field, moody, 8k" | python reverse.py
+  run: |
+    echo "${{ github.event.inputs.prompt }}" | python reverse.py
