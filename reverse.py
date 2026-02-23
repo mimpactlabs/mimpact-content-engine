@@ -1,4 +1,6 @@
 import json
+import os
+from datetime import datetime
 
 description = input("Masukkan deskripsi gambar AI: ").lower()
 
@@ -73,51 +75,25 @@ print(sd_prompt)
 print("\n=== CLEAN UNIVERSAL VERSION ===")
 print(final_prompt)
 
-import json
-from datetime import datetime
-
-import json
-import os
-from datetime import datetime
+# ===============================
+# SAVE HISTORY FILE (STABLE)
+# ===============================
 
 os.makedirs("history", exist_ok=True)
 
 timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
 
-result_data = {
+history_data = {
     "timestamp": timestamp,
     "analysis": analysis,
-    "structured_output": structured_output
+    "final_prompt": final_prompt,
+    "midjourney": mj_prompt,
+    "stable_diffusion": sd_prompt
 }
 
 filename = f"history/{timestamp}.json"
 
 with open(filename, "w") as f:
-    json.dump(result_data, f, indent=4)
-
-print(f"\n=== FILE SAVED: {filename} ===")
-
-# ===============================
-# SAVE HISTORY FILE (LEVEL 2)
-# ===============================
-
-import json
-import os
-from datetime import datetime
-
-os.makedirs("history", exist_ok=True)
-
-timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
-
-# Gunakan dictionary hasil yang sudah pasti ada
-final_output = {
-    "timestamp": timestamp,
-    "analysis": analysis
-}
-
-filename = f"history/{timestamp}.json"
-
-with open(filename, "w") as f:
-    json.dump(final_output, f, indent=4)
+    json.dump(history_data, f, indent=4)
 
 print(f"\n=== FILE SAVED: {filename} ===")
