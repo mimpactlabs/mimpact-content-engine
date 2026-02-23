@@ -76,21 +76,10 @@ print(final_prompt)
 import json
 from datetime import datetime
 
-result_data = {
-    "timestamp": datetime.utcnow().isoformat(),
-    "analysis": analysis,
-    "reconstructed_prompt": reconstructed_prompt,
-    "json_output": structured_output
-}
-
-with open("output.json", "w") as f:
-    json.dump(result_data, f, indent=4)
-
 import json
 import os
 from datetime import datetime
 
-# Pastikan folder history ada
 os.makedirs("history", exist_ok=True)
 
 timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
@@ -98,7 +87,7 @@ timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
 result_data = {
     "timestamp": timestamp,
     "analysis": analysis,
-    "json_output": structured_output
+    "structured_output": structured_output
 }
 
 filename = f"history/{timestamp}.json"
