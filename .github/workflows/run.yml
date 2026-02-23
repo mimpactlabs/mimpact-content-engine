@@ -22,5 +22,4 @@ jobs:
           python-version: '3.10'
 
       - name: Run script
-  run: |
-    echo "${{ github.event.inputs.prompt }}" | python reverse.py
+        run: echo "${{ github.event.inputs.prompt }}" | python reverse.py
