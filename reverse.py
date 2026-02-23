@@ -72,3 +72,18 @@ print(sd_prompt)
 
 print("\n=== CLEAN UNIVERSAL VERSION ===")
 print(final_prompt)
+
+import json
+from datetime import datetime
+
+result_data = {
+    "timestamp": datetime.utcnow().isoformat(),
+    "analysis": analysis,
+    "reconstructed_prompt": reconstructed_prompt,
+    "json_output": structured_output
+}
+
+with open("output.json", "w") as f:
+    json.dump(result_data, f, indent=4)
+
+print("\n=== FILE SAVED: output.json ===")
