@@ -86,6 +86,45 @@ button:hover {
 </div>
 
 <script>
+
+function smartExpand(input) {
+  let parts = [];
+
+  // SUBJECT DETECTION
+  if (input.includes("elderly")) {
+    parts.push("ultra realistic portrait of an elderly person");
+    parts.push("detailed facial wrinkles");
+    parts.push("textured aged skin");
+    parts.push("natural skin imperfections");
+  } 
+  else if (input.includes("person") || input.includes("man") || input.includes("woman")) {
+    parts.push("ultra realistic portrait");
+    parts.push("natural skin texture");
+  } 
+  else {
+    parts.push(input);
+  }
+
+  // STYLE ENHANCER
+  if (input.includes("ultra realistic") || input.includes("realistic")) {
+    parts.push("highly detailed");
+    parts.push("sharp focus");
+    parts.push("professional photography");
+  }
+
+  if (input.includes("cinematic")) {
+    parts.push("cinematic lighting");
+    parts.push("dramatic shadows");
+  }
+
+  // DEFAULT ENHANCERS
+  parts.push("85mm lens");
+  parts.push("shallow depth of field");
+  parts.push("soft natural lighting");
+
+  return parts.join(", ");
+}    
+  
 function optimizePrompt() {
   const input = document.getElementById("inputPrompt").value.toLowerCase();
 
@@ -102,9 +141,11 @@ function optimizePrompt() {
   if (input.includes("ultra realistic") || input.includes("realistic")) { score += 15; }
   if (input.includes("dramatic")) { mood = "dramatic"; score += 10; }
 
-  subject = input.split(" ").slice(-2).join(" ");
+  if (input.includes("elderly")) subject = "elderly person";
+else if (input.includes("person")) subject = "person";
+else subject = "general subject";
 
-  let optimized = input + ", highly detailed, sharp focus";
+  let optimized = smartExpand(input);
 
   let midjourney = optimized + " --ar 2:3 --v 6 --style raw";
 
