@@ -98,7 +98,6 @@ timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
 result_data = {
     "timestamp": timestamp,
     "analysis": analysis,
-    "reconstructed_prompt": reconstructed_prompt,
     "json_output": structured_output
 }
 
