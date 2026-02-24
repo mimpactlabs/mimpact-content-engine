@@ -71,6 +71,9 @@ button:hover {
 <body>
 
 <div class="container">
+  <p style="opacity:0.6; font-size:14px;">
+Built by Mimpact Labs
+</p>
   <h1>PromptUtility</h1>
 
   <textarea id="inputPrompt" placeholder="Enter your Midjourney prompt..."></textarea>
@@ -201,6 +204,12 @@ else subject = "general subject";
 function copyText(id) {
   const text = document.getElementById(id).innerText;
   navigator.clipboard.writeText(text);
+
+  const btn = event.target;
+  btn.innerText = "Copied!";
+  setTimeout(() => {
+    btn.innerText = "Copy";
+  }, 1500);
 }
 </script>
 
