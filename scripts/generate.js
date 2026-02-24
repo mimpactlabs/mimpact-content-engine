@@ -22,38 +22,44 @@ const metaDescription = `${randomTopic} complete guide for beginners. Learn stra
 
 // Generate Article
 const content = `
----
-title: "${randomTopic} Guide ${today}"
-description: "${metaDescription}"
-date: "${today}"
-author: "Mimpact Engine"
----
+<!DOCTYPE html>
+<html>
+<head>
+  <title>${randomTopic} Guide ${today}</title>
+  <meta name="description" content="${metaDescription}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="font-family: Arial; max-width: 800px; margin: 40px auto; line-height: 1.6;">
+  
+  <h1>${randomTopic} – Complete Guide</h1>
+  <p><em>Published on ${today}</em></p>
 
-# ${randomTopic} – Complete Guide
+  <h2>Introduction</h2>
+  <p>${randomTopic} is rapidly transforming the digital landscape. Businesses that adapt early gain long-term advantage.</p>
 
-## Introduction
-${randomTopic} is rapidly transforming the digital landscape.
+  <h2>Why It Matters</h2>
+  <ul>
+    <li>Improves efficiency</li>
+    <li>Builds scalable systems</li>
+    <li>Supports sustainable growth</li>
+  </ul>
 
-## Why It Matters
-- Improves efficiency  
-- Scalable systems  
-- Long term growth  
+  <h2>Implementation Steps</h2>
+  <ol>
+    <li>Analyze your current strategy</li>
+    <li>Apply structured improvements</li>
+    <li>Measure and optimize continuously</li>
+  </ol>
 
-## Implementation Steps
-1. Analyze current strategy  
-2. Apply improvements  
-3. Measure performance  
+  <h2>Conclusion</h2>
+  <p>Mastering ${randomTopic} requires clarity, execution, and consistency.</p>
 
-## Conclusion
-Consistency is key to mastering ${randomTopic}.
+  <hr>
+  <p><small>Generated automatically by Mimpact Content Engine</small></p>
 
----
-
-*Generated automatically.*
+</body>
+</html>
 `;
-
-fs.writeFileSync(filePath, content);
-console.log("SEO content generated:", filePath);
 
 // ============================
 // SAFE SITEMAP GENERATOR
