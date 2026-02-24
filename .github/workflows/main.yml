@@ -24,12 +24,12 @@ jobs:
           mkdir -p morning
           mkdir -p night
 
-          if [[ "$SCHEDULE" == "0 3 * * *" ]]; then
+          if [[ ! -f morning/$TODAY.txt ]]; then
             echo "Morning AI Insight - $TODAY" > morning/$TODAY.txt
           fi
 
-          if [[ "$SCHEDULE" == "0 14 * * *" ]]; then
-            echo "Night Recap - $TODAY" > night/$TODAY.txt
+          if [[ ! -f night/$TODAY.txt ]]; then
+            echo "Night AI Insight - $TODAY" > night/$TODAY.txt
           fi
 
       - name: Commit and Push
