@@ -53,7 +53,21 @@ const content = `
 
   <hr>
   <p><small>Generated automatically by Mimpact Content Engine</small></p>
+  <h2>Conclusion</h2>
+  <p>Consistency is key to mastering ${randomTopic}.</p>
 
+  <hr>
+
+  <h3>Related Articles</h3>
+  <ul>
+    <li><a href="https://mimpactlabs.github.io/mimpact-content-engine/">Home</a></li>
+  </ul>
+
+  <p><small>Generated automatically by Mimpact Content Engine</small></p>
+
+</body>
+</html>
+`;
 </body>
 </html>
 `;
