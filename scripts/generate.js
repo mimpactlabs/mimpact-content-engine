@@ -15,7 +15,7 @@ const hour = new Date().getHours();
 const folder = hour < 12 ? "morning" : "night";
 
 const slug = randomTopic.toLowerCase().replace(/ /g, "-");
-const fileName = `${today}-${slug}.md`;
+const fileName = `${today}-${slug}.html`;
 const filePath = `./${folder}/${fileName}`;
 
 const metaDescription = `${randomTopic} complete guide for beginners. Learn strategies, tips, and practical implementation steps.`;
