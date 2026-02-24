@@ -1,0 +1,30 @@
+name: Auto Content Engine
+
+on:
+  schedule:
+    - cron: "0 1 * * *"   # jalan tiap hari
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Run Generator
+        run: node scripts/generate.js
+
+      - name: Commit & Push
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Auto generate content"
+          git push
