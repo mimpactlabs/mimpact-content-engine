@@ -22,6 +22,14 @@ const metaDescription = `${randomTopic} complete guide for beginners. Learn stra
 
 // Generate Article
 const content = `
+// pastikan folder ada
+if (!fs.existsSync(folder)) {
+  fs.mkdirSync(folder);
+}
+
+// simpan file artikel
+fs.writeFileSync(filePath, content);
+console.log("HTML article generated:", filePath);
 <!DOCTYPE html>
 <html>
 <head>
