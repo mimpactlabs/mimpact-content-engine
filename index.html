@@ -79,9 +79,13 @@ button:hover {
     <div class="section-title">Optimized Prompt</div>
     <div id="optimized"></div>
 
-    <div class="section-title">Midjourney Ready</div>
-    <div id="midjourney"></div>
-    <button class="copy-btn" onclick="copyText('midjourney')">Copy</button>
+<div class="section-title">Midjourney Ready</div>
+<div id="midjourney"></div>
+<button class="copy-btn" onclick="copyText('midjourney')">Copy</button>
+
+<div class="section-title">Negative Prompt</div>
+<div id="negative"></div>
+<button class="copy-btn" onclick="copyText('negative')">Copy</button>
   </div>
 </div>
 
@@ -124,6 +128,32 @@ function smartExpand(input) {
 
   return parts.join(", ");
 }    
+
+function generateNegative(input) {
+  let negatives = [
+    "blurry",
+    "low quality",
+    "bad anatomy",
+    "extra fingers",
+    "extra limbs",
+    "distorted face",
+    "watermark",
+    "oversharpened"
+  ];
+
+  if (input.includes("elderly")) {
+    negatives.push("plastic skin");
+    negatives.push("overly smooth skin");
+    negatives.push("cartoon texture");
+  }
+
+  if (input.includes("portrait")) {
+    negatives.push("cropped head");
+    negatives.push("out of frame");
+  }
+
+  return negatives.join(", ");
+}  
   
 function optimizePrompt() {
   const input = document.getElementById("inputPrompt").value.toLowerCase();
@@ -148,6 +178,7 @@ else subject = "general subject";
   let optimized = smartExpand(input);
 
   let midjourney = optimized + " --ar 2:3 --v 6 --style raw";
+  let negative = generateNegative(input);
 
   document.getElementById("analysis").innerHTML =
     "Subject: " + subject + "<br>" +
@@ -160,6 +191,7 @@ else subject = "general subject";
   document.getElementById("midjourney").innerText = midjourney;
 
   document.getElementById("output").style.display = "block";
+  document.getElementById("negative").innerText = negative;
 }
 
 function copyText(id) {
