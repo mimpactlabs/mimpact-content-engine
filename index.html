@@ -127,6 +127,16 @@ function smartExpand(input) {
     parts.push("cinematic lighting");
     parts.push("dramatic shadows");
   }
+  
+  if (input.includes("studio")) {
+  parts.push("studio photography");
+  parts.push("controlled lighting");
+}
+
+if (input.includes("outdoor")) {
+  parts.push("natural environment");
+  parts.push("ambient light");
+}
 
   // DEFAULT ENHANCERS
   parts.push("85mm lens");
@@ -163,7 +173,8 @@ function generateNegative(input) {
 }  
   
 function optimizePrompt() {
-  const input = document.getElementById("inputPrompt").value.toLowerCase();
+  const rawInput = document.getElementById("inputPrompt").value;
+  const input = rawInput.toLowerCase();
 
   if (!input) return;
 
