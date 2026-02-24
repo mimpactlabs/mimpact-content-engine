@@ -1,5 +1,4 @@
 const fs = require("fs");
-const path = require("path");
 
 const topics = [
   "Digital Marketing Strategy",
@@ -18,18 +17,15 @@ const slug = randomTopic.toLowerCase().replace(/ /g, "-");
 const fileName = `${today}-${slug}.html`;
 const filePath = `./${folder}/${fileName}`;
 
-const metaDescription = `${randomTopic} complete guide for beginners. Learn strategies, tips, and practical implementation steps.`;
+const metaDescription = `${randomTopic} complete guide for beginners.`;
 
-// Generate Article
-const content = `
-// pastikan folder ada
+// ✅ PASTIKAN FOLDER ADA
 if (!fs.existsSync(folder)) {
   fs.mkdirSync(folder);
 }
 
-// simpan file artikel
-fs.writeFileSync(filePath, content);
-console.log("HTML article generated:", filePath);
+// ✅ BUAT HTML CONTENT
+const content = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,7 +39,7 @@ console.log("HTML article generated:", filePath);
   <p><em>Published on ${today}</em></p>
 
   <h2>Introduction</h2>
-  <p>${randomTopic} is rapidly transforming the digital landscape. Businesses that adapt early gain long-term advantage.</p>
+  <p>${randomTopic} is rapidly transforming the digital landscape.</p>
 
   <h2>Why It Matters</h2>
   <ul>
@@ -52,15 +48,8 @@ console.log("HTML article generated:", filePath);
     <li>Supports sustainable growth</li>
   </ul>
 
-  <h2>Implementation Steps</h2>
-  <ol>
-    <li>Analyze your current strategy</li>
-    <li>Apply structured improvements</li>
-    <li>Measure and optimize continuously</li>
-  </ol>
-
   <h2>Conclusion</h2>
-  <p>Mastering ${randomTopic} requires clarity, execution, and consistency.</p>
+  <p>Consistency is key to mastering ${randomTopic}.</p>
 
   <hr>
   <p><small>Generated automatically by Mimpact Content Engine</small></p>
@@ -69,32 +58,30 @@ console.log("HTML article generated:", filePath);
 </html>
 `;
 
+// ✅ SIMPAN FILE HTML
+fs.writeFileSync(filePath, content);
+console.log("HTML article generated:", filePath);
+
+
 // ============================
 // SAFE SITEMAP GENERATOR
 // ============================
 
 const baseUrl = "https://mimpactlabs.github.io/mimpact-content-engine";
 
-function safeReadDir(folder) {
-  if (!fs.existsSync(folder)) {
-    fs.mkdirSync(folder);
-    return [];
-  }
-  return fs.readdirSync(folder);
-}
-
 function generateSitemap() {
   const folders = ["morning", "night"];
   let urls = "";
 
   folders.forEach(folder => {
-    const files = safeReadDir(`./${folder}`);
+    if (!fs.existsSync(folder)) return;
+
+    const files = fs.readdirSync(folder);
     files.forEach(file => {
       if (file.endsWith(".html")) {
-        const slug = file.replace(".md", ".html");
         urls += `
   <url>
-    <loc>${baseUrl}/${folder}/${slug}</loc>
+    <loc>${baseUrl}/${folder}/${file}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
   </url>`;
       }
