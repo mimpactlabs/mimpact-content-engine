@@ -1,0 +1,30 @@
+name: Auto Generate Article
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'  # Jalan tiap hari
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run generator
+        run: node generate.js
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Auto generate article" || echo "No changes"
+          git push
