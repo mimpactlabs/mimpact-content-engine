@@ -82,7 +82,7 @@ function generateSitemap() {
   folders.forEach(folder => {
     const files = safeReadDir(`./${folder}`);
     files.forEach(file => {
-      if (file.endsWith(".md")) {
+      if (file.endsWith(".html")) {
         const slug = file.replace(".md", ".html");
         urls += `
   <url>
