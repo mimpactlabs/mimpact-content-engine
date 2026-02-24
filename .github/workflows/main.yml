@@ -2,34 +2,33 @@ name: AI Content Engine
 
 on:
   schedule:
-    - cron: '0 3 * * *'
-    - cron: '0 14 * * *'
+    - cron: '0 3 * * *'   # Morning (UTC)
+    - cron: '0 14 * * *'  # Night (UTC)
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Pull latest
-        run: git pull origin main --rebase
-
-      - name: Generate AI Content
+      - name: Generate Content
         run: |
-          HOUR=$(date -u +"%H")
-          TODAY=$(date +"%Y-%m-%d")
+          TODAY=$(date -u +"%Y-%m-%d")
+          SCHEDULE="${{ github.event.schedule }}"
 
           mkdir -p morning
           mkdir -p night
 
-          if [ "$HOUR" = "03" ]; then
+          if [[ "$SCHEDULE" == "0 3 * * *" ]]; then
             echo "Morning AI Insight - $TODAY" > morning/$TODAY.txt
-          else
+          fi
+
+          if [[ "$SCHEDULE" == "0 14 * * *" ]]; then
             echo "Night Recap - $TODAY" > night/$TODAY.txt
           fi
 
