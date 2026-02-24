@@ -56,24 +56,32 @@ fs.writeFileSync(filePath, content);
 console.log("SEO content generated:", filePath);
 
 // ============================
-// SITEMAP GENERATOR
+// SAFE SITEMAP GENERATOR
 // ============================
 
 const baseUrl = "https://mimpactlabs.github.io/mimpact-content-engine";
+
+function safeReadDir(folder) {
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder);
+    return [];
+  }
+  return fs.readdirSync(folder);
+}
 
 function generateSitemap() {
   const folders = ["morning", "night"];
   let urls = "";
 
   folders.forEach(folder => {
-    const files = fs.readdirSync(`./${folder}`);
+    const files = safeReadDir(`./${folder}`);
     files.forEach(file => {
       if (file.endsWith(".md")) {
         const slug = file.replace(".md", ".html");
         urls += `
   <url>
     <loc>${baseUrl}/${folder}/${slug}</loc>
-    <lastmod>${today}</lastmod>
+    <lastmod>${new Date().toISOString()}</lastmod>
   </url>`;
       }
     });
@@ -85,7 +93,7 @@ ${urls}
 </urlset>`;
 
   fs.writeFileSync("./sitemap.xml", sitemap);
-  console.log("Sitemap generated");
+  console.log("Sitemap generated successfully");
 }
 
 generateSitemap();
