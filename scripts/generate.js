@@ -142,11 +142,15 @@ const content = `
 `;
 
 // ============================
-// SAVE ARTICLE
+// SAVE ARTICLE (NO DUPLICATE)
 // ============================
 
-fs.writeFileSync(filePath, content);
-console.log("HTML article generated:", filePath);
+if (fs.existsSync(filePath)) {
+  console.log("Article already exists. Skipping:", filePath);
+} else {
+  fs.writeFileSync(filePath, content);
+  console.log("HTML article generated:", filePath);
+}
 
 // ============================
 // SITEMAP GENERATOR
