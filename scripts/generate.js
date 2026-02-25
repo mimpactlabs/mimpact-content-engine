@@ -88,6 +88,7 @@ const content = `
   "@type": "Article",
   "headline": "${randomTopic} – Complete Guide",
   "datePublished": "${today}",
+  "dateModified": "${today}",
   "articleSection": "${randomCluster}",
   "keywords": "${randomTopic}, ${randomCluster} guide",
   "author": {
