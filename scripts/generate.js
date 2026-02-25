@@ -29,7 +29,7 @@ const content = `
 <!DOCTYPE html>
 <html>
 <head>
-  <title>${randomTopic} Guide ${today}</title>
+  <title>${randomTopic} – Complete Beginner Guide (${today})</title>
   <meta name="description" content="${metaDescription}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
