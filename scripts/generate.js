@@ -12,7 +12,15 @@ const clusters = {
   ]
 };
 
-const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+// ============================
+// PICK RANDOM CLUSTER + TOPIC
+// ============================
+
+const clusterNames = Object.keys(clusters);
+const randomCluster = clusterNames[Math.floor(Math.random() * clusterNames.length)];
+
+const clusterTopics = clusters[randomCluster];
+const randomTopic = clusterTopics[Math.floor(Math.random() * clusterTopics.length)];
 const today = new Date().toISOString().split("T")[0];
 const hour = new Date().getHours();
 const folder = hour < 12 ? "morning" : "night";
