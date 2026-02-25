@@ -1,5 +1,7 @@
 const fs = require("fs");
 
+const baseUrl = "https://mimpactlabs.github.io/mimpact-content-engine";
+
 const topics = [
   "Digital Marketing Strategy",
   "AI Automation for Business",
@@ -19,12 +21,42 @@ const filePath = `./${folder}/${fileName}`;
 
 const metaDescription = `${randomTopic} complete guide for beginners.`;
 
-// ✅ PASTIKAN FOLDER ADA
+// ============================
+// ENSURE FOLDER EXISTS
+// ============================
+
 if (!fs.existsSync(folder)) {
   fs.mkdirSync(folder);
 }
 
-// ✅ BUAT HTML CONTENT
+// ============================
+// GET RANDOM RELATED ARTICLES
+// ============================
+
+function getRandomArticles(currentFile) {
+  const folders = ["morning", "night"];
+  let links = [];
+
+  folders.forEach(folder => {
+    if (!fs.existsSync(folder)) return;
+
+    const files = fs.readdirSync(folder);
+    files.forEach(file => {
+      if (file.endsWith(".html") && file !== currentFile) {
+        links.push({ folder, file });
+      }
+    });
+  });
+
+  return links.sort(() => 0.5 - Math.random()).slice(0, 3);
+}
+
+const relatedArticles = getRandomArticles(fileName);
+
+// ============================
+// HTML CONTENT
+// ============================
+
 const content = `
 <!DOCTYPE html>
 <html>
@@ -32,9 +64,38 @@ const content = `
   <title>${randomTopic} – Complete Beginner Guide (${today})</title>
   <meta name="description" content="${metaDescription}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="canonical" href="${baseUrl}/${folder}/${fileName}" />
+
+  <meta property="og:title" content="${randomTopic} – Complete Guide" />
+  <meta property="og:description" content="${metaDescription}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="${baseUrl}/${folder}/${fileName}" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "${randomTopic} – Complete Guide",
+    "datePublished": "${today}",
+    "author": {
+      "@type": "Organization",
+      "name": "Mimpact Labs"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Mimpact Labs"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "${baseUrl}/${folder}/${fileName}"
+    }
+  }
+  </script>
 </head>
+
 <body style="font-family: Arial; max-width: 800px; margin: 40px auto; line-height: 1.6;">
-  
+
   <h1>${randomTopic} – Complete Guide</h1>
   <p><em>Published on ${today}</em></p>
 
@@ -52,15 +113,16 @@ const content = `
   <p>Consistency is key to mastering ${randomTopic}.</p>
 
   <hr>
-  <p><small>Generated automatically by Mimpact Content Engine</small></p>
-  <h2>Conclusion</h2>
-  <p>Consistency is key to mastering ${randomTopic}.</p>
-
-  <hr>
 
   <h3>Related Articles</h3>
   <ul>
-    <li><a href="https://mimpactlabs.github.io/mimpact-content-engine/">Home</a></li>
+    ${relatedArticles.map(article => `
+      <li>
+        <a href="${baseUrl}/${article.folder}/${article.file}">
+          ${article.file.replace(".html","").replace(/-/g," ")}
+        </a>
+      </li>
+    `).join("")}
   </ul>
 
   <p><small>Generated automatically by Mimpact Content Engine</small></p>
@@ -68,20 +130,17 @@ const content = `
 </body>
 </html>
 `;
-</body>
-</html>
-`;
 
-// ✅ SIMPAN FILE HTML
+// ============================
+// SAVE ARTICLE
+// ============================
+
 fs.writeFileSync(filePath, content);
 console.log("HTML article generated:", filePath);
 
-
 // ============================
-// SAFE SITEMAP GENERATOR
+// SITEMAP GENERATOR
 // ============================
-
-const baseUrl = "https://mimpactlabs.github.io/mimpact-content-engine";
 
 function generateSitemap() {
   const folders = ["morning", "night"];
