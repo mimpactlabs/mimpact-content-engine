@@ -82,31 +82,34 @@ const content = `
   <meta property="og:type" content="article" />
   <meta property="og:url" content="${baseUrl}/${folder}/${fileName}" />
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "${randomTopic} – Complete Guide",
-    "datePublished": "${today}",
-    "author": {
-      "@type": "Organization",
-      "name": "Mimpact Labs"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Mimpact Labs"
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "${baseUrl}/${folder}/${fileName}"
-    }
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "${randomTopic} – Complete Guide",
+  "datePublished": "${today}",
+  "articleSection": "${randomCluster}",
+  "keywords": "${randomTopic}, ${randomCluster} guide",
+  "author": {
+    "@type": "Organization",
+    "name": "Mimpact Labs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mimpact Labs"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "${baseUrl}/${folder}/${fileName}"
   }
-  </script>
+}
+</script>
 </head>
 
 <body style="font-family: Arial; max-width: 800px; margin: 40px auto; line-height: 1.6;">
 
   <h1>${randomTopic} – Complete Guide</h1>
+  <p><strong>Category:</strong> ${randomCluster}</p>
   <p><em>Published on ${today}</em></p>
 
   <h2>Introduction</h2>
