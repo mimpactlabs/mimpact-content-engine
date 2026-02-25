@@ -2,13 +2,15 @@ const fs = require("fs");
 
 const baseUrl = "https://mimpactlabs.github.io/mimpact-content-engine";
 
-const topics = [
-  "Digital Marketing Strategy",
-  "AI Automation for Business",
-  "Passive Income Online",
-  "Content Marketing Trends",
-  "Remote Work Productivity"
-];
+const clusters = {
+  "AI Automation": [
+    "AI Automation Tools for Small Business",
+    "How AI Workflow Automation Works",
+    "AI Automation Agency Business Model",
+    "Best AI Automation Software 2026",
+    "Common AI Automation Mistakes"
+  ]
+};
 
 const randomTopic = topics[Math.floor(Math.random() * topics.length)];
 const today = new Date().toISOString().split("T")[0];
