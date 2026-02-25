@@ -1,6 +1,11 @@
 const fs = require("fs");
 
+// ============================
+// CONFIG
+// ============================
+
 const baseUrl = "https://mimpactlabs.github.io/mimpact-content-engine";
+const trackerFile = "./progress.json";
 
 const clusters = {
   "AI Automation": [
@@ -13,55 +18,70 @@ const clusters = {
 };
 
 // ============================
-// PICK RANDOM CLUSTER + TOPIC
+// LOAD PROGRESS TRACKER
 // ============================
 
-const clusterNames = Object.keys(clusters);
-const randomCluster = clusterNames[Math.floor(Math.random() * clusterNames.length)];
+let progress = { clusterIndex: 0, topicIndex: 0 };
 
-const clusterTopics = clusters[randomCluster];
-const randomTopic = clusterTopics[Math.floor(Math.random() * clusterTopics.length)];
+if (fs.existsSync(trackerFile)) {
+  progress = JSON.parse(fs.readFileSync(trackerFile));
+}
+
+const clusterNames = Object.keys(clusters);
+const currentCluster = clusterNames[progress.clusterIndex];
+const clusterTopics = clusters[currentCluster];
+
+const currentTopic = clusterTopics[progress.topicIndex];
+
+// ============================
+// DATE + FOLDER
+// ============================
+
 const today = new Date().toISOString().split("T")[0];
 const hour = new Date().getHours();
 const folder = hour < 12 ? "morning" : "night";
-
-const slug = randomTopic.toLowerCase().replace(/ /g, "-");
-const fileName = `${today}-${slug}.html`;
-const filePath = `./${folder}/${fileName}`;
-
-const metaDescription = `${randomTopic} complete guide for beginners.`;
-
-// ============================
-// ENSURE FOLDER EXISTS
-// ============================
 
 if (!fs.existsSync(folder)) {
   fs.mkdirSync(folder);
 }
 
 // ============================
-// GET RANDOM RELATED ARTICLES
+// FILE STRUCTURE
 // ============================
 
-function getRandomArticles(currentFile) {
-  const folders = ["morning", "night"];
-  let links = [];
+const slug = currentTopic.toLowerCase().replace(/ /g, "-");
+const fileName = `${today}-${slug}.html`;
+const filePath = `./${folder}/${fileName}`;
 
-  folders.forEach(folder => {
-    if (!fs.existsSync(folder)) return;
+const metaDescription = `${currentTopic} complete guide for beginners.`;
 
-    const files = fs.readdirSync(folder);
-    files.forEach(file => {
-      if (file.endsWith(".html") && file !== currentFile) {
-        links.push({ folder, file });
-      }
-    });
-  });
+// ============================
+// SKIP IF EXISTS
+// ============================
 
-  return links.sort(() => 0.5 - Math.random()).slice(0, 3);
+if (fs.existsSync(filePath)) {
+  console.log("Article already exists. Skipping:", filePath);
+  process.exit();
 }
 
-const relatedArticles = getRandomArticles(fileName);
+// ============================
+// RELATED ARTICLES (Cluster Only)
+// ============================
+
+function getClusterRelated(topic, clusterName) {
+  return clusters[clusterName]
+    .filter(t => t !== topic)
+    .slice(0, 3)
+    .map(t => {
+      const tSlug = t.toLowerCase().replace(/ /g, "-");
+      return {
+        title: t,
+        url: `${baseUrl}/${folder}/${today}-${tSlug}.html`
+      };
+    });
+}
+
+const relatedArticles = getClusterRelated(currentTopic, currentCluster);
 
 // ============================
 // HTML CONTENT
@@ -71,13 +91,13 @@ const content = `
 <!DOCTYPE html>
 <html>
 <head>
-  <title>${randomTopic} – Complete Beginner Guide (${today})</title>
+  <title>${currentTopic} – Complete Beginner Guide (${today})</title>
   <meta name="description" content="${metaDescription}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="canonical" href="${baseUrl}/${folder}/${fileName}" />
 
-  <meta property="og:title" content="${randomTopic} – Complete Guide" />
+  <meta property="og:title" content="${currentTopic} – Complete Guide" />
   <meta property="og:description" content="${metaDescription}" />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="${baseUrl}/${folder}/${fileName}" />
@@ -86,11 +106,11 @@ const content = `
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "${randomTopic} – Complete Guide",
+  "headline": "${currentTopic} – Complete Guide",
   "datePublished": "${today}",
   "dateModified": "${today}",
-  "articleSection": "${randomCluster}",
-  "keywords": "${randomTopic}, ${randomCluster} guide",
+  "articleSection": "${currentCluster}",
+  "keywords": "${currentTopic}, ${currentCluster} guide",
   "author": {
     "@type": "Organization",
     "name": "Mimpact Labs"
@@ -105,16 +125,17 @@ const content = `
   }
 }
 </script>
+
 </head>
 
 <body style="font-family: Arial; max-width: 800px; margin: 40px auto; line-height: 1.6;">
 
-  <h1>${randomTopic} – Complete Guide</h1>
-  <p><strong>Category:</strong> ${randomCluster}</p>
+  <h1>${currentTopic} – Complete Guide</h1>
+  <p><strong>Category:</strong> ${currentCluster}</p>
   <p><em>Published on ${today}</em></p>
 
   <h2>Introduction</h2>
-  <p>${randomTopic} is rapidly transforming the digital landscape.</p>
+  <p>${currentTopic} is rapidly transforming the digital landscape.</p>
 
   <h2>Why It Matters</h2>
   <ul>
@@ -124,7 +145,7 @@ const content = `
   </ul>
 
   <h2>Conclusion</h2>
-  <p>Consistency is key to mastering ${randomTopic}.</p>
+  <p>Consistency is key to mastering ${currentTopic}.</p>
 
   <hr>
 
@@ -132,8 +153,8 @@ const content = `
   <ul>
     ${relatedArticles.map(article => `
       <li>
-        <a href="${baseUrl}/${article.folder}/${article.file}">
-          ${article.file.replace(".html","").replace(/-/g," ")}
+        <a href="${article.url}">
+          ${article.title}
         </a>
       </li>
     `).join("")}
@@ -146,15 +167,28 @@ const content = `
 `;
 
 // ============================
-// SAVE ARTICLE (NO DUPLICATE)
+// SAVE ARTICLE
 // ============================
 
-if (fs.existsSync(filePath)) {
-  console.log("Article already exists. Skipping:", filePath);
-} else {
-  fs.writeFileSync(filePath, content);
-  console.log("HTML article generated:", filePath);
+fs.writeFileSync(filePath, content);
+console.log("HTML article generated:", filePath);
+
+// ============================
+// UPDATE PROGRESS
+// ============================
+
+progress.topicIndex++;
+
+if (progress.topicIndex >= clusterTopics.length) {
+  progress.topicIndex = 0;
+  progress.clusterIndex++;
+
+  if (progress.clusterIndex >= clusterNames.length) {
+    progress.clusterIndex = 0;
+  }
 }
+
+fs.writeFileSync(trackerFile, JSON.stringify(progress));
 
 // ============================
 // SITEMAP GENERATOR
