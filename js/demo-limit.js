@@ -1,55 +1,75 @@
-const MAX_LIMIT = 3;
+const DEMO_LIMIT = 3;
+const MEMBER_LIMIT = 200;
 
-function isPro() {
-  return localStorage.getItem("proMode") === "true";
+function isMember() {
+  return localStorage.getItem("member") === "true";
 }
 
 function getUsage() {
+  if (isMember()) {
+    return parseInt(localStorage.getItem("memberUsage") || "0");
+  }
   return parseInt(localStorage.getItem("demoUsage") || "0");
 }
 
 function incrementUsage() {
-  let usage = getUsage() + 1;
-  localStorage.setItem("demoUsage", usage);
+  if (isMember()) {
+    let usage = getUsage() + 1;
+    localStorage.setItem("memberUsage", usage);
+  } else {
+    let usage = getUsage() + 1;
+    localStorage.setItem("demoUsage", usage);
+  }
   updateLimitMessage();
 }
 
 function checkLimit() {
-  if (isPro()) return true;
-
   let usage = getUsage();
 
-  if (usage >= MAX_LIMIT) {
-    lockTool();
-    return false;
+  if (isMember()) {
+    if (usage >= MEMBER_LIMIT) {
+      lockTool("Batas 200 penggunaan telah habis.<br><a href='upgrade.html'>Perpanjang Member</a>");
+      return false;
+    }
+  } else {
+    if (usage >= DEMO_LIMIT) {
+      lockTool("Limit demo habis.<br><a href='upgrade.html'>Upgrade ke Member</a>");
+      return false;
+    }
   }
 
   return true;
 }
 
-function lockTool() {
+function lockTool(message) {
   const btn = document.getElementById("generateBtn");
   if (btn) btn.disabled = true;
 
-  document.getElementById("limitMessage").innerHTML =
-    "Limit demo habis.<br><a href='upgrade.html'>Upgrade untuk akses penuh</a>";
+  document.getElementById("limitMessage").innerHTML = message;
 }
 
 function updateLimitMessage() {
-  if (isPro()) {
-    document.getElementById("limitMessage").innerText =
-      "Pro Mode Active - Unlimited Access";
-    return;
-  }
-
   let usage = getUsage();
-  let remaining = MAX_LIMIT - usage;
 
-  if (remaining <= 0) {
-    lockTool();
+  if (isMember()) {
+    let remaining = MEMBER_LIMIT - usage;
+
+    if (remaining <= 0) {
+      lockTool("Batas 200 penggunaan telah habis.<br><a href='upgrade.html'>Perpanjang Member</a>");
+    } else {
+      document.getElementById("limitMessage").innerText =
+        `Sisa penggunaan member: ${remaining} dari ${MEMBER_LIMIT}`;
+    }
+
   } else {
-    document.getElementById("limitMessage").innerText =
-      `Sisa demo: ${remaining}`;
+    let remaining = DEMO_LIMIT - usage;
+
+    if (remaining <= 0) {
+      lockTool("Limit demo habis.<br><a href='upgrade.html'>Upgrade ke Member</a>");
+    } else {
+      document.getElementById("limitMessage").innerText =
+        `Sisa demo: ${remaining} dari ${DEMO_LIMIT}`;
+    }
   }
 }
 
