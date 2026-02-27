@@ -5,6 +5,10 @@ function isMember() {
   return localStorage.getItem("member") === "true";
 }
 
+function isSuper() {
+  return window.location.pathname.includes("super.html");
+}
+
 function getUsage() {
   if (isMember()) {
     return parseInt(localStorage.getItem("memberUsage") || "0");
@@ -13,6 +17,8 @@ function getUsage() {
 }
 
 function incrementUsage() {
+  if (isSuper()) return; // SUPER tidak dihitung
+
   if (isMember()) {
     let usage = getUsage() + 1;
     localStorage.setItem("memberUsage", usage);
@@ -20,10 +26,15 @@ function incrementUsage() {
     let usage = getUsage() + 1;
     localStorage.setItem("demoUsage", usage);
   }
+
   updateLimitMessage();
 }
 
 function checkLimit() {
+
+  // SUPER BYPASS
+  if (isSuper()) return true;
+
   let usage = getUsage();
 
   if (isMember()) {
@@ -49,6 +60,13 @@ function lockTool(message) {
 }
 
 function updateLimitMessage() {
+
+  if (isSuper()) {
+    document.getElementById("limitMessage").innerText =
+      "Super User Mode - Unlimited Access";
+    return;
+  }
+
   let usage = getUsage();
 
   if (isMember()) {
@@ -71,10 +89,6 @@ function updateLimitMessage() {
         `Sisa demo: ${remaining} dari ${DEMO_LIMIT}`;
     }
   }
-}
-
-function isSuper() {
-  return window.location.pathname.includes("super.html");
 }
 
 document.addEventListener("DOMContentLoaded", function() {
