@@ -1,5 +1,9 @@
 const MAX_LIMIT = 3;
 
+function isPro() {
+  return localStorage.getItem("proMode") === "true";
+}
+
 function getUsage() {
   return parseInt(localStorage.getItem("demoUsage") || "0");
 }
@@ -11,19 +15,44 @@ function incrementUsage() {
 }
 
 function checkLimit() {
+  if (isPro()) return true;
+
   let usage = getUsage();
+
   if (usage >= MAX_LIMIT) {
-    document.getElementById("limitMessage").innerHTML =
-      "Limit demo habis. <br><a href='#'>Daftar Member untuk akses penuh</a>";
+    lockTool();
     return false;
   }
+
   return true;
 }
 
-function updateLimitMessage() {
-  let usage = getUsage();
-  document.getElementById("limitMessage").innerText =
-    `Sisa demo: ${MAX_LIMIT - usage}`;
+function lockTool() {
+  const btn = document.getElementById("generateBtn");
+  if (btn) btn.disabled = true;
+
+  document.getElementById("limitMessage").innerHTML =
+    "Limit demo habis.<br><a href='upgrade.html'>Upgrade untuk akses penuh</a>";
 }
 
-updateLimitMessage();
+function updateLimitMessage() {
+  if (isPro()) {
+    document.getElementById("limitMessage").innerText =
+      "Pro Mode Active - Unlimited Access";
+    return;
+  }
+
+  let usage = getUsage();
+  let remaining = MAX_LIMIT - usage;
+
+  if (remaining <= 0) {
+    lockTool();
+  } else {
+    document.getElementById("limitMessage").innerText =
+      `Sisa demo: ${remaining}`;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  updateLimitMessage();
+});
