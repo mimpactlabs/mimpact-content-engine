@@ -49,3 +49,9 @@ function loadStats() {
     Pro Mode: ${pro}
   `;
 }
+
+function resetMemberUsage() {
+  localStorage.setItem("memberUsage", "0");
+  alert("Member usage reset.");
+  loadStats();
+}
