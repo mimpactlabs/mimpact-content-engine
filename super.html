@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Super User Panel</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<h2>Super User Access</h2>
+
+<div id="authBox">
+  <input type="password" id="superCode" placeholder="Enter Super Access Code">
+  <button onclick="unlockSuper()">Unlock</button>
+  <p id="authMessage"></p>
+</div>
+
+<hr>
+
+<div id="superPanel" style="display:none;">
+  <h3>Unlimited Prompt Generator</h3>
+
+  <textarea id="inputText" placeholder="Masukkan topik..."></textarea>
+  <br><br>
+
+  <button onclick="generateSuperPrompt()">Generate (Unlimited)</button>
+
+  <h4>Output:</h4>
+  <div id="outputBox"></div>
+</div>
+
+<script src="js/super.js"></script>
+</body>
+</html>
