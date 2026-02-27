@@ -1,34 +1,28 @@
-const SUPER_ACCESS_CODE = "MIMPACT-SUPER-2026";
+const SUPER_PASSWORD = "mimpact2026";
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  const unlockBtn = document.getElementById("unlockBtn");
+  const generateBtn = document.getElementById("generateBtn");
+
+  unlockBtn.addEventListener("click", unlockSuper);
+
+  if (generateBtn) {
+    generateBtn.addEventListener("click", function () {
+      generatePrompt();
+    });
+  }
+
+});
 
 function unlockSuper() {
-  const code = document.getElementById("superCode").value;
+  const input = document.getElementById("superCode").value;
+  const message = document.getElementById("authMessage");
 
-  if (code === SUPER_ACCESS_CODE) {
-    document.getElementById("superPanel").style.display = "block";
+  if (input === SUPER_PASSWORD) {
     document.getElementById("authBox").style.display = "none";
+    document.getElementById("superPanel").style.display = "block";
   } else {
-    document.getElementById("authMessage").innerText = "Invalid Access Code";
+    message.innerText = "Wrong access code!";
   }
 }
-
-function generateSuperPrompt() {
-  const input = document.getElementById("inputText").value;
-
-  if (!input) {
-    alert("Masukkan topik terlebih dahulu.");
-    return;
-  }
-
-  // Gunakan logic dari app.js kalau mau
-  const result = `
-    🔥 Generated Prompt:
-
-    Buatkan konten affiliate yang menarik tentang "${input}"
-    dengan gaya persuasif dan fokus pada conversion.
-  `;
-
-  document.getElementById("outputBox").innerText = result;
-}
-
-localStorage.setItem("member", "true");
-localStorage.setItem("memberUsage", "0");
