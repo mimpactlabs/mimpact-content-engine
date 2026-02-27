@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Super User Panel</title>
+  <title>Super User Panel, pass: "MIMPACT-SUPER-2026"</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -10,7 +10,7 @@
 
 <div id="authBox">
   <input type="password" id="superCode" placeholder="Enter Super Access Code">
-  <button onclick="unlockSuper()">Unlock</button>
+  <button id="unlockBtn">Unlock</button>
   <p id="authMessage"></p>
 </div>
 
@@ -22,13 +22,15 @@
   <textarea id="inputText" placeholder="Masukkan topik..."></textarea>
   <br><br>
 
-  <button onclick="generatePrompt()">Generate (Unlimited)</button>
-  <script src="js/app.js"></script>
+  <button id="generateBtn">Generate (Unlimited)</button>
 
   <h4>Output:</h4>
   <div id="outputBox"></div>
 </div>
 
+<!-- SCRIPT DI BAWAH -->
+<script src="js/app.js"></script>
 <script src="js/super.js"></script>
+
 </body>
 </html>
