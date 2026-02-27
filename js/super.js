@@ -29,3 +29,6 @@ function generateSuperPrompt() {
 
   document.getElementById("outputBox").innerText = result;
 }
+
+localStorage.setItem("member", "true");
+localStorage.setItem("memberUsage", "0");
