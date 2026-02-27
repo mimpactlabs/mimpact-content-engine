@@ -1,33 +1,11 @@
-function assemblePrompt(name, dna, scene) {
-  return `
-Character: ${name}
-
-${dna}
-
-Scene:
-${scene}
-
-same face, identical identity, consistent character across scenes
---ar 9:16
-`;
-}
-
 function generatePrompt() {
+  const input = document.getElementById("inputText").value;
+  const output = document.getElementById("outputBox");
 
-  if (!checkLimit()) return;
-   // logic generate prompt di sini
+  if (!input.trim()) {
+    output.innerText = "Masukkan topik terlebih dahulu.";
+    return;
+  }
 
-  incrementUsage();
-}
-<button id="generateBtn" onclick="generatePrompt()">Generate</button>
-
-  const name = document.getElementById("charName").value;
-  const dna = document.getElementById("charDNA").value;
-  const scene = document.getElementById("sceneDesc").value;
-
-  const prompt = assemblePrompt(name, dna, scene);
-
-  document.getElementById("output").innerText = prompt;
-
-  incrementUsage();
+  output.innerText = "Generated Prompt: " + input + " - versi super unlimited.";
 }
