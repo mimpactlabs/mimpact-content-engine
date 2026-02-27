@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Developer Panel - AI Character Continuity Engine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<h1>Developer Super User Panel</h1>
+
+<div id="authSection">
+  <input type="password" id="devCode" placeholder="Enter Developer Access Code">
+  <button onclick="unlockDev()">Unlock</button>
+  <p id="authMessage"></p>
+</div>
+
+<div id="devPanel" style="display:none;">
+
+  <h2>Member Control</h2>
+
+  <button onclick="resetDemoLimit()">Reset Demo Limit</button>
+  <button onclick="enableProMode()">Enable Pro Mode</button>
+  <button onclick="disableProMode()">Disable Pro Mode</button>
+
+  <h2>System Stats</h2>
+  <p id="usageStats"></p>
+
+  <h2>Danger Zone</h2>
+  <button onclick="clearAllData()">Clear All Local Data</button>
+
+</div>
+
+<script src="js/developer.js"></script>
+</body>
+</html>
