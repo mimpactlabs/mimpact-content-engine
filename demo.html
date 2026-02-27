@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Demo - AI Character Continuity Engine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<h1>Demo (Maksimal 3 Kali Generate)</h1>
+
+<div class="form">
+  <input id="charName" placeholder="Nama Karakter (contoh: Sayid)">
+  <textarea id="charDNA" placeholder="Deskripsi DNA karakter..."></textarea>
+  <textarea id="sceneDesc" placeholder="Deskripsi Scene..."></textarea>
+  <button onclick="generatePrompt()">Generate Prompt</button>
+</div>
+
+<div id="output"></div>
+
+<div id="limitMessage"></div>
+
+<script src="js/app.js"></script>
+<script src="js/demo-limit.js"></script>
+
+</body>
+</html>
