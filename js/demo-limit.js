@@ -73,6 +73,10 @@ function updateLimitMessage() {
   }
 }
 
+function isSuper() {
+  return window.location.pathname.includes("super.html");
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   updateLimitMessage();
 });
