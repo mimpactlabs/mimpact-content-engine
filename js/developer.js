@@ -1,3 +1,6 @@
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById("devPanel").style.display = "none";
+});
 const DEV_ACCESS_CODE = "MIMPACT-DEV-2026";
 
 function unlockDev() {
