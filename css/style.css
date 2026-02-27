@@ -1,0 +1,26 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.btn {
+  background: black;
+  color: white;
+  padding: 12px 20px;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+textarea, input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+}
