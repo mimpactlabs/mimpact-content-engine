@@ -143,22 +143,19 @@ function generate() {
   let outfitText = selected.outfit;
 
   if (outfitLock && outfitVariation.trim() !== "") {
-    outfitText = `
-${selected.outfit},
-Variation: ${outfitVariation},
-maintain core outfit identity,
-do not change character style base
-`;
+    outfitText =
+      selected.outfit +
+      ", Variation: " + outfitVariation +
+      ", maintain core outfit identity, do not change character style base";
   }
 
-  const base = `
-${selected.name}, ${selected.age} year old ${selected.gender},
-${selected.face},
-${selected.hair},
-wearing ${outfitText},
-${selected.style} style,
-consistent facial structure
-`;
+  let base =
+    selected.name + ", " + selected.age + " year old " + selected.gender + ",\n" +
+    selected.face + ",\n" +
+    selected.hair + ",\n" +
+    "wearing " + outfitText + ",\n" +
+    selected.style + " style,\n" +
+    "consistent facial structure\n";
 
   const sceneInput = document.getElementById("scene").value;
   const mode = document.getElementById("mode").value;
@@ -166,23 +163,19 @@ consistent facial structure
   let result = "";
 
   if (mode === "image") {
-    result = base + `,
-${sceneInput},
-ultra detailed, 8k`;
+    result = base + "\n" + sceneInput + ", ultra detailed, 8k";
   }
 
   if (mode === "video") {
-    result = base + `,
-${sceneInput},
-cinematic movement, dramatic lighting`;
+    result = base + "\n" + sceneInput + ", cinematic movement, dramatic lighting";
   }
 
   if (mode === "story") {
-    result = `Write a detailed story about:\n${base}\nScene: ${sceneInput}`;
+    result = "Write a detailed story about:\n" + base + "\nScene: " + sceneInput;
   }
 
   if (mode === "chat") {
-    result = `You are roleplaying as:\n${base}\nSituation: ${sceneInput}`;
+    result = "You are roleplaying as:\n" + base + "\nSituation: " + sceneInput;
   }
 
   document.getElementById("output").innerText = result;
