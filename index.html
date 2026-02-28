@@ -181,45 +181,6 @@ function generate() {
   document.getElementById("output").innerText = result;
 }
 
-  const selected = profiles[select.selectedIndex];
-
-  const base = `
-${selected.name}, ${selected.age} year old ${selected.gender},
-${selected.face},
-${selected.hair},
-wearing ${selected.outfit},
-${selected.style} style,
-consistent facial structure
-`;
-
-  const sceneInput = document.getElementById("scene").value;
-  const mode = document.getElementById("mode").value;
-
-  let result = "";
-
-  if (mode === "image") {
-    result = base + `,
-${sceneInput},
-ultra detailed, 8k`;
-  }
-
-  if (mode === "video") {
-    result = base + `,
-${sceneInput},
-cinematic movement, dramatic lighting`;
-  }
-
-  if (mode === "story") {
-    result = `Write a detailed story about:\n${base}\nScene: ${sceneInput}`;
-  }
-
-  if (mode === "chat") {
-    result = `You are roleplaying as:\n${base}\nSituation: ${sceneInput}`;
-  }
-
-  document.getElementById("output").innerText = result;
-}
-
 window.saveCharacter = saveCharacter;
 window.deleteCharacter = deleteCharacter;
 window.generate = generate;
