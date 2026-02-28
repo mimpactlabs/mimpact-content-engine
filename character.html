@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Character Consistency Tool</title>
+  <style>
+    body { font-family: Arial; padding: 30px; max-width: 800px; margin: auto; }
+    textarea, input { width: 100%; margin: 8px 0; padding: 8px; }
+    button { padding: 10px 15px; margin-top: 10px; }
+    #output { margin-top: 20px; white-space: pre-wrap; background: #f4f4f4; padding: 15px; }
+  </style>
+</head>
+<body>
+
+<h2>AI Character Consistency Tool</h2>
+
+<h3>🔐 Character Lock Profile</h3>
+
+<input id="charName" placeholder="Character Name">
+<input id="charAge" placeholder="Age">
+<input id="charHair" placeholder="Hair Description">
+<input id="charStyle" placeholder="Visual Style (Cinematic, Anime, Realistic...)">
+
+<button onclick="saveCharacter()">Save Character</button>
+
+<hr>
+
+<h3>🎬 Generate Scene</h3>
+
+<textarea id="sceneInput" placeholder="Describe scene..."></textarea>
+<button onclick="generatePrompt()">Generate Prompt</button>
+
+<div id="output"></div>
+
+<script>
+function saveCharacter() {
+  const profile = {
+    name: document.getElementById("charName").value,
+    age: document.getElementById("charAge").value,
+    hair: document.getElementById("charHair").value,
+    style: document.getElementById("charStyle").value
+  };
+
+  localStorage.setItem("lockedCharacter", JSON.stringify(profile));
+  alert("Character Locked!");
+}
+
+function generatePrompt() {
+  const scene = document.getElementById("sceneInput").value;
+  const saved = JSON.parse(localStorage.getItem("lockedCharacter"));
+
+  if (!saved) {
+    document.getElementById("output").innerText = "No character locked yet.";
+    return;
+  }
+
+  let result = `
+${saved.name}, ${saved.age} years old,
+${saved.hair},
+${saved.style} style,
+${scene},
+consistent face structure, high detail, 8k resolution
+`;
+
+  document.getElementById("output").innerText = result;
+}
+</script>
+
+</body>
+</html>
