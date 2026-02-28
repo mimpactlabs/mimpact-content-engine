@@ -42,6 +42,13 @@
   </select>
 
   <textarea id="scene" placeholder="Describe scene..."></textarea>
+  <hr>
+<label>
+  <input type="checkbox" id="outfitLock">
+  Enable Outfit Variation Lock
+</label>
+
+<input id="outfitVariation" placeholder="Outfit variation (e.g. black hoodie version, add denim jacket, night version)">
   <button onclick="generate()">Generate</button>
 </div>
 
@@ -127,6 +134,59 @@ function generate() {
     document.getElementById("output").innerText = "No character available.";
     return;
   }
+
+  const selected = profiles[select.selectedIndex];
+
+  const outfitLock = document.getElementById("outfitLock").checked;
+  const outfitVariation = document.getElementById("outfitVariation").value;
+
+  let outfitText = selected.outfit;
+
+  if (outfitLock && outfitVariation.trim() !== "") {
+    outfitText = `
+${selected.outfit},
+Variation: ${outfitVariation},
+maintain core outfit identity,
+do not change character style base
+`;
+  }
+
+  const base = `
+${selected.name}, ${selected.age} year old ${selected.gender},
+${selected.face},
+${selected.hair},
+wearing ${outfitText},
+${selected.style} style,
+consistent facial structure
+`;
+
+  const sceneInput = document.getElementById("scene").value;
+  const mode = document.getElementById("mode").value;
+
+  let result = "";
+
+  if (mode === "image") {
+    result = base + `,
+${sceneInput},
+ultra detailed, 8k`;
+  }
+
+  if (mode === "video") {
+    result = base + `,
+${sceneInput},
+cinematic movement, dramatic lighting`;
+  }
+
+  if (mode === "story") {
+    result = `Write a detailed story about:\n${base}\nScene: ${sceneInput}`;
+  }
+
+  if (mode === "chat") {
+    result = `You are roleplaying as:\n${base}\nSituation: ${sceneInput}`;
+  }
+
+  document.getElementById("output").innerText = result;
+}
 
   const selected = profiles[select.selectedIndex];
 
