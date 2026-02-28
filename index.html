@@ -48,6 +48,8 @@
 <div id="output"></div>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
+
 function getProfiles() {
   return JSON.parse(localStorage.getItem("characterProfiles")) || [];
 }
@@ -58,13 +60,15 @@ function saveProfiles(profiles) {
 
 function refreshDropdown() {
   const select = document.getElementById("characterSelect");
-  select.innerHTML = "";
+  if (!select) return;
 
+  select.innerHTML = "";
   const profiles = getProfiles();
+
   profiles.forEach((p, index) => {
     const option = document.createElement("option");
     option.value = index;
-    option.textContent = p.name;
+    option.textContent = p.age ? p.age + " - " + (p.gender || "") : "Character " + (index + 1);
     select.appendChild(option);
   });
 }
@@ -73,13 +77,13 @@ function saveCharacter() {
   const profiles = getProfiles();
 
   const profile = {
-    name: name.value,
-    age: age.value,
-    gender: gender.value,
-    face: face.value,
-    hair: hair.value,
-    outfit: outfit.value,
-    style: style.value
+    name: document.getElementById("name").value,
+    age: document.getElementById("age").value,
+    gender: document.getElementById("gender").value,
+    face: document.getElementById("face").value,
+    hair: document.getElementById("hair").value,
+    outfit: document.getElementById("outfit").value,
+    style: document.getElementById("style").value
   };
 
   profiles.push(profile);
@@ -88,62 +92,11 @@ function saveCharacter() {
   alert("Character Saved!");
 }
 
-function deleteCharacter() {
-  const profiles = getProfiles();
-  const index = characterSelect.value;
-
-  profiles.splice(index, 1);
-  saveProfiles(profiles);
-  refreshDropdown();
-}
-
-function generate() {
-  const profiles = getProfiles();
-  const selected = profiles[characterSelect.value];
-
-  if (!selected) {
-    output.innerText = "No character selected.";
-    return;
-  }
-
-  const base = `
-${selected.name}, ${selected.age} year old ${selected.gender},
-${selected.face},
-${selected.hair},
-wearing ${selected.outfit},
-${selected.style} style,
-consistent facial structure
-`;
-
-  const sceneInput = document.getElementById("scene").value;
-  const mode = document.getElementById("mode").value;
-
-  let result = "";
-
-  if (mode === "image") {
-    result = base + `,
-${sceneInput},
-ultra detailed, 8k`;
-  }
-
-  if (mode === "video") {
-    result = base + `,
-${sceneInput},
-cinematic movement, dramatic lighting`;
-  }
-
-  if (mode === "story") {
-    result = `Write a detailed story about:\n${base}\nScene: ${sceneInput}`;
-  }
-
-  if (mode === "chat") {
-    result = `You are roleplaying as:\n${base}\nSituation: ${sceneInput}`;
-  }
-
-  document.getElementById("output").innerText = result;
-}
+window.saveCharacter = saveCharacter;
 
 refreshDropdown();
+
+});
 </script>
 
 </body>
