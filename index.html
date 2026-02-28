@@ -51,7 +51,8 @@
 document.addEventListener("DOMContentLoaded", function () {
 
 function getProfiles() {
-  return JSON.parse(localStorage.getItem("characterProfiles")) || [];
+  const data = localStorage.getItem("characterProfiles");
+  return data ? JSON.parse(data) : [];
 }
 
 function saveProfiles(profiles) {
@@ -60,10 +61,9 @@ function saveProfiles(profiles) {
 
 function refreshDropdown() {
   const select = document.getElementById("characterSelect");
-  if (!select) return;
+  const profiles = getProfiles();
 
   select.innerHTML = "";
-  const profiles = getProfiles();
 
   if (profiles.length === 0) {
     const option = document.createElement("option");
@@ -80,7 +80,7 @@ function refreshDropdown() {
     select.appendChild(option);
   });
 
-  // Auto select first character
+  // Auto select first item
   select.selectedIndex = 0;
 }
 
@@ -111,25 +111,24 @@ function saveCharacter() {
 function deleteCharacter() {
   const profiles = getProfiles();
   const select = document.getElementById("characterSelect");
-  const index = select.value;
 
-  if (index === "" || profiles.length === 0) return;
+  if (profiles.length === 0) return;
 
-  profiles.splice(index, 1);
+  profiles.splice(select.selectedIndex, 1);
   saveProfiles(profiles);
   refreshDropdown();
 }
 
 function generate() {
   const profiles = getProfiles();
-  const index = document.getElementById("characterSelect").value;
+  const select = document.getElementById("characterSelect");
 
-  if (index === "" || !profiles[index]) {
-    document.getElementById("output").innerText = "No character selected.";
+  if (profiles.length === 0) {
+    document.getElementById("output").innerText = "No character available.";
     return;
   }
 
-  const selected = profiles[index];
+  const selected = profiles[select.selectedIndex];
 
   const base = `
 ${selected.name}, ${selected.age} year old ${selected.gender},
@@ -168,12 +167,11 @@ cinematic movement, dramatic lighting`;
   document.getElementById("output").innerText = result;
 }
 
-/* expose functions */
 window.saveCharacter = saveCharacter;
 window.deleteCharacter = deleteCharacter;
 window.generate = generate;
 
-/* 🔥 IMPORTANT — load data immediately */
+/* 🔥 CRITICAL: Always load dropdown on page load */
 refreshDropdown();
 
 });
