@@ -5,7 +5,7 @@
   <style>
     body { font-family: Arial; max-width: 900px; margin: auto; padding: 30px; }
     input, textarea, select { width: 100%; margin: 8px 0; padding: 8px; }
-    button { padding: 10px 15px; margin-top: 10px; }
+    button { padding: 10px 15px; margin-top: 10px; margin-right: 5px; }
     #output { white-space: pre-wrap; background: #f4f4f4; padding: 15px; margin-top: 20px; }
     .section { margin-bottom: 40px; }
   </style>
@@ -15,34 +15,63 @@
 <h2>🧠 AI Character Consistency Tool</h2>
 
 <div class="section">
-  <h3>🔐 CHARACTER LOCK PROFILE</h3>
+  <h3>🔐 Create Character</h3>
   <input id="name" placeholder="Character Name">
   <input id="age" placeholder="Age">
   <input id="gender" placeholder="Gender">
   <input id="face" placeholder="Face Description">
   <input id="hair" placeholder="Hair Description">
   <input id="outfit" placeholder="Default Outfit">
-  <input id="style" placeholder="Visual Style (Cinematic, Anime, Realistic...)">
-  <button onclick="saveCharacter()">Lock Character</button>
+  <input id="style" placeholder="Visual Style">
+  <button onclick="saveCharacter()">Save Character</button>
 </div>
 
 <div class="section">
-  <h3>🎛 MODE SELECTOR</h3>
+  <h3>🧬 Select Character</h3>
+  <select id="characterSelect"></select>
+  <button onclick="deleteCharacter()">Delete</button>
+</div>
+
+<div class="section">
+  <h3>🎛 Mode</h3>
   <select id="mode">
-    <option value="image">AI Image Prompt</option>
-    <option value="video">AI Video Prompt</option>
-    <option value="story">Story Writing</option>
-    <option value="chat">Character Dialogue</option>
+    <option value="image">AI Image</option>
+    <option value="video">AI Video</option>
+    <option value="story">Story</option>
+    <option value="chat">Dialogue</option>
   </select>
 
-  <textarea id="scene" placeholder="Describe scene / situation..."></textarea>
+  <textarea id="scene" placeholder="Describe scene..."></textarea>
   <button onclick="generate()">Generate</button>
 </div>
 
 <div id="output"></div>
 
 <script>
+function getProfiles() {
+  return JSON.parse(localStorage.getItem("characterProfiles")) || [];
+}
+
+function saveProfiles(profiles) {
+  localStorage.setItem("characterProfiles", JSON.stringify(profiles));
+}
+
+function refreshDropdown() {
+  const select = document.getElementById("characterSelect");
+  select.innerHTML = "";
+
+  const profiles = getProfiles();
+  profiles.forEach((p, index) => {
+    const option = document.createElement("option");
+    option.value = index;
+    option.textContent = p.name;
+    select.appendChild(option);
+  });
+}
+
 function saveCharacter() {
+  const profiles = getProfiles();
+
   const profile = {
     name: name.value,
     age: age.value,
@@ -53,57 +82,68 @@ function saveCharacter() {
     style: style.value
   };
 
-  localStorage.setItem("characterProfile", JSON.stringify(profile));
-  alert("Character Locked Successfully!");
+  profiles.push(profile);
+  saveProfiles(profiles);
+  refreshDropdown();
+  alert("Character Saved!");
+}
+
+function deleteCharacter() {
+  const profiles = getProfiles();
+  const index = characterSelect.value;
+
+  profiles.splice(index, 1);
+  saveProfiles(profiles);
+  refreshDropdown();
 }
 
 function generate() {
-  const profile = JSON.parse(localStorage.getItem("characterProfile"));
-  if (!profile) {
-    output.innerText = "No character locked yet.";
+  const profiles = getProfiles();
+  const selected = profiles[characterSelect.value];
+
+  if (!selected) {
+    output.innerText = "No character selected.";
     return;
   }
 
-  const sceneInput = scene.value;
-  const mode = document.getElementById("mode").value;
-
-  let baseCharacter = `
-${profile.name}, ${profile.age} year old ${profile.gender},
-${profile.face},
-${profile.hair},
-wearing ${profile.outfit},
-${profile.style} style,
+  const base = `
+${selected.name}, ${selected.age} year old ${selected.gender},
+${selected.face},
+${selected.hair},
+wearing ${selected.outfit},
+${selected.style} style,
 consistent facial structure
 `;
+
+  const sceneInput = scene.value;
+  const mode = modeSelect = document.getElementById("mode").value;
 
   let result = "";
 
   if (mode === "image") {
-    result = baseCharacter + `,
+    result = base + `,
 ${sceneInput},
-ultra detailed, 8k, professional lighting`;
+ultra detailed, 8k`;
   }
 
   if (mode === "video") {
-    result = baseCharacter + `,
+    result = base + `,
 ${sceneInput},
-cinematic camera movement, dynamic lighting, high realism`;
+cinematic movement, dramatic lighting`;
   }
 
   if (mode === "story") {
-    result = `Write a detailed story about:
-${baseCharacter}
-Scene: ${sceneInput}`;
+    result = `Write a detailed story about:\n${base}\nScene: ${sceneInput}`;
   }
 
   if (mode === "chat") {
-    result = `You are roleplaying as:
-${baseCharacter}
-Situation: ${sceneInput}`;
+    result = `You are roleplaying as:\n${base}\nSituation: ${sceneInput}`;
   }
 
   output.innerText = result;
 }
+
+refreshDropdown();
 </script>
 
 </body>
