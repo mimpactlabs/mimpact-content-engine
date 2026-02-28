@@ -1,38 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AI Character Continuity Engine</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
+  <title>AI Character Consistency Tool</title>
+  <style>
+    body { font-family: Arial; max-width: 900px; margin: auto; padding: 30px; }
+    input, textarea, select { width: 100%; margin: 8px 0; padding: 8px; }
+    button { padding: 10px 15px; margin-top: 10px; }
+    #output { white-space: pre-wrap; background: #f4f4f4; padding: 15px; margin-top: 20px; }
+    .section { margin-bottom: 40px; }
+  </style>
 </head>
 <body>
 
-<section class="hero">
-  <h1>AI Character Continuity Engine</h1>
-  <p>Buat Karakter AI Konsisten untuk Konten Affiliate & Story Series</p>
-  <a href="demo.html" class="btn">Coba Demo Gratis (3x Generate)</a>
-</section>
+<h2>🧠 AI Character Consistency Tool</h2>
 
-<section class="problem">
-  <h2>Masalah Generative AI</h2>
-  <ul>
-    <li>Wajah berubah tiap scene</li>
-    <li>Rambut tidak konsisten</li>
-    <li>Karakter terlihat seperti orang berbeda</li>
-  </ul>
-</section>
+<div class="section">
+  <h3>🔐 CHARACTER LOCK PROFILE</h3>
+  <input id="name" placeholder="Character Name">
+  <input id="age" placeholder="Age">
+  <input id="gender" placeholder="Gender">
+  <input id="face" placeholder="Face Description">
+  <input id="hair" placeholder="Hair Description">
+  <input id="outfit" placeholder="Default Outfit">
+  <input id="style" placeholder="Visual Style (Cinematic, Anime, Realistic...)">
+  <button onclick="saveCharacter()">Lock Character</button>
+</div>
 
-<section class="solution">
-  <h2>Solusi Kami</h2>
-  <p>
-    Sistem DNA Karakter + Scene Builder + Continuity Lock.
-    Cocok untuk kreator affiliate yang ingin membuat story berkelanjutan.
-  </p>
-</section>
+<div class="section">
+  <h3>🎛 MODE SELECTOR</h3>
+  <select id="mode">
+    <option value="image">AI Image Prompt</option>
+    <option value="video">AI Video Prompt</option>
+    <option value="story">Story Writing</option>
+    <option value="chat">Character Dialogue</option>
+  </select>
 
-<section class="cta">
-  <a href="demo.html" class="btn">Mulai Sekarang</a>
-</section>
+  <textarea id="scene" placeholder="Describe scene / situation..."></textarea>
+  <button onclick="generate()">Generate</button>
+</div>
+
+<div id="output"></div>
+
+<script>
+function saveCharacter() {
+  const profile = {
+    name: name.value,
+    age: age.value,
+    gender: gender.value,
+    face: face.value,
+    hair: hair.value,
+    outfit: outfit.value,
+    style: style.value
+  };
+
+  localStorage.setItem("characterProfile", JSON.stringify(profile));
+  alert("Character Locked Successfully!");
+}
+
+function generate() {
+  const profile = JSON.parse(localStorage.getItem("characterProfile"));
+  if (!profile) {
+    output.innerText = "No character locked yet.";
+    return;
+  }
+
+  const sceneInput = scene.value;
+  const mode = document.getElementById("mode").value;
+
+  let baseCharacter = `
+${profile.name}, ${profile.age} year old ${profile.gender},
+${profile.face},
+${profile.hair},
+wearing ${profile.outfit},
+${profile.style} style,
+consistent facial structure
+`;
+
+  let result = "";
+
+  if (mode === "image") {
+    result = baseCharacter + `,
+${sceneInput},
+ultra detailed, 8k, professional lighting`;
+  }
+
+  if (mode === "video") {
+    result = baseCharacter + `,
+${sceneInput},
+cinematic camera movement, dynamic lighting, high realism`;
+  }
+
+  if (mode === "story") {
+    result = `Write a detailed story about:
+${baseCharacter}
+Scene: ${sceneInput}`;
+  }
+
+  if (mode === "chat") {
+    result = `You are roleplaying as:
+${baseCharacter}
+Situation: ${sceneInput}`;
+  }
+
+  output.innerText = result;
+}
+</script>
 
 </body>
 </html>
