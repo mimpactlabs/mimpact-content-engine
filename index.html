@@ -65,12 +65,23 @@ function refreshDropdown() {
   select.innerHTML = "";
   const profiles = getProfiles();
 
+  if (profiles.length === 0) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "No characters saved";
+    select.appendChild(option);
+    return;
+  }
+
   profiles.forEach((p, index) => {
     const option = document.createElement("option");
     option.value = index;
-    option.textContent = (p.age || "") + " - " + (p.gender || "");
+    option.textContent = p.name + " (" + p.age + " - " + p.gender + ")";
     select.appendChild(option);
   });
+
+  // Auto select first character
+  select.selectedIndex = 0;
 }
 
 function saveCharacter() {
@@ -86,6 +97,11 @@ function saveCharacter() {
     style: document.getElementById("style").value
   };
 
+  if (!profile.name) {
+    alert("Name is required!");
+    return;
+  }
+
   profiles.push(profile);
   saveProfiles(profiles);
   refreshDropdown();
@@ -97,7 +113,7 @@ function deleteCharacter() {
   const select = document.getElementById("characterSelect");
   const index = select.value;
 
-  if (index === "") return;
+  if (index === "" || profiles.length === 0) return;
 
   profiles.splice(index, 1);
   saveProfiles(profiles);
@@ -107,12 +123,13 @@ function deleteCharacter() {
 function generate() {
   const profiles = getProfiles();
   const index = document.getElementById("characterSelect").value;
-  const selected = profiles[index];
 
-  if (!selected) {
+  if (index === "" || !profiles[index]) {
     document.getElementById("output").innerText = "No character selected.";
     return;
   }
+
+  const selected = profiles[index];
 
   const base = `
 ${selected.name}, ${selected.age} year old ${selected.gender},
@@ -151,11 +168,12 @@ cinematic movement, dramatic lighting`;
   document.getElementById("output").innerText = result;
 }
 
-/* 🔥 CRITICAL PART — expose functions to HTML buttons */
+/* expose functions */
 window.saveCharacter = saveCharacter;
 window.deleteCharacter = deleteCharacter;
 window.generate = generate;
 
+/* 🔥 IMPORTANT — load data immediately */
 refreshDropdown();
 
 });
