@@ -93,8 +93,18 @@ function saveCharacter() {
 }
 
 window.saveCharacter = saveCharacter;
+window.deleteCharacter = deleteCharacter;
 
-refreshDropdown();
+function deleteCharacter() {
+  const profiles = getProfiles();
+  const index = document.getElementById("characterSelect").value;
+
+  if (index === "") return;
+
+  profiles.splice(index, 1);
+  saveProfiles(profiles);
+  refreshDropdown();
+}
 
 });
 </script>
