@@ -130,15 +130,18 @@ function generate() {
   const profiles = getProfiles();
   const select = document.getElementById("characterSelect");
 
-  if (profiles.length === 0) {
+  if (!profiles.length) {
     document.getElementById("output").innerText = "No character available.";
     return;
   }
 
   const selected = profiles[select.selectedIndex];
 
-  const outfitLock = document.getElementById("outfitLock").checked;
-  const outfitVariation = document.getElementById("outfitVariation").value;
+  const outfitLockEl = document.getElementById("outfitLock");
+  const variationEl = document.getElementById("outfitVariation");
+
+  const outfitLock = outfitLockEl ? outfitLockEl.checked : false;
+  const outfitVariation = variationEl ? variationEl.value : "";
 
   let outfitText = selected.outfit;
 
@@ -149,36 +152,32 @@ function generate() {
       ", maintain core outfit identity, do not change character style base";
   }
 
-  let base =
-    selected.name + ", " + selected.age + " year old " + selected.gender + ",\n" +
+  var base =
+    selected.name + ", " +
+    selected.age + " year old " +
+    selected.gender + ",\n" +
     selected.face + ",\n" +
     selected.hair + ",\n" +
     "wearing " + outfitText + ",\n" +
     selected.style + " style,\n" +
     "consistent facial structure\n";
 
-  const sceneInput = document.getElementById("scene").value;
-  const mode = document.getElementById("mode").value;
-
-  let result = "";
+  var sceneInput = document.getElementById("scene").value;
+  var mode = document.getElementById("mode").value;
+  var result = "";
 
   if (mode === "image") {
     result = base + "\n" + sceneInput + ", ultra detailed, 8k";
-  }
-
-  if (mode === "video") {
+  } else if (mode === "video") {
     result = base + "\n" + sceneInput + ", cinematic movement, dramatic lighting";
-  }
-
-  if (mode === "story") {
+  } else if (mode === "story") {
     result = "Write a detailed story about:\n" + base + "\nScene: " + sceneInput;
-  }
-
-  if (mode === "chat") {
+  } else if (mode === "chat") {
     result = "You are roleplaying as:\n" + base + "\nSituation: " + sceneInput;
   }
 
   document.getElementById("output").innerText = result;
+
 }
 
 window.saveCharacter = saveCharacter;
