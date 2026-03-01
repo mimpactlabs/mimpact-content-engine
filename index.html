@@ -1,101 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>AI Character Consistency Tool</title>
-  <style>
-    body { font-family: Arial; max-width: 900px; margin: auto; padding: 30px; }
-    input, textarea, select { width: 100%; margin: 8px 0; padding: 8px; }
-    button { padding: 10px 15px; margin-top: 10px; margin-right: 5px; }
-    #output { white-space: pre-wrap; background: #f4f4f4; padding: 15px; margin-top: 20px; }
-    .section { margin-bottom: 40px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mimpact Content Engine</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: #fff;
+  padding: 20px;
+}
+
+input, textarea, select, button {
+  width: 100%;
+  margin: 5px 0 15px 0;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+}
+
+button {
+  background: #00c3ff;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+#output {
+  white-space: pre-wrap;
+  background: #222;
+  padding: 15px;
+  border-radius: 5px;
+}
+</style>
 </head>
+
 <body>
 
-<h2>🧠 AI Character Consistency Tool</h2>
+<h2>🧠 Alat Konsistensi Karakter AI</h2>
 
-<div class="section">
-  <h3>🔐 Create Character</h3>
-  <input id="name" placeholder="Character Name">
-  <input id="age" placeholder="Age">
-  <input id="gender" placeholder="Gender">
-  <input id="face" placeholder="Face Description">
-  <input id="hair" placeholder="Hair Description">
-  <input id="outfit" placeholder="Default Outfit">
-  <input id="style" placeholder="Visual Style">
-  <button onclick="saveCharacter()">Save Character</button>
-</div>
+<h3>🔐 Buat Karakter</h3>
 
-<div class="section">
-  <h3>🧬 Select Character</h3>
-  <select id="characterSelect"></select>
-  <button onclick="deleteCharacter()">Delete</button>
-</div>
+<input id="name" placeholder="Nama Karakter">
+<input id="age" placeholder="Usia">
+<input id="gender" placeholder="Jenis Kelamin">
+<input id="face" placeholder="Deskripsi Wajah">
+<input id="hair" placeholder="Deskripsi Rambut">
+<input id="outfit" placeholder="Pakaian Standar">
+<input id="style" placeholder="Gaya Visual">
 
-<div class="section">
-  <h3>🎛 Mode</h3>
-  <select id="mode">
-    <option value="image">AI Image</option>
-    <option value="video">AI Video</option>
-    <option value="story">Story</option>
-    <option value="chat">Dialogue</option>
-  </select>
+<button onclick="saveCharacter()">Simpan Karakter</button>
 
-  <textarea id="scene" placeholder="Describe scene..."></textarea>
+<h3>🧬 Pilih Karakter</h3>
+<select id="characterSelect"></select>
+<button onclick="deleteCharacter()">Hapus Karakter</button>
+
 <hr>
+
+<h3>🎛 Mode</h3>
+<select id="mode">
+  <option value="image">Gambar AI</option>
+  <option value="video">Video AI</option>
+  <option value="story">Story</option>
+  <option value="chat">Dialogue</option>
+</select>
+
+<textarea id="scene" placeholder="Tulis adegan di sini..."></textarea>
 
 <label>
   <input type="checkbox" id="outfitLock">
-  Enable Outfit Variation
+  Aktifkan Variasi Pakaian
 </label>
 
-<input id="outfitVariation" placeholder="Outfit variation (e.g. black hoodie version, add denim jacket, night version)">
-  <button onclick="generate()">Generate</button>
-</div>
+<input id="outfitVariation" placeholder="Contoh: versi hoodie hitam, tambah jaket denim, versi malam">
 
+<button onclick="generate()">Menghasilkan</button>
+
+<h3>📦 Output</h3>
 <div id="output"></div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
 
-function getProfiles() {
-  const data = localStorage.getItem("characterProfiles");
-  return data ? JSON.parse(data) : [];
-}
-
-function saveProfiles(profiles) {
-  localStorage.setItem("characterProfiles", JSON.stringify(profiles));
-}
+let selectedCharacter = "";
+let characters = JSON.parse(localStorage.getItem("characters")) || [];
 
 function refreshDropdown() {
   const select = document.getElementById("characterSelect");
-  const profiles = getProfiles();
-
   select.innerHTML = "";
 
-  if (profiles.length === 0) {
-    const option = document.createElement("option");
-    option.value = "";
-    option.textContent = "No characters saved";
-    select.appendChild(option);
-    return;
-  }
-
-  profiles.forEach((p, index) => {
-    const option = document.createElement("option");
+  characters.forEach((char, index) => {
+    let option = document.createElement("option");
     option.value = index;
-    option.textContent = p.name + " (" + p.age + " - " + p.gender + ")";
+    option.text = char.name + " (" + char.age + " - " + char.gender + ")";
     select.appendChild(option);
   });
 
-  // Auto select first item
-  select.selectedIndex = 0;
+  if (characters.length > 0) {
+    loadCharacter(0);
+  }
 }
 
 function saveCharacter() {
-  const profiles = getProfiles();
-
-  const profile = {
+  let char = {
     name: document.getElementById("name").value,
     age: document.getElementById("age").value,
     gender: document.getElementById("gender").value,
@@ -105,100 +117,87 @@ function saveCharacter() {
     style: document.getElementById("style").value
   };
 
-  if (!profile.name) {
-    alert("Name is required!");
-    return;
-  }
-
-  profiles.push(profile);
-  saveProfiles(profiles);
+  characters.push(char);
+  localStorage.setItem("characters", JSON.stringify(characters));
   refreshDropdown();
-  alert("Character Saved!");
+}
+
+function loadCharacter(index) {
+  let char = characters[index];
+
+  selectedCharacter =
+    char.name + ", " +
+    char.gender + " berusia " + char.age + " tahun, " +
+    char.face + ", " +
+    char.hair + ", " +
+    char.outfit + ", " +
+    char.style;
 }
 
 function deleteCharacter() {
-  const profiles = getProfiles();
-  const select = document.getElementById("characterSelect");
-
-  if (profiles.length === 0) return;
-
-  profiles.splice(select.selectedIndex, 1);
-  saveProfiles(profiles);
+  let select = document.getElementById("characterSelect");
+  characters.splice(select.value, 1);
+  localStorage.setItem("characters", JSON.stringify(characters));
   refreshDropdown();
 }
 
-function generate() {
-  const profiles = getProfiles();
-  const select = document.getElementById("characterSelect");
+document.getElementById("characterSelect").addEventListener("change", function() {
+  loadCharacter(this.value);
+});
 
-  if (!profiles.length) {
-    document.getElementById("output").innerText = "No character available.";
+function generate() {
+
+  let sceneInput = document.getElementById("scene").value;
+  let mode = document.getElementById("mode").value;
+  let output = document.getElementById("output");
+
+  if (!sceneInput.trim()) {
+    output.innerText = "Masukkan adegan terlebih dahulu.";
     return;
   }
 
-  const selected = profiles[select.selectedIndex];
-
-  const outfitLockEl = document.getElementById("outfitLock");
-  const variationEl = document.getElementById("outfitVariation");
-
-  const outfitLock = outfitLockEl ? outfitLockEl.checked : false;
-  const outfitVariation = variationEl ? variationEl.value : "";
-
-  let outfitText = selected.outfit;
-
-  if (outfitLock && outfitVariation.trim() !== "") {
-    outfitText =
-      selected.outfit +
-      ", Variation: " + outfitVariation +
-      ", maintain core outfit identity, do not change character style base";
-  }
-
-  var base =
-    selected.name + ", " +
-    selected.age + " year old " +
-    selected.gender + ",\n" +
-    selected.face + ",\n" +
-    selected.hair + ",\n" +
-    "wearing " + outfitText + ",\n" +
-    selected.style + " style,\n" +
-    "fixed character identity, same face across all scenes\n";
-
-  var sceneInput = document.getElementById("scene").value;
-  var mode = document.getElementById("mode").value;
-  var result = "";
-
-if (mode === "image") {
+  let outfitLock = document.getElementById("outfitLock").checked;
+  let outfitVariation = document.getElementById("outfitVariation").value;
 
   let consistency =
-    "same person, same character, identical face, identical bone structure, " +
-    "same age, do not modify facial features, preserve identity, " +
-    "maintain core outfit identity, highly consistent character design";
+    "same person, identical face, same bone structure, same age, " +
+    "do not modify facial features, preserve identity";
 
-  result =
-    base + "\n" +
-    sceneInput + ", ultra detailed, 8k, " +
-    consistency;
-}
-  } else if (mode === "video") {
-    result = base + "\n" + sceneInput + ", cinematic movement, dramatic lighting";
-  } else if (mode === "story") {
-    result = "Write a detailed story about:\n" + base + "\nScene: " + sceneInput;
-  } else if (mode === "chat") {
-    result = "You are roleplaying as:\n" + base + "\nSituation: " + sceneInput;
+  if (outfitLock && outfitVariation.trim()) {
+    consistency += ", keep core outfit identity but " + outfitVariation;
+  } else {
+    consistency += ", maintain core outfit identity";
   }
 
-  document.getElementById("output").innerText = result;
+  let result = "";
 
+  if (mode === "image") {
+    result =
+      selectedCharacter + "\n\n" +
+      sceneInput + ", ultra detailed, 8k, " +
+      consistency;
+
+  } else if (mode === "video") {
+    result =
+      selectedCharacter + "\n\n" +
+      sceneInput + ", cinematic movement, dramatic lighting";
+
+  } else if (mode === "story") {
+    result =
+      "Write a detailed story about:\n" +
+      selectedCharacter + "\nScene: " + sceneInput;
+
+  } else if (mode === "chat") {
+    result =
+      "You are roleplaying as:\n" +
+      selectedCharacter + "\nSituation: " + sceneInput;
+  }
+
+  output.innerText = result;
 }
 
-window.saveCharacter = saveCharacter;
-window.deleteCharacter = deleteCharacter;
-window.generate = generate;
-
-/* 🔥 CRITICAL: Always load dropdown on page load */
 refreshDropdown();
 
-});
 </script>
 
 </body>
