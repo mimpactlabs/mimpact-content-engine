@@ -161,17 +161,24 @@ function generate() {
     selected.hair + ",\n" +
     "wearing " + outfitText + ",\n" +
     selected.style + " style,\n" +
-    "consistent facial structure\n";
+    "fixed character identity, same face across all scenes\n";
 
   var sceneInput = document.getElementById("scene").value;
   var mode = document.getElementById("mode").value;
   var result = "";
 
 if (mode === "image") {
-  result = base + "\n" +
-           sceneInput + ", ultra detailed, 8k, " +
-           "consistent face structure, same identity, same age, " +
-           "do not change facial features, maintain core outfit identity";
+
+  let consistency =
+    "same person, same character, identical face, identical bone structure, " +
+    "same age, do not modify facial features, preserve identity, " +
+    "maintain core outfit identity, highly consistent character design";
+
+  result =
+    base + "\n" +
+    sceneInput + ", ultra detailed, 8k, " +
+    consistency;
+}
   } else if (mode === "video") {
     result = base + "\n" + sceneInput + ", cinematic movement, dramatic lighting";
   } else if (mode === "story") {
