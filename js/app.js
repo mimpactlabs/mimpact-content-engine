@@ -1,4 +1,4 @@
-function generatePrompt() {
+function generate() {
   const input = document.getElementById("inputText").value;
   const output = document.getElementById("outputBox");
 
