@@ -44,7 +44,22 @@
   <textarea id="scene" placeholder="Describe scene..."></textarea>
   <hr>
 <label>
-  <input type="checkbox" id="outfitLock">
+  if (mode === "image") {
+
+  var lockVariation = document.getElementById("lockVariation");
+
+  var consistencyRules =
+      "consistent face structure, same identity, same age, " +
+      "do not change facial features, maintain core outfit identity";
+
+  if (lockVariation && lockVariation.checked) {
+      consistencyRules += ", allow outfit variation but keep core style";
+  }
+
+  result = base + "\n" +
+           sceneInput + ", ultra detailed, 8k, " +
+           consistencyRules;
+}
   Enable Outfit Variation Lock
 </label>
 
@@ -166,8 +181,11 @@ function generate() {
   var mode = document.getElementById("mode").value;
   var result = "";
 
-  if (mode === "image") {
-    result = base + "\n" + sceneInput + ", ultra detailed, 8k";
+if (mode === "image") {
+  result = base + "\n" +
+           sceneInput + ", ultra detailed, 8k, " +
+           "consistent face structure, same identity, same age, " +
+           "do not change facial features, maintain core outfit identity";
   } else if (mode === "video") {
     result = base + "\n" + sceneInput + ", cinematic movement, dramatic lighting";
   } else if (mode === "story") {
