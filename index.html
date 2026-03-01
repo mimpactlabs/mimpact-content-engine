@@ -3,120 +3,221 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mimpact Content Engine</title>
+<title>Mimpact Labs – AI Character Consistency Engine</title>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: #111;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f14;
   color: #fff;
-  padding: 20px;
+  line-height: 1.6;
 }
 
-input, textarea, select, button {
-  width: 100%;
-  margin: 5px 0 15px 0;
-  padding: 8px;
-  border-radius: 5px;
-  border: none;
+section {
+  padding: 80px 20px;
+  max-width: 1100px;
+  margin: auto;
 }
 
-button {
+h1 {
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+p {
+  color: #aaa;
+}
+
+.hero {
+  text-align: center;
+  padding-top: 120px;
+}
+
+.hero button {
+  margin-top: 30px;
+  padding: 14px 28px;
   background: #00c3ff;
-  color: black;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
 }
 
-button:hover {
-  opacity: 0.8;
+.hero button:hover {
+  opacity: 0.85;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.feature-box {
+  background: #1a1a22;
+  padding: 25px;
+  border-radius: 12px;
+}
+
+.tool {
+  background: #15151c;
+  padding: 60px 20px;
+  border-top: 1px solid #222;
+}
+
+input, textarea, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: none;
+}
+
+textarea {
+  min-height: 100px;
+}
+
+button.generate {
+  background: #00ff9d;
+  font-weight: bold;
 }
 
 #output {
-  white-space: pre-wrap;
   background: #222;
-  padding: 15px;
-  border-radius: 5px;
+  padding: 20px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  margin-top: 20px;
+}
+
+footer {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  border-top: 1px solid #222;
 }
 </style>
 </head>
 
 <body>
 
-<h2>🧠 Alat Konsistensi Karakter AI</h2>
+<!-- HERO -->
+<section class="hero">
+  <h1>🧠 AI Character Consistency Engine</h1>
+  <p>Buat dan pertahankan karakter AI yang konsisten untuk gambar, video, cerita, dan dialog.</p>
+  <button onclick="document.getElementById('toolSection').scrollIntoView({behavior:'smooth'})">
+    🚀 Coba Sekarang
+  </button>
+</section>
 
-<h3>🔐 Buat Karakter</h3>
+<!-- FEATURES -->
+<section>
+  <h2>Kenapa Menggunakan Engine Ini?</h2>
 
-<input id="name" placeholder="Nama Karakter">
-<input id="age" placeholder="Usia">
-<input id="gender" placeholder="Jenis Kelamin">
-<input id="face" placeholder="Deskripsi Wajah">
-<input id="hair" placeholder="Deskripsi Rambut">
-<input id="outfit" placeholder="Pakaian Standar">
-<input id="style" placeholder="Gaya Visual">
+  <div class="features">
+    <div class="feature-box">
+      <h3>🔒 Face Lock System</h3>
+      <p>Menjaga wajah tetap identik meskipun adegan berubah.</p>
+    </div>
 
-<button onclick="saveCharacter()">Simpan Karakter</button>
+    <div class="feature-box">
+      <h3>🎭 Outfit Variation</h3>
+      <p>Variasi pakaian tanpa merusak identitas karakter.</p>
+    </div>
 
-<h3>🧬 Pilih Karakter</h3>
-<select id="characterSelect"></select>
-<button onclick="deleteCharacter()">Hapus Karakter</button>
+    <div class="feature-box">
+      <h3>🎬 Multi Mode</h3>
+      <p>Support Image, Video Prompt, Story, dan Roleplay Chat.</p>
+    </div>
 
-<hr>
+    <div class="feature-box">
+      <h3>⚡ Instan & Tanpa Login</h3>
+      <p>Langsung pakai. Semua data tersimpan di browser Anda.</p>
+    </div>
+  </div>
+</section>
 
-<h3>🎛 Mode</h3>
-<select id="mode">
-  <option value="image">Gambar AI</option>
-  <option value="video">Video AI</option>
-  <option value="story">Story</option>
-  <option value="chat">Dialogue</option>
-</select>
+<!-- TOOL -->
+<section class="tool" id="toolSection">
+  <h2>🛠 Buat Karakter</h2>
 
-<textarea id="scene" placeholder="Tulis adegan di sini..."></textarea>
+  <input id="name" placeholder="Nama Karakter">
+  <input id="age" placeholder="Usia">
+  <input id="gender" placeholder="Jenis Kelamin">
+  <input id="face" placeholder="Deskripsi Wajah">
+  <input id="hair" placeholder="Deskripsi Rambut">
+  <input id="outfit" placeholder="Pakaian Standar">
+  <input id="style" placeholder="Gaya Visual">
 
-<label>
-  <input type="checkbox" id="outfitLock">
-  Aktifkan Variasi Pakaian
-</label>
+  <button onclick="saveCharacter()">Simpan Karakter</button>
 
-<input id="outfitVariation" placeholder="Contoh: versi hoodie hitam, tambah jaket denim, versi malam">
+  <h3>🧬 Pilih Karakter</h3>
+  <select id="characterSelect"></select>
+  <button onclick="deleteCharacter()">Hapus Karakter</button>
 
-<button onclick="generate()">Menghasilkan</button>
+  <h3>🎛 Mode</h3>
+  <select id="mode">
+    <option value="image">Gambar AI</option>
+    <option value="video">Video AI</option>
+    <option value="story">Story</option>
+    <option value="chat">Dialogue</option>
+  </select>
 
-<h3>📦 Output</h3>
-<div id="output"></div>
+  <textarea id="scene" placeholder="Tulis adegan di sini..."></textarea>
+
+  <label>
+    <input type="checkbox" id="outfitLock"> Aktifkan Variasi Pakaian
+  </label>
+
+  <input id="outfitVariation" placeholder="Detail variasi pakaian">
+
+  <button class="generate" onclick="generate()">✨ Generate Prompt</button>
+
+  <div id="output"></div>
+</section>
+
+<footer>
+  © 2026 Mimpact Labs – AI Character Engine
+</footer>
 
 <script>
-
 let selectedCharacter = "";
 let characters = JSON.parse(localStorage.getItem("characters")) || [];
 
 function refreshDropdown() {
   const select = document.getElementById("characterSelect");
   select.innerHTML = "";
-
   characters.forEach((char, index) => {
     let option = document.createElement("option");
     option.value = index;
     option.text = char.name + " (" + char.age + " - " + char.gender + ")";
     select.appendChild(option);
   });
-
-  if (characters.length > 0) {
-    loadCharacter(0);
-  }
+  if (characters.length > 0) loadCharacter(0);
 }
 
 function saveCharacter() {
   let char = {
-    name: document.getElementById("name").value,
-    age: document.getElementById("age").value,
-    gender: document.getElementById("gender").value,
-    face: document.getElementById("face").value,
-    hair: document.getElementById("hair").value,
-    outfit: document.getElementById("outfit").value,
-    style: document.getElementById("style").value
+    name: name.value,
+    age: age.value,
+    gender: gender.value,
+    face: face.value,
+    hair: hair.value,
+    outfit: outfit.value,
+    style: style.value
   };
-
   characters.push(char);
   localStorage.setItem("characters", JSON.stringify(characters));
   refreshDropdown();
@@ -124,87 +225,48 @@ function saveCharacter() {
 
 function loadCharacter(index) {
   let char = characters[index];
-
   selectedCharacter =
     char.name + ", " +
     char.gender + " berusia " + char.age + " tahun, " +
     char.face + ", " +
-    char.hair + ", " +
-    char.outfit + ", " +
+    char.hair + ", mengenakan " +
+    char.outfit + ", gaya " +
     char.style;
 }
 
 function deleteCharacter() {
-  let select = document.getElementById("characterSelect");
-  characters.splice(select.value, 1);
+  characters.splice(characterSelect.value, 1);
   localStorage.setItem("characters", JSON.stringify(characters));
   refreshDropdown();
 }
 
-document.getElementById("characterSelect").addEventListener("change", function() {
+characterSelect.addEventListener("change", function() {
   loadCharacter(this.value);
 });
 
 function generate() {
-
-  let sceneInput = document.getElementById("scene").value;
-  let mode = document.getElementById("mode").value;
-  let output = document.getElementById("output");
-
+  let sceneInput = scene.value;
   if (!sceneInput.trim()) {
     output.innerText = "Masukkan adegan terlebih dahulu.";
     return;
   }
 
-  let outfitLock = document.getElementById("outfitLock").checked;
-  let outfitVariation = document.getElementById("outfitVariation").value;
-
   let consistency =
-    "same person, identical face, same bone structure, same age, " +
-    "do not modify facial features, preserve identity";
+    "same person, identical face, same bone structure, same age, preserve identity";
 
-  if (outfitLock && outfitVariation.trim()) {
-
-  // cegah variasi sama persis dengan outfit utama
-  if (!selectedCharacter.includes(outfitVariation)) {
-    consistency += ", keep core outfit identity, outfit variation: " + outfitVariation;
+  if (outfitLock.checked && outfitVariation.value.trim()) {
+    consistency += ", outfit variation: " + outfitVariation.value;
   } else {
     consistency += ", maintain core outfit identity";
   }
 
-} else {
-  consistency += ", maintain core outfit identity";
-}
-
-  let result = "";
-
-  if (mode === "image") {
-    result =
-      selectedCharacter + "\n\n" +
-      sceneInput + ", ultra detailed, 8k, " +
-      consistency;
-
-  } else if (mode === "video") {
-    result =
-      selectedCharacter + "\n\n" +
-      sceneInput + ", cinematic movement, dramatic lighting";
-
-  } else if (mode === "story") {
-    result =
-      "Write a detailed story about:\n" +
-      selectedCharacter + "\nScene: " + sceneInput;
-
-  } else if (mode === "chat") {
-    result =
-      "You are roleplaying as:\n" +
-      selectedCharacter + "\nSituation: " + sceneInput;
-  }
-
-  output.innerText = result;
+  output.innerText =
+    selectedCharacter + "\n\n" +
+    sceneInput + ", ultra detailed, 8k, " +
+    consistency;
 }
 
 refreshDropdown();
-
 </script>
 
 </body>
