@@ -164,10 +164,17 @@ function generate() {
     "do not modify facial features, preserve identity";
 
   if (outfitLock && outfitVariation.trim()) {
-    consistency += ", keep core outfit identity but " + outfitVariation;
+
+  // cegah variasi sama persis dengan outfit utama
+  if (!selectedCharacter.includes(outfitVariation)) {
+    consistency += ", keep core outfit identity, outfit variation: " + outfitVariation;
   } else {
     consistency += ", maintain core outfit identity";
   }
+
+} else {
+  consistency += ", maintain core outfit identity";
+}
 
   let result = "";
 
