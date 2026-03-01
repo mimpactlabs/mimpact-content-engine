@@ -42,25 +42,11 @@
   </select>
 
   <textarea id="scene" placeholder="Describe scene..."></textarea>
-  <hr>
+<hr>
+
 <label>
-  if (mode === "image") {
-
-  var lockVariation = document.getElementById("lockVariation");
-
-  var consistencyRules =
-      "consistent face structure, same identity, same age, " +
-      "do not change facial features, maintain core outfit identity";
-
-  if (lockVariation && lockVariation.checked) {
-      consistencyRules += ", allow outfit variation but keep core style";
-  }
-
-  result = base + "\n" +
-           sceneInput + ", ultra detailed, 8k, " +
-           consistencyRules;
-}
-  Enable Outfit Variation Lock
+  <input type="checkbox" id="outfitLock">
+  Enable Outfit Variation
 </label>
 
 <input id="outfitVariation" placeholder="Outfit variation (e.g. black hoodie version, add denim jacket, night version)">
