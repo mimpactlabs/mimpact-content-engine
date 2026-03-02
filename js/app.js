@@ -25,10 +25,10 @@ function generate() {
   const character = appState.activeCharacter;
 
   const finalPrompt =
-    input +
-    " | Character: " + character.name +
+    "Character: " + character.name +
     " | Emotion: " + character.emotion +
-    " | Model: " + character.model;
+    " | Model: " + character.model +
+    " | Topic: " + input;
 
   output.innerText = finalPrompt;
 }
