@@ -252,7 +252,12 @@ function saveCharacter() {
     face: document.getElementById("face").value.trim(),
     hair: document.getElementById("hair").value.trim(),
     outfit: document.getElementById("outfit").value.trim(),
-    style: document.getElementById("style").value.trim()
+    style: document.getElementById("style").value.trim(),
+
+    // 🔽 TAMBAHKAN INI
+    emotion: document.getElementById("emotion").value.trim(),
+    personality: document.getElementById("personality").value.trim(),
+    mood: document.getElementById("mood").value.trim()
   };
 
   if (!char.name) {
