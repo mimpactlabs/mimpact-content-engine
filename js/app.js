@@ -1,3 +1,11 @@
+// ====== ENGINE STATE ======
+let appState = {
+  activeCharacter: {
+    name: "Aira",
+    emotion: "confident",
+    model: "SDXL"
+  }
+};
 let appState = {
   activeCharacter: {
     name: "Aira",
