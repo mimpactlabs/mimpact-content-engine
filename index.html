@@ -175,6 +175,13 @@ footer {
     <option value="chat">Dialogue</option>
   </select>
 
+  <h3>🎨 Model AI</h3>
+<select id="model">
+  <option value="midjourney">Midjourney</option>
+  <option value="sdxl">SDXL</option>
+  <option value="runway">Runway</option>
+</select>
+
   <textarea id="scene" placeholder="Tulis adegan di sini..."></textarea>
 
   <label>
@@ -204,7 +211,7 @@ function refreshDropdown() {
   select.innerHTML = "";
 
   characters.forEach((char, index) => {
-    let option = document.createElement("option");
+    const option = document.createElement("option");
     option.value = index;
     option.textContent =
       (char.name || "No Name") +
@@ -255,8 +262,10 @@ function saveCharacter() {
    LOAD CHARACTER
 ========================= */
 function loadCharacter(index) {
-  selectedIndex = index;
-  const char = characters[index];
+  selectedIndex = Number(index);
+  const char = characters[selectedIndex];
+
+  if (!char) return;
 
   document.getElementById("name").value = char.name || "";
   document.getElementById("age").value = char.age || "";
@@ -272,7 +281,6 @@ function loadCharacter(index) {
 ========================= */
 function deleteCharacter() {
   if (selectedIndex === null) return;
-
   if (!confirm("Hapus karakter ini?")) return;
 
   characters.splice(selectedIndex, 1);
@@ -298,6 +306,26 @@ function clearForm() {
 }
 
 /* =========================
+   MODEL FORMATTER
+========================= */
+function formatByModel(model, baseCharacter, scene, consistency) {
+
+  if (model === "midjourney") {
+    return `${baseCharacter}, ${scene}, ultra detailed, cinematic lighting, 8k, ${consistency} --ar 16:9 --v 6 --style raw`;
+  }
+
+  if (model === "sdxl") {
+    return `${baseCharacter}, ${scene}, masterpiece, best quality, highly detailed, ${consistency}`;
+  }
+
+  if (model === "runway") {
+    return `Cinematic film scene of ${baseCharacter}. ${scene}. ${consistency}. Shot on 35mm film, dramatic lighting, realistic motion.`;
+  }
+
+  return `${baseCharacter}, ${scene}, ${consistency}`;
+}
+
+/* =========================
    GENERATE PROMPT
 ========================= */
 function generate() {
@@ -316,13 +344,9 @@ function generate() {
 
   const char = characters[selectedIndex];
 
-  let baseCharacter =
-    char.name + ", " +
-    char.gender + " berusia " + char.age + " tahun, " +
-    char.face + ", " +
-    char.hair + ", mengenakan " +
-    char.outfit + ", gaya " +
-    char.style;
+  const baseCharacter =
+    `${char.name}, ${char.gender} berusia ${char.age} tahun, ` +
+    `${char.face}, ${char.hair}, mengenakan ${char.outfit}, gaya ${char.style}`;
 
   let consistency =
     "same person, identical face, same bone structure, same age, preserve identity";
@@ -331,27 +355,31 @@ function generate() {
   const variation = document.getElementById("outfitVariation").value.trim();
 
   if (outfitLock && variation) {
-    consistency += ", outfit variation: " + variation;
+    consistency += `, outfit variation: ${variation}`;
   } else {
     consistency += ", maintain core outfit identity";
   }
 
-  output.innerText =
-    baseCharacter + "\n\n" +
-    sceneInput + ", ultra detailed, 8k, " +
-    consistency;
+  const model = document.getElementById("model").value;
+
+  const finalPrompt = formatByModel(
+    model,
+    baseCharacter,
+    sceneInput,
+    consistency
+  );
+
+  output.innerText = finalPrompt;
 }
 
 /* =========================
-   EVENT LISTENER
+   INIT SYSTEM
 ========================= */
-document.getElementById("characterSelect").addEventListener("change", function() {
-  loadCharacter(this.value);
-});
+document.getElementById("characterSelect")
+  .addEventListener("change", function () {
+    loadCharacter(this.value);
+  });
 
-/* =========================
-   INIT
-========================= */
 refreshDropdown();
 </script>
 </body>
