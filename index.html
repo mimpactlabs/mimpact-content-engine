@@ -292,8 +292,12 @@ function loadCharacter(index) {
   document.getElementById("hair").value = char.hair || "";
   document.getElementById("outfit").value = char.outfit || "";
   document.getElementById("style").value = char.style || "";
-}
 
+  // ✅ TAMBAHKAN INI
+  document.getElementById("emotion").value = char.emotion || "";
+  document.getElementById("personality").value = char.personality || "";
+  document.getElementById("mood").value = char.mood || "";
+}
 /* =========================
    DELETE CHARACTER
 ========================= */
@@ -319,6 +323,11 @@ function clearForm() {
   document.getElementById("hair").value = "";
   document.getElementById("outfit").value = "";
   document.getElementById("style").value = "";
+
+  // ✅ TAMBAHKAN INI
+  document.getElementById("emotion").value = "";
+  document.getElementById("personality").value = "";
+  document.getElementById("mood").value = "";
 
   selectedIndex = null;
 }
