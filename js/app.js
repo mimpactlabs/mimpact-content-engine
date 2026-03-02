@@ -6,13 +6,7 @@ let appState = {
     model: "SDXL"
   }
 };
-let appState = {
-  activeCharacter: {
-    name: "Aira",
-    emotion: "confident",
-    model: "SDXL"
-  }
-};
+
 function generate() {
   const input = document.getElementById("inputText").value;
   const output = document.getElementById("outputBox");
