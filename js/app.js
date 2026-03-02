@@ -1,3 +1,10 @@
+let appState = {
+  activeCharacter: {
+    name: "Aira",
+    emotion: "confident",
+    model: "SDXL"
+  }
+};
 function generate() {
   const input = document.getElementById("inputText").value;
   const output = document.getElementById("outputBox");
@@ -7,5 +14,13 @@ function generate() {
     return;
   }
 
-  output.innerText = "Generated Prompt: " + input + " - versi super unlimited.";
+  const character = appState.activeCharacter;
+
+  const finalPrompt =
+    input +
+    " | Character: " + character.name +
+    " | Emotion: " + character.emotion +
+    " | Model: " + character.model;
+
+  output.innerText = finalPrompt;
 }
