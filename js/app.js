@@ -129,14 +129,20 @@ function clearForm() {
 /* =========================
    MODEL FORMATTER
 ========================= */
-function formatByModel(model, baseCharacter, scene, consistency) {
+function formatByModel(model, baseCharacter, scene, consistency, negativePrompt) {
 
   if (model === "midjourney") {
     return `${baseCharacter}, ${scene}, ultra detailed, cinematic lighting, 8k, ${consistency} --ar 16:9 --v 6 --style raw`;
   }
 
   if (model === "sdxl") {
-    return `${baseCharacter}, ${scene}, masterpiece, best quality, highly detailed, ${consistency}`;
+    return `
+${baseCharacter}, 
+${scene}, 
+masterpiece, best quality, highly detailed, 
+${consistency}
+Negative prompt: ${negativePrompt}
+    `.replace(/\n/g, " ").trim();
   }
 
   if (model === "runway") {
