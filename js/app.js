@@ -57,6 +57,12 @@ function saveCharacter() {
     return;
   }
 
+   voiceTone: "warm cinematic narrator",
+   pitch: "medium-low stable pitch",
+   speakingSpeed: "natural steady pace",
+   micType: "studio condenser microphone clarity",
+   breathingStyle: "subtle natural breathing pattern"
+
   if (selectedIndex !== null) {
     characters[selectedIndex] = char;
   } else {
