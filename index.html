@@ -25,8 +25,6 @@ section {
 
 h1 { font-size: 42px; margin-bottom: 20px; }
 h2 { font-size: 28px; margin-bottom: 20px; }
-h3 { margin-top: 40px; }
-
 p { color: #aaa; }
 
 .hero {
@@ -44,8 +42,6 @@ p { color: #aaa; }
   font-weight: bold;
   cursor: pointer;
 }
-
-.hero button:hover { opacity: 0.85; }
 
 .features {
   display: grid;
@@ -72,22 +68,13 @@ input, textarea, select, button {
   margin-bottom: 15px;
   border-radius: 6px;
   border: none;
-  font-family: inherit;
 }
 
 textarea { min-height: 100px; }
 
-button {
-  cursor: pointer;
-}
-
 button.generate {
   background: #00ff9d;
   font-weight: bold;
-}
-
-button.danger {
-  background: #ff4c4c;
 }
 
 #output {
@@ -96,7 +83,6 @@ button.danger {
   border-radius: 10px;
   white-space: pre-wrap;
   margin-top: 20px;
-  font-size: 14px;
 }
 
 footer {
@@ -114,25 +100,31 @@ footer {
 <section class="hero">
   <h1>🧠 AI Character Consistency Engine</h1>
   <p>Buat dan pertahankan karakter AI yang konsisten untuk gambar, video, cerita, dan dialog.</p>
-  <button id="scrollBtn">🚀 Coba Sekarang</button>
+  <button onclick="document.getElementById('toolSection').scrollIntoView({behavior:'smooth'})">
+    🚀 Coba Sekarang
+  </button>
 </section>
 
 <!-- FEATURES -->
 <section>
   <h2>Kenapa Menggunakan Engine Ini?</h2>
+
   <div class="features">
     <div class="feature-box">
       <h3>🔒 Face Lock System</h3>
       <p>Menjaga wajah tetap identik meskipun adegan berubah.</p>
     </div>
+
     <div class="feature-box">
       <h3>🎭 Outfit Variation</h3>
       <p>Variasi pakaian tanpa merusak identitas karakter.</p>
     </div>
+
     <div class="feature-box">
       <h3>🎬 Multi Mode</h3>
       <p>Support Image, Video Prompt, Story, dan Roleplay Chat.</p>
     </div>
+
     <div class="feature-box">
       <h3>⚡ Instan & Tanpa Login</h3>
       <p>Langsung pakai. Semua data tersimpan di browser Anda.</p>
@@ -153,22 +145,25 @@ footer {
   <input id="style" placeholder="Gaya Visual">
 
   <h3>🧠 Emotional State</h3>
-  <input id="emotion" placeholder="Emotion (happy, angry, nervous)">
-  <input id="personality" placeholder="Personality (confident, introvert)">
-  <input id="mood" placeholder="Current Mood (calm, tense)">
+  <input id="emotion" placeholder="happy, angry, nervous">
+  <input id="personality" placeholder="confident, introvert, dominant">
+  <input id="mood" placeholder="calm, tense, excited">
 
-  <button id="saveBtn">Simpan Karakter</button>
+  <button onclick="saveCharacter()">Simpan Karakter</button>
 
   <h3>🧬 Pilih Karakter</h3>
   <select id="characterSelect"></select>
-  <button id="deleteBtn" class="danger">Hapus Karakter</button>
+  <button onclick="deleteCharacter()">Hapus Karakter</button>
 
-  <button id="exportBtn">Export Character</button>
-  <button id="exportAllBtn">Export All</button>
+  <button onclick="exportCharacter()">Export Character</button>
+  <button onclick="exportAllCharacters()">Export All</button>
 
-  <input type="file" id="importFile" accept=".json" hidden>
+  <input type="file" id="importFile" accept=".json"
+         onchange="importCharacter(event)" hidden>
 
-  <button id="importBtn">Import Character</button>
+  <button onclick="document.getElementById('importFile').click()">
+    Import Character
+  </button>
 
   <h3>🎛 Mode</h3>
   <select id="mode">
@@ -193,7 +188,7 @@ footer {
 
   <input id="outfitVariation" placeholder="Detail variasi pakaian">
 
-  <button class="generate" id="generateBtn">✨ Generate Prompt</button>
+  <button class="generate" onclick="generate()">✨ Generate Prompt</button>
 
   <div id="output"></div>
 </section>
@@ -202,28 +197,6 @@ footer {
   © 2026 Mimpact Labs – AI Character Engine
 </footer>
 
-<script src="js/app.js" defer></script>
-
-<script>
-/* Event Binding – lebih aman daripada inline onclick */
-document.getElementById("scrollBtn").addEventListener("click", () => {
-  document.getElementById("toolSection")
-    .scrollIntoView({ behavior: "smooth" });
-});
-
-document.getElementById("saveBtn").addEventListener("click", saveCharacter);
-document.getElementById("deleteBtn").addEventListener("click", deleteCharacter);
-document.getElementById("exportBtn").addEventListener("click", exportCharacter);
-document.getElementById("exportAllBtn").addEventListener("click", exportAllCharacters);
-document.getElementById("generateBtn").addEventListener("click", generate);
-
-document.getElementById("importBtn").addEventListener("click", () => {
-  document.getElementById("importFile").click();
-});
-
-document.getElementById("importFile")
-  .addEventListener("change", importCharacter);
-</script>
-
+<script src="js/app.js"></script>
 </body>
 </html>
