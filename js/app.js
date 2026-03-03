@@ -1,13 +1,31 @@
 /* ======================================
    MIMPACT LABS – AI CHARACTER ENGINE
-   Clean & Stable Production Version
+   Production Safe Version
 ====================================== */
 
 /* =========================
-   GLOBAL STATE
+   SAFE STORAGE LOADER
 ========================= */
-let characters = JSON.parse(localStorage.getItem("characters")) || [];
+function loadFromStorage() {
+  try {
+    const data = localStorage.getItem("characters");
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    console.warn("Storage corrupt. Resetting.");
+    localStorage.removeItem("characters");
+    return [];
+  }
+}
+
+let characters = loadFromStorage();
 let selectedIndex = null;
+
+/* =========================
+   SAVE TO STORAGE
+========================= */
+function saveToStorage() {
+  localStorage.setItem("characters", JSON.stringify(characters));
+}
 
 /* =========================
    EMOTION DETECTOR
@@ -38,9 +56,7 @@ function refreshDropdown() {
     const option = document.createElement("option");
     option.value = index;
     option.textContent =
-      (char.name || "No Name") +
-      " (" + (char.age || "-") +
-      " - " + (char.gender || "-") + ")";
+      `${char.name || "No Name"} (${char.age || "-"} - ${char.gender || "-"})`;
     select.appendChild(option);
   });
 
@@ -57,28 +73,30 @@ function refreshDropdown() {
 ========================= */
 function saveCharacter() {
 
-  const emotionValue = document.getElementById("emotion").value.trim() || "neutral";
+  const nameEl = document.getElementById("name");
+  if (!nameEl) return;
+
+  const emotionValue =
+    document.getElementById("emotion")?.value.trim() || "neutral";
 
   const char = {
-    name: document.getElementById("name").value.trim(),
-    age: document.getElementById("age").value.trim(),
-    gender: document.getElementById("gender").value.trim(),
-    face: document.getElementById("face").value.trim(),
-    hair: document.getElementById("hair").value.trim(),
-    outfit: document.getElementById("outfit").value.trim(),
-    style: document.getElementById("style").value.trim(),
+    name: nameEl.value.trim(),
+    age: document.getElementById("age")?.value.trim(),
+    gender: document.getElementById("gender")?.value.trim(),
+    face: document.getElementById("face")?.value.trim(),
+    hair: document.getElementById("hair")?.value.trim(),
+    outfit: document.getElementById("outfit")?.value.trim(),
+    style: document.getElementById("style")?.value.trim(),
     emotion: emotionValue,
-    personality: document.getElementById("personality").value.trim(),
-    mood: document.getElementById("mood").value.trim(),
+    personality: document.getElementById("personality")?.value.trim(),
+    mood: document.getElementById("mood")?.value.trim(),
 
-    // Voice Lock
     voiceTone: "warm cinematic narrator",
     pitch: "medium-low stable pitch",
     speakingSpeed: "natural steady pace",
     micType: "studio condenser microphone clarity",
     breathingStyle: "subtle natural breathing pattern",
 
-    // Timeline System
     timeline: [],
     currentEmotion: emotionValue
   };
@@ -94,7 +112,7 @@ function saveCharacter() {
     characters.push(char);
   }
 
-  localStorage.setItem("characters", JSON.stringify(characters));
+  saveToStorage();
   clearForm();
   refreshDropdown();
 }
@@ -107,16 +125,15 @@ function loadCharacter(index) {
   const char = characters[selectedIndex];
   if (!char) return;
 
-  document.getElementById("name").value = char.name || "";
-  document.getElementById("age").value = char.age || "";
-  document.getElementById("gender").value = char.gender || "";
-  document.getElementById("face").value = char.face || "";
-  document.getElementById("hair").value = char.hair || "";
-  document.getElementById("outfit").value = char.outfit || "";
-  document.getElementById("style").value = char.style || "";
-  document.getElementById("emotion").value = char.emotion || "";
-  document.getElementById("personality").value = char.personality || "";
-  document.getElementById("mood").value = char.mood || "";
+  const fields = [
+    "name","age","gender","face","hair",
+    "outfit","style","emotion","personality","mood"
+  ];
+
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = char[id] || "";
+  });
 }
 
 /* =========================
@@ -127,53 +144,45 @@ function deleteCharacter() {
   if (!confirm("Hapus karakter ini?")) return;
 
   characters.splice(selectedIndex, 1);
-  localStorage.setItem("characters", JSON.stringify(characters));
-
+  saveToStorage();
   clearForm();
   refreshDropdown();
 }
 
 /* =========================
-   EXPORT SINGLE CHARACTER
+   EXPORT SYSTEM
 ========================= */
-function exportCharacter() {
+function downloadJSON(data, filename) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: "application/json"
+  });
 
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportCharacter() {
   if (selectedIndex === null) {
     alert("Pilih karakter terlebih dahulu.");
     return;
   }
-
-  const char = characters[selectedIndex];
-  const dataStr = JSON.stringify(char, null, 2);
-  const blob = new Blob([dataStr], { type: "application/json" });
-
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = `${char.name || "character"}.json`;
-  link.click();
+  downloadJSON(characters[selectedIndex], `${characters[selectedIndex].name}.json`);
 }
 
-/* =========================
-   EXPORT ALL CHARACTERS
-========================= */
 function exportAllCharacters() {
-
   if (!characters.length) {
-    alert("Belum ada karakter untuk diexport.");
+    alert("Belum ada karakter.");
     return;
   }
-
-  const dataStr = JSON.stringify(characters, null, 2);
-  const blob = new Blob([dataStr], { type: "application/json" });
-
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = `mimpact_characters_backup.json`;
-  link.click();
+  downloadJSON(characters, "mimpact_backup.json");
 }
 
 /* =========================
-   IMPORT CHARACTER
+   IMPORT SYSTEM
 ========================= */
 function importCharacter(event) {
 
@@ -184,45 +193,28 @@ function importCharacter(event) {
 
   reader.onload = function(e) {
     try {
-      const importedData = JSON.parse(e.target.result);
+      const data = JSON.parse(e.target.result);
 
-      // Jika array → import multiple
-      if (Array.isArray(importedData)) {
-        characters = characters.concat(importedData);
-      } 
-      // Jika object tunggal → import single
-      else {
-        characters.push(importedData);
+      const valid = (obj) => obj.name && obj.timeline;
+
+      if (Array.isArray(data)) {
+        data.filter(valid).forEach(d => characters.push(d));
+      } else if (valid(data)) {
+        characters.push(data);
+      } else {
+        throw new Error("Invalid structure");
       }
 
-      localStorage.setItem("characters", JSON.stringify(characters));
+      saveToStorage();
       refreshDropdown();
       alert("Import berhasil!");
 
-    } catch (error) {
+    } catch {
       alert("File JSON tidak valid.");
     }
   };
 
   reader.readAsText(file);
-}
-
-/* =========================
-   CLEAR FORM
-========================= */
-function clearForm() {
-  const ids = [
-    "name", "age", "gender",
-    "face", "hair", "outfit", "style",
-    "emotion", "personality", "mood"
-  ];
-
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
-  });
-
-  selectedIndex = null;
 }
 
 /* =========================
@@ -239,109 +231,25 @@ function updateTimeline(char, sceneInput) {
     char.currentEmotion = detectedEmotion;
   }
 
-  const timelineEntry = {
+  char.timeline.push({
     scene: sceneInput,
-    emotionBefore: emotionBefore,
+    emotionBefore,
     emotionAfter: char.currentEmotion,
     timestamp: new Date().toISOString()
-  };
+  });
 
-  char.timeline.push(timelineEntry);
-  localStorage.setItem("characters", JSON.stringify(characters));
+  saveToStorage();
 }
 
 /* =========================
-   VISUAL HARD LOCK 2.0
+   VISUAL + VOICE LOCK
 ========================= */
 function buildVisualLock() {
-  return `
-same exact face as previous frame,
-identical facial bone structure,
-same eye shape and spacing,
-same nose bridge,
-same jawline,
-same lip structure,
-same skin tone,
-same age appearance,
-no face morphing,
-no facial transformation,
-no different person,
-no identity change,
-no aging,
-no de-aging,
-ultra photorealistic,
-hyper realistic skin texture,
-real human pores,
-cinematic lens realism,
-natural lighting physics,
-studio quality sharpness`
-    .replace(/\n/g, " ")
-    .trim();
+  return "same exact face, no morphing, hyper realistic, cinematic lighting";
 }
 
-/* =========================
-   VOICE LOCK
-========================= */
 function buildVoiceLock(char) {
-  return `
-consistent voice tone: ${char.voiceTone},
-same speaker throughout the entire video,
-fixed pitch: ${char.pitch},
-stable speaking speed: ${char.speakingSpeed},
-clear studio voice recording using ${char.micType},
-${char.breathingStyle}`
-    .replace(/\n/g, " ")
-    .trim();
-}
-
-/* =========================
-   NEGATIVE PROMPT ENGINE
-========================= */
-function buildNegativePrompt(model) {
-
-  if (model !== "sdxl") return "";
-
-  return `
-cartoon,
-anime,
-cgi,
-3d render,
-illustration,
-stylized face,
-different person,
-face swap,
-face morph,
-aging,
-de-aging,
-low resolution,
-blurry face,
-distorted face,
-extra eyes,
-deformed facial structure,
-plastic skin,
-oversmoothed skin`
-    .replace(/\n/g, " ")
-    .trim();
-}
-
-/* =========================
-   MODEL FORMATTER
-========================= */
-function formatByModel(model, baseCharacter, scene, consistency, negativePrompt) {
-
-  if (model === "midjourney") {
-    return `${baseCharacter}, ${scene}, ultra detailed, cinematic lighting, 8k, ${consistency} --ar 16:9 --v 6 --style raw`;
-  }
-
-  if (model === "sdxl") {
-    return `${baseCharacter}, ${scene}, masterpiece, best quality, highly detailed, ${consistency} Negative prompt: ${negativePrompt}`;
-  }
-
-  if (model === "runway") {
-    return `Cinematic film scene of ${baseCharacter}. ${scene}. ${consistency}. Shot on 35mm film, dramatic lighting, realistic motion.`;
-  }
-
-  return `${baseCharacter}, ${scene}, ${consistency}`;
+  return `consistent voice tone ${char.voiceTone}, fixed pitch ${char.pitch}`;
 }
 
 /* =========================
@@ -349,8 +257,12 @@ function formatByModel(model, baseCharacter, scene, consistency, negativePrompt)
 ========================= */
 function generate() {
 
-  const sceneInput = document.getElementById("scene").value.trim();
+  const sceneEl = document.getElementById("scene");
   const output = document.getElementById("output");
+
+  if (!sceneEl || !output) return;
+
+  const sceneInput = sceneEl.value.trim();
 
   if (!sceneInput) {
     output.innerText = "Masukkan adegan terlebih dahulu.";
@@ -369,28 +281,12 @@ function generate() {
   }
 
   const baseCharacter =
-    `${char.name}, ${char.gender} ${char.age} tahun, ${char.face}, ${char.hair}, mengenakan ${char.outfit}, gaya ${char.style}, emotion ${char.currentEmotion}`;
+    `${char.name}, ${char.gender}, ${char.age} tahun, emotion ${char.currentEmotion}`;
 
-  let consistency = buildVisualLock();
-
-  const mode = document.getElementById("mode").value;
-  if (mode === "video" || mode === "story" || mode === "chat") {
-    consistency += ", " + buildVoiceLock(char);
-  }
-
-  const model = document.getElementById("model").value;
-  const negativePrompt = buildNegativePrompt(model);
-
-  const finalPrompt = formatByModel(
-    model,
-    baseCharacter,
-    sceneInput,
-    consistency,
-    negativePrompt
-  );
+  const finalPrompt =
+    `${baseCharacter}, ${sceneInput}, ${buildVisualLock()}, ${buildVoiceLock(char)}`;
 
   updateTimeline(char, sceneInput);
-
   output.innerText = finalPrompt;
 }
 
