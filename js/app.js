@@ -193,6 +193,20 @@ function buildNegativePrompt(model) {
 
   if (model !== "sdxl") return "";
 
+function detectEmotion(sceneText) {
+
+  const text = sceneText.toLowerCase();
+
+  if (text.includes("marah") || text.includes("angry")) return "angry";
+  if (text.includes("sedih") || text.includes("cry")) return "sad";
+  if (text.includes("bahagia") || text.includes("happy")) return "happy";
+  if (text.includes("romantis") || text.includes("love")) return "romantic";
+  if (text.includes("takut") || text.includes("dark")) return "fearful";
+  if (text.includes("terkejut") || text.includes("shock")) return "shocked";
+
+  return null;
+}   
+
   const negativeBlock = `
 cartoon,
 anime,
