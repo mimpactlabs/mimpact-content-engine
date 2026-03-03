@@ -143,6 +143,48 @@ function formatByModel(model, baseCharacter, scene, consistency) {
 /* =========================
    GENERATE PROMPT
 ========================= */
+function buildVisualLock() {
+
+  const faceAnchor = `
+same exact face as previous frame,
+identical facial bone structure,
+same eye shape and spacing,
+same nose bridge,
+same jawline,
+same lip structure,
+same skin tone,
+same age appearance
+  `;
+
+  const antiMorph = `
+no face morphing,
+no facial transformation,
+no different person,
+no identity change,
+no aging,
+no de-aging,
+no face variation
+  `;
+
+  const hyperReality = `
+ultra photorealistic,
+hyper realistic skin texture,
+real human pores,
+cinematic lens realism,
+natural lighting physics,
+studio quality sharpness,
+no CGI look,
+no cartoon style,
+no anime style
+  `;
+
+  return `
+${faceAnchor},
+${antiMorph},
+${hyperReality}
+  `.replace(/\n/g, " ").trim();
+}
+
 function generate() {
 
   const sceneInput = document.getElementById("scene").value.trim();
@@ -167,9 +209,6 @@ function generate() {
     `personality ${char.personality || "balanced"}, ` +
     `current mood ${char.mood || "stable"}`;
 
-  let consistency =
-    "same person, identical face, same bone structure, same age, preserve identity";
-
   const outfitLock = document.getElementById("outfitLock").checked;
   const variation = document.getElementById("outfitVariation").value.trim();
 
@@ -181,12 +220,12 @@ function generate() {
 
   const model = document.getElementById("model").value;
 
-  const finalPrompt = formatByModel(
-    model,
-    baseCharacter,
-    sceneInput,
-    consistency
-  );
+const finalPrompt = formatByModel(
+  model,
+  baseCharacter,
+  sceneInput,
+  consistency
+);
 
   output.innerText = finalPrompt;
 }
