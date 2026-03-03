@@ -210,6 +210,46 @@ ${char.breathingStyle}
 
 }
 
+function buildNegativePrompt(model) {
+
+if (model === "sdxl") {
+  return `
+${baseCharacter}, 
+${scene}, 
+masterpiece, best quality, highly detailed, 
+${consistency}
+Negative prompt: ${negativePrompt}
+  `.replace(/\n/g, " ").trim();
+}
+
+const negativePrompt = buildNegativePrompt(model);
+   
+  const negativeBlock = `
+cartoon,
+anime,
+cgi,
+3d render,
+illustration,
+stylized face,
+different person,
+face swap,
+face morph,
+aging,
+de-aging,
+low resolution,
+blurry face,
+distorted face,
+extra eyes,
+extra nose,
+deformed facial structure,
+plastic skin,
+unrealistic skin,
+oversmoothed skin
+  `;
+
+  return negativeBlock.replace(/\n/g, " ").trim();
+}
+
 function generate() {
 
   const sceneInput = document.getElementById("scene").value.trim();
@@ -249,7 +289,8 @@ const finalPrompt = formatByModel(
   model,
   baseCharacter,
   sceneInput,
-  consistency
+  consistency,
+  negativePrompt
 );
 
   output.innerText = finalPrompt;
