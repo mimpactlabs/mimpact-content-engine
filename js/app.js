@@ -300,14 +300,19 @@ function generate() {
   }
 
   const char = characters[selectedIndex];
+   
+// 🔥 Apply last emotional state
+if (!char.currentEmotion) {
+  char.currentEmotion = char.emotion || "neutral";
+}
 
-  const baseCharacter =
-    `${char.name}, ${char.gender} berusia ${char.age} tahun, ` +
-    `${char.face}, ${char.hair}, mengenakan ${char.outfit}, gaya ${char.style}, ` +
-    `emotion ${char.emotion || "neutral"}, ` +
-    `personality ${char.personality || "balanced"}, ` +
-    `current mood ${char.mood || "stable"}`;
-
+const baseCharacter =
+  `${char.name}, ${char.gender} berusia ${char.age} tahun, ` +
+  `${char.face}, ${char.hair}, mengenakan ${char.outfit}, gaya ${char.style}, ` +
+  `emotion ${char.currentEmotion}, ` +
+  `personality ${char.personality || "balanced"}, ` +
+  `current mood ${char.mood || "stable"}`;
+   
   let consistency = buildVisualLock();
 
   const mode = document.getElementById("mode").value;
@@ -334,6 +339,8 @@ function generate() {
     consistency,
     negativePrompt
   );
+
+   updateTimeline(char, sceneInput);
 
   output.innerText = finalPrompt;
 }
