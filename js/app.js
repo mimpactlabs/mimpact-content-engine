@@ -151,6 +151,12 @@ function formatByModel(model, baseCharacter, scene, consistency) {
 ========================= */
 function buildVisualLock() {
 
+   const mode = document.getElementById("mode").value;
+
+if (mode === "video" || mode === "story" || mode === "chat") {
+  consistency += ", " + buildVoiceLock(char);
+}
+
   const faceAnchor = `
 same exact face as previous frame,
 identical facial bone structure,
@@ -189,6 +195,19 @@ ${faceAnchor},
 ${antiMorph},
 ${hyperReality}
   `.replace(/\n/g, " ").trim();
+}
+
+function buildVoiceLock(char) {
+
+  return `
+consistent voice tone: ${char.voiceTone},
+same speaker throughout the entire video,
+fixed pitch: ${char.pitch},
+stable speaking speed: ${char.speakingSpeed},
+clear studio voice recording using ${char.micType},
+${char.breathingStyle}
+  `.replace(/\n/g, " ").trim();
+
 }
 
 function generate() {
