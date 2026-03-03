@@ -1,5 +1,6 @@
 /* ======================================
    MIMPACT LABS – AI CHARACTER ENGINE
+   Clean & Stable Production Version
 ====================================== */
 
 /* =========================
@@ -49,19 +50,20 @@ function saveCharacter() {
     style: document.getElementById("style").value.trim(),
     emotion: document.getElementById("emotion").value.trim(),
     personality: document.getElementById("personality").value.trim(),
-    mood: document.getElementById("mood").value.trim()
+    mood: document.getElementById("mood").value.trim(),
+
+    // Voice Lock Defaults
+    voiceTone: "warm cinematic narrator",
+    pitch: "medium-low stable pitch",
+    speakingSpeed: "natural steady pace",
+    micType: "studio condenser microphone clarity",
+    breathingStyle: "subtle natural breathing pattern"
   };
 
   if (!char.name) {
     alert("Nama karakter wajib diisi.");
     return;
   }
-
-   voiceTone: "warm cinematic narrator",
-   pitch: "medium-low stable pitch",
-   speakingSpeed: "natural steady pace",
-   micType: "studio condenser microphone clarity",
-   breathingStyle: "subtle natural breathing pattern"
 
   if (selectedIndex !== null) {
     characters[selectedIndex] = char;
@@ -127,36 +129,9 @@ function clearForm() {
 }
 
 /* =========================
-   MODEL FORMATTER
-========================= */
-function formatByModel(model, baseCharacter, scene, consistency, negativePrompt) {
-
-  if (model === "midjourney") {
-    return `${baseCharacter}, ${scene}, ultra detailed, cinematic lighting, 8k, ${consistency} --ar 16:9 --v 6 --style raw`;
-  }
-
-  if (model === "sdxl") {
-    return `
-${baseCharacter}, 
-${scene}, 
-masterpiece, best quality, highly detailed, 
-${consistency}
-Negative prompt: ${negativePrompt}
-    `.replace(/\n/g, " ").trim();
-  }
-
-  if (model === "runway") {
-    return `Cinematic film scene of ${baseCharacter}. ${scene}. ${consistency}. Shot on 35mm film, dramatic lighting, realistic motion.`;
-  }
-
-  return `${baseCharacter}, ${scene}, ${consistency}`;
-}
-
-/* =========================
-   GENERATE PROMPT
+   VISUAL HARD LOCK 2.0
 ========================= */
 function buildVisualLock() {
-
   const faceAnchor = `
 same exact face as previous frame,
 identical facial bone structure,
@@ -165,8 +140,7 @@ same nose bridge,
 same jawline,
 same lip structure,
 same skin tone,
-same age appearance
-  `;
+same age appearance`;
 
   const antiMorph = `
 no face morphing,
@@ -175,8 +149,7 @@ no different person,
 no identity change,
 no aging,
 no de-aging,
-no face variation
-  `;
+no face variation`;
 
   const hyperReality = `
 ultra photorealistic,
@@ -187,39 +160,31 @@ natural lighting physics,
 studio quality sharpness,
 no CGI look,
 no cartoon style,
-no anime style
-  `;
+no anime style`;
 
-  return `
-${faceAnchor},
-${antiMorph},
-${hyperReality}
-  `.replace(/\n/g, " ").trim();
+  return `${faceAnchor}, ${antiMorph}, ${hyperReality}`
+    .replace(/\n/g, " ")
+    .trim();
 }
 
+/* =========================
+   VOICE LOCK
+========================= */
 function buildVoiceLock(char) {
   return `
-consistent voice tone: ${char.voiceTone || "warm cinematic narrator"},
+consistent voice tone: ${char.voiceTone},
 same speaker throughout the entire video,
-fixed pitch: ${char.pitch || "medium-low stable pitch"},
-stable speaking speed: ${char.speakingSpeed || "natural steady pace"},
-clear studio voice recording using ${char.micType || "studio condenser microphone"},
-${char.breathingStyle || "subtle natural breathing pattern"}
-  `.replace(/\n/g, " ").trim();
+fixed pitch: ${char.pitch},
+stable speaking speed: ${char.speakingSpeed},
+clear studio voice recording using ${char.micType},
+${char.breathingStyle}`
+    .replace(/\n/g, " ")
+    .trim();
 }
 
-function buildNegativePrompt(model) {
-
-if (model === "sdxl") {
-  return `
-${baseCharacter}, 
-${scene}, 
-masterpiece, best quality, highly detailed, 
-${consistency}
-Negative prompt: ${negativePrompt}
-  `.replace(/\n/g, " ").trim();
-}
-
+/* =========================
+   NEGATIVE PROMPT ENGINE
+========================= */
 function buildNegativePrompt(model) {
 
   if (model !== "sdxl") return "";
@@ -244,12 +209,41 @@ extra nose,
 deformed facial structure,
 plastic skin,
 unrealistic skin,
-oversmoothed skin
-  `;
+oversmoothed skin`;
 
   return negativeBlock.replace(/\n/g, " ").trim();
 }
 
+/* =========================
+   MODEL FORMATTER
+========================= */
+function formatByModel(model, baseCharacter, scene, consistency, negativePrompt) {
+
+  if (model === "midjourney") {
+    return `${baseCharacter}, ${scene}, ultra detailed, cinematic lighting, 8k, ${consistency} --ar 16:9 --v 6 --style raw`;
+  }
+
+  if (model === "sdxl") {
+    return `
+${baseCharacter}, 
+${scene}, 
+masterpiece, best quality, highly detailed, 
+${consistency}
+Negative prompt: ${negativePrompt}`
+      .replace(/\n/g, " ")
+      .trim();
+  }
+
+  if (model === "runway") {
+    return `Cinematic film scene of ${baseCharacter}. ${scene}. ${consistency}. Shot on 35mm film, dramatic lighting, realistic motion.`;
+  }
+
+  return `${baseCharacter}, ${scene}, ${consistency}`;
+}
+
+/* =========================
+   GENERATE PROMPT
+========================= */
 function generate() {
 
   const sceneInput = document.getElementById("scene").value.trim();
@@ -308,11 +302,13 @@ function generate() {
    INIT SYSTEM
 ========================= */
 document.addEventListener("DOMContentLoaded", function () {
-  document
-    .getElementById("characterSelect")
-    .addEventListener("change", function () {
+
+  const select = document.getElementById("characterSelect");
+  if (select) {
+    select.addEventListener("change", function () {
       loadCharacter(this.value);
     });
+  }
 
   refreshDropdown();
 });
