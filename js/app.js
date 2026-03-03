@@ -10,6 +10,22 @@ let characters = JSON.parse(localStorage.getItem("characters")) || [];
 let selectedIndex = null;
 
 /* =========================
+   EMOTION DETECTOR
+========================= */
+function detectEmotion(sceneText) {
+  const text = sceneText.toLowerCase();
+
+  if (text.includes("marah") || text.includes("angry")) return "angry";
+  if (text.includes("sedih") || text.includes("cry")) return "sad";
+  if (text.includes("bahagia") || text.includes("happy")) return "happy";
+  if (text.includes("romantis") || text.includes("love")) return "romantic";
+  if (text.includes("takut") || text.includes("dark")) return "fearful";
+  if (text.includes("terkejut") || text.includes("shock")) return "shocked";
+
+  return null;
+}
+
+/* =========================
    REFRESH DROPDOWN
 ========================= */
 function refreshDropdown() {
@@ -40,6 +56,9 @@ function refreshDropdown() {
    SAVE CHARACTER
 ========================= */
 function saveCharacter() {
+
+  const emotionValue = document.getElementById("emotion").value.trim() || "neutral";
+
   const char = {
     name: document.getElementById("name").value.trim(),
     age: document.getElementById("age").value.trim(),
@@ -48,7 +67,7 @@ function saveCharacter() {
     hair: document.getElementById("hair").value.trim(),
     outfit: document.getElementById("outfit").value.trim(),
     style: document.getElementById("style").value.trim(),
-    emotion: document.getElementById("emotion").value.trim(),
+    emotion: emotionValue,
     personality: document.getElementById("personality").value.trim(),
     mood: document.getElementById("mood").value.trim(),
 
@@ -59,9 +78,9 @@ function saveCharacter() {
     micType: "studio condenser microphone clarity",
     breathingStyle: "subtle natural breathing pattern",
 
-    // 🔥 Timeline System
+    // Timeline System
     timeline: [],
-    currentEmotion: document.getElementById("emotion").value.trim() || "neutral"
+    currentEmotion: emotionValue
   };
 
   if (!char.name) {
@@ -78,28 +97,6 @@ function saveCharacter() {
   localStorage.setItem("characters", JSON.stringify(characters));
   clearForm();
   refreshDropdown();
-}
-
-function updateTimeline(char, sceneInput) {
-
-  const emotionBefore = char.currentEmotion;
-
-  const detectedEmotion = detectEmotion(sceneInput);
-
-  if (detectedEmotion) {
-    char.currentEmotion = detectedEmotion;
-  }
-
-  const timelineEntry = {
-    scene: sceneInput,
-    emotionBefore: emotionBefore,
-    emotionAfter: char.currentEmotion,
-    timestamp: new Date().toISOString()
-  };
-
-  char.timeline.push(timelineEntry);
-
-  localStorage.setItem("characters", JSON.stringify(characters));
 }
 
 /* =========================
@@ -155,10 +152,35 @@ function clearForm() {
 }
 
 /* =========================
+   TIMELINE SYSTEM
+========================= */
+function updateTimeline(char, sceneInput) {
+
+  if (!char.timeline) char.timeline = [];
+
+  const emotionBefore = char.currentEmotion || "neutral";
+  const detectedEmotion = detectEmotion(sceneInput);
+
+  if (detectedEmotion) {
+    char.currentEmotion = detectedEmotion;
+  }
+
+  const timelineEntry = {
+    scene: sceneInput,
+    emotionBefore: emotionBefore,
+    emotionAfter: char.currentEmotion,
+    timestamp: new Date().toISOString()
+  };
+
+  char.timeline.push(timelineEntry);
+  localStorage.setItem("characters", JSON.stringify(characters));
+}
+
+/* =========================
    VISUAL HARD LOCK 2.0
 ========================= */
 function buildVisualLock() {
-  const faceAnchor = `
+  return `
 same exact face as previous frame,
 identical facial bone structure,
 same eye shape and spacing,
@@ -166,29 +188,19 @@ same nose bridge,
 same jawline,
 same lip structure,
 same skin tone,
-same age appearance`;
-
-  const antiMorph = `
+same age appearance,
 no face morphing,
 no facial transformation,
 no different person,
 no identity change,
 no aging,
 no de-aging,
-no face variation`;
-
-  const hyperReality = `
 ultra photorealistic,
 hyper realistic skin texture,
 real human pores,
 cinematic lens realism,
 natural lighting physics,
-studio quality sharpness,
-no CGI look,
-no cartoon style,
-no anime style`;
-
-  return `${faceAnchor}, ${antiMorph}, ${hyperReality}`
+studio quality sharpness`
     .replace(/\n/g, " ")
     .trim();
 }
@@ -215,21 +227,7 @@ function buildNegativePrompt(model) {
 
   if (model !== "sdxl") return "";
 
-function detectEmotion(sceneText) {
-
-  const text = sceneText.toLowerCase();
-
-  if (text.includes("marah") || text.includes("angry")) return "angry";
-  if (text.includes("sedih") || text.includes("cry")) return "sad";
-  if (text.includes("bahagia") || text.includes("happy")) return "happy";
-  if (text.includes("romantis") || text.includes("love")) return "romantic";
-  if (text.includes("takut") || text.includes("dark")) return "fearful";
-  if (text.includes("terkejut") || text.includes("shock")) return "shocked";
-
-  return null;
-}   
-
-  const negativeBlock = `
+  return `
 cartoon,
 anime,
 cgi,
@@ -245,13 +243,11 @@ low resolution,
 blurry face,
 distorted face,
 extra eyes,
-extra nose,
 deformed facial structure,
 plastic skin,
-unrealistic skin,
-oversmoothed skin`;
-
-  return negativeBlock.replace(/\n/g, " ").trim();
+oversmoothed skin`
+    .replace(/\n/g, " ")
+    .trim();
 }
 
 /* =========================
@@ -264,14 +260,7 @@ function formatByModel(model, baseCharacter, scene, consistency, negativePrompt)
   }
 
   if (model === "sdxl") {
-    return `
-${baseCharacter}, 
-${scene}, 
-masterpiece, best quality, highly detailed, 
-${consistency}
-Negative prompt: ${negativePrompt}`
-      .replace(/\n/g, " ")
-      .trim();
+    return `${baseCharacter}, ${scene}, masterpiece, best quality, highly detailed, ${consistency} Negative prompt: ${negativePrompt}`;
   }
 
   if (model === "runway") {
@@ -300,33 +289,19 @@ function generate() {
   }
 
   const char = characters[selectedIndex];
-   
-// 🔥 Apply last emotional state
-if (!char.currentEmotion) {
-  char.currentEmotion = char.emotion || "neutral";
-}
 
-const baseCharacter =
-  `${char.name}, ${char.gender} berusia ${char.age} tahun, ` +
-  `${char.face}, ${char.hair}, mengenakan ${char.outfit}, gaya ${char.style}, ` +
-  `emotion ${char.currentEmotion}, ` +
-  `personality ${char.personality || "balanced"}, ` +
-  `current mood ${char.mood || "stable"}`;
-   
+  if (!char.currentEmotion) {
+    char.currentEmotion = char.emotion || "neutral";
+  }
+
+  const baseCharacter =
+    `${char.name}, ${char.gender} ${char.age} tahun, ${char.face}, ${char.hair}, mengenakan ${char.outfit}, gaya ${char.style}, emotion ${char.currentEmotion}`;
+
   let consistency = buildVisualLock();
 
   const mode = document.getElementById("mode").value;
   if (mode === "video" || mode === "story" || mode === "chat") {
     consistency += ", " + buildVoiceLock(char);
-  }
-
-  const outfitLock = document.getElementById("outfitLock").checked;
-  const variation = document.getElementById("outfitVariation").value.trim();
-
-  if (outfitLock && variation) {
-    consistency += `, outfit variation: ${variation}`;
-  } else {
-    consistency += ", maintain core outfit identity";
   }
 
   const model = document.getElementById("model").value;
@@ -340,13 +315,13 @@ const baseCharacter =
     negativePrompt
   );
 
-   updateTimeline(char, sceneInput);
+  updateTimeline(char, sceneInput);
 
   output.innerText = finalPrompt;
 }
 
 /* =========================
-   INIT SYSTEM
+   INIT
 ========================= */
 document.addEventListener("DOMContentLoaded", function () {
 
