@@ -52,12 +52,16 @@ function saveCharacter() {
     personality: document.getElementById("personality").value.trim(),
     mood: document.getElementById("mood").value.trim(),
 
-    // Voice Lock Defaults
+    // Voice Lock
     voiceTone: "warm cinematic narrator",
     pitch: "medium-low stable pitch",
     speakingSpeed: "natural steady pace",
     micType: "studio condenser microphone clarity",
-    breathingStyle: "subtle natural breathing pattern"
+    breathingStyle: "subtle natural breathing pattern",
+
+    // 🔥 Timeline System
+    timeline: [],
+    currentEmotion: document.getElementById("emotion").value.trim() || "neutral"
   };
 
   if (!char.name) {
