@@ -1,6 +1,6 @@
 /* ======================================
    MIMPACT LABS – AI CHARACTER ENGINE
-   Production Stable v1.5
+   Production Safe Version
 ====================================== */
 
 /* =========================
@@ -28,7 +28,7 @@ function saveToStorage() {
 }
 
 /* =========================
-   CLEAR FORM
+   CLEAR FORM (ADDED - SAFE)
 ========================= */
 function clearForm() {
   const fields = [
@@ -96,14 +96,6 @@ function saveCharacter() {
   const emotionValue =
     document.getElementById("emotion")?.value.trim() || "neutral";
 
-  let existingTimeline = [];
-  let existingEmotion = emotionValue;
-
-  if (selectedIndex !== null && characters[selectedIndex]) {
-    existingTimeline = characters[selectedIndex].timeline || [];
-    existingEmotion = characters[selectedIndex].currentEmotion || emotionValue;
-  }
-
   const char = {
     name: nameEl.value.trim(),
     age: document.getElementById("age")?.value.trim(),
@@ -122,8 +114,8 @@ function saveCharacter() {
     micType: "studio condenser microphone clarity",
     breathingStyle: "subtle natural breathing pattern",
 
-    timeline: existingTimeline,
-    currentEmotion: existingEmotion
+    timeline: [],
+    currentEmotion: emotionValue
   };
 
   if (!char.name) {
@@ -305,28 +297,11 @@ function generate() {
     char.currentEmotion = char.emotion || "neutral";
   }
 
-  let outfitText = char.outfit;
-
-  const outfitLock = document.getElementById("outfitLock");
-  const outfitVariation = document.getElementById("outfitVariation");
-
-  if (outfitLock?.checked && outfitVariation?.value.trim()) {
-    outfitText = `${char.outfit}, variation: ${outfitVariation.value.trim()}`;
-  }
-
   const baseCharacter =
-    `${char.name}, ${char.gender}, ${char.age} tahun,
-    face: ${char.face},
-    hair: ${char.hair},
-    outfit: ${outfitText},
-    style: ${char.style},
-    personality: ${char.personality},
-    mood: ${char.currentEmotion}`;
+    `${char.name}, ${char.gender}, ${char.age} tahun, emotion ${char.currentEmotion}`;
 
   const finalPrompt =
-    `${baseCharacter}, ${sceneInput},
-    ${buildVisualLock()},
-    ${buildVoiceLock(char)}`;
+    `${baseCharacter}, ${sceneInput}, ${buildVisualLock()}, ${buildVoiceLock(char)}`;
 
   updateTimeline(char, sceneInput);
   output.innerText = finalPrompt;
