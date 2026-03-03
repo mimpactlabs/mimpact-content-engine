@@ -181,6 +181,16 @@ footer {
   <select id="characterSelect"></select>
   <button onclick="deleteCharacter()">Hapus Karakter</button>
 
+  <button onclick="exportCharacter()">Export Character</button>
+<button onclick="exportAllCharacters()">Export All</button>
+
+<input type="file" id="importFile" accept=".json" 
+       onchange="importCharacter(event)" hidden>
+
+<button onclick="document.getElementById('importFile').click()">
+  Import Character
+</button>
+
   <h3>🎛 Mode</h3>
   <select id="mode">
     <option value="image">Gambar AI</option>
