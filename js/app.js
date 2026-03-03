@@ -80,6 +80,28 @@ function saveCharacter() {
   refreshDropdown();
 }
 
+function updateTimeline(char, sceneInput) {
+
+  const emotionBefore = char.currentEmotion;
+
+  const detectedEmotion = detectEmotion(sceneInput);
+
+  if (detectedEmotion) {
+    char.currentEmotion = detectedEmotion;
+  }
+
+  const timelineEntry = {
+    scene: sceneInput,
+    emotionBefore: emotionBefore,
+    emotionAfter: char.currentEmotion,
+    timestamp: new Date().toISOString()
+  };
+
+  char.timeline.push(timelineEntry);
+
+  localStorage.setItem("characters", JSON.stringify(characters));
+}
+
 /* =========================
    LOAD CHARACTER
 ========================= */
