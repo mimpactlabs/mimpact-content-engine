@@ -134,6 +134,80 @@ function deleteCharacter() {
 }
 
 /* =========================
+   EXPORT SINGLE CHARACTER
+========================= */
+function exportCharacter() {
+
+  if (selectedIndex === null) {
+    alert("Pilih karakter terlebih dahulu.");
+    return;
+  }
+
+  const char = characters[selectedIndex];
+  const dataStr = JSON.stringify(char, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${char.name || "character"}.json`;
+  link.click();
+}
+
+/* =========================
+   EXPORT ALL CHARACTERS
+========================= */
+function exportAllCharacters() {
+
+  if (!characters.length) {
+    alert("Belum ada karakter untuk diexport.");
+    return;
+  }
+
+  const dataStr = JSON.stringify(characters, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `mimpact_characters_backup.json`;
+  link.click();
+}
+
+/* =========================
+   IMPORT CHARACTER
+========================= */
+function importCharacter(event) {
+
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    try {
+      const importedData = JSON.parse(e.target.result);
+
+      // Jika array → import multiple
+      if (Array.isArray(importedData)) {
+        characters = characters.concat(importedData);
+      } 
+      // Jika object tunggal → import single
+      else {
+        characters.push(importedData);
+      }
+
+      localStorage.setItem("characters", JSON.stringify(characters));
+      refreshDropdown();
+      alert("Import berhasil!");
+
+    } catch (error) {
+      alert("File JSON tidak valid.");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+/* =========================
    CLEAR FORM
 ========================= */
 function clearForm() {
