@@ -157,12 +157,6 @@ Negative prompt: ${negativePrompt}
 ========================= */
 function buildVisualLock() {
 
-   const mode = document.getElementById("mode").value;
-
-if (mode === "video" || mode === "story" || mode === "chat") {
-  consistency += ", " + buildVoiceLock(char);
-}
-
   const faceAnchor = `
 same exact face as previous frame,
 identical facial bone structure,
@@ -204,16 +198,14 @@ ${hyperReality}
 }
 
 function buildVoiceLock(char) {
-
   return `
-consistent voice tone: ${char.voiceTone},
+consistent voice tone: ${char.voiceTone || "warm cinematic narrator"},
 same speaker throughout the entire video,
-fixed pitch: ${char.pitch},
-stable speaking speed: ${char.speakingSpeed},
-clear studio voice recording using ${char.micType},
-${char.breathingStyle}
+fixed pitch: ${char.pitch || "medium-low stable pitch"},
+stable speaking speed: ${char.speakingSpeed || "natural steady pace"},
+clear studio voice recording using ${char.micType || "studio condenser microphone"},
+${char.breathingStyle || "subtle natural breathing pattern"}
   `.replace(/\n/g, " ").trim();
-
 }
 
 function buildNegativePrompt(model) {
@@ -228,8 +220,10 @@ Negative prompt: ${negativePrompt}
   `.replace(/\n/g, " ").trim();
 }
 
-const negativePrompt = buildNegativePrompt(model);
-   
+function buildNegativePrompt(model) {
+
+  if (model !== "sdxl") return "";
+
   const negativeBlock = `
 cartoon,
 anime,
@@ -280,6 +274,13 @@ function generate() {
     `personality ${char.personality || "balanced"}, ` +
     `current mood ${char.mood || "stable"}`;
 
+  let consistency = buildVisualLock();
+
+  const mode = document.getElementById("mode").value;
+  if (mode === "video" || mode === "story" || mode === "chat") {
+    consistency += ", " + buildVoiceLock(char);
+  }
+
   const outfitLock = document.getElementById("outfitLock").checked;
   const variation = document.getElementById("outfitVariation").value.trim();
 
@@ -290,14 +291,15 @@ function generate() {
   }
 
   const model = document.getElementById("model").value;
+  const negativePrompt = buildNegativePrompt(model);
 
-const finalPrompt = formatByModel(
-  model,
-  baseCharacter,
-  sceneInput,
-  consistency,
-  negativePrompt
-);
+  const finalPrompt = formatByModel(
+    model,
+    baseCharacter,
+    sceneInput,
+    consistency,
+    negativePrompt
+  );
 
   output.innerText = finalPrompt;
 }
