@@ -403,9 +403,14 @@ function generate() {
     char.currentEmotion = char.emotion || "neutral";
   }
 
-  const baseCharacter =
-    `${char.name}, ${char.gender}, ${char.age} tahun, emotion ${char.currentEmotion}`;
+ let outfitText = char.outfit || ""
 
+if(char.outfits && char.outfits.length > 0){
+  outfitText = char.outfits[0]
+}
+
+const baseCharacter =
+`${char.name}, ${char.gender}, ${char.age} tahun, wearing ${outfitText}, emotion ${char.currentEmotion}`;
   const finalPrompt =
     `${baseCharacter}, ${sceneInput}, ${buildVisualLock()}, ${buildVoiceLock(char)}`;
 
