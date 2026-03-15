@@ -160,6 +160,34 @@ function addOutfit(){
 
 }
 
+/* =========================
+   Tampilkan Outfit
+========================= */
+function renderOutfits(){
+
+ const list = document.getElementById("outfitList")
+
+ if(!list) return
+
+ list.innerHTML = ""
+
+ if(selectedIndex === null) return
+
+ const char = characters[selectedIndex]
+
+ if(!char.outfits) return
+
+ char.outfits.forEach(o => {
+
+   const li = document.createElement("li")
+   li.textContent = o
+
+   list.appendChild(li)
+
+ })
+
+}
+
 
 /* =========================
    SAVE CHARACTER
