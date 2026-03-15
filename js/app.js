@@ -86,6 +86,48 @@ function refreshDropdown() {
 }
 
 /* =========================
+Add Character
+========================= */
+let characters = []
+
+function addCharacter(){
+
+ const name = prompt("Masukkan nama karakter")
+
+ if(!name) return
+
+ const newCharacter = {
+   id: Date.now(),
+   name: name
+ }
+
+ characters.push(newCharacter)
+
+ renderCharacters()
+}
+
+function renderCharacters(){
+
+ const list = document.getElementById("characterList")
+
+ if(!list) return
+
+ list.innerHTML = ""
+
+ characters.forEach(char => {
+
+   const li = document.createElement("li")
+
+   li.innerText = char.name
+
+   list.appendChild(li)
+
+ })
+
+}
+
+
+/* =========================
    SAVE CHARACTER
 ========================= */
 function saveCharacter() {
