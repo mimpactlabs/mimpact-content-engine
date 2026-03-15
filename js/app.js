@@ -127,6 +127,39 @@ function renderCharacters(){
 
 }
 
+/* =========================
+   extraOutfit
+========================= */
+function addOutfit(){
+
+ const outfitInput = document.getElementById("extraOutfit")
+
+ if(!outfitInput) return
+
+ const outfit = outfitInput.value.trim()
+
+ if(!outfit) return
+
+ if(selectedIndex === null){
+   alert("Pilih karakter dulu")
+   return
+ }
+
+ const char = characters[selectedIndex]
+
+ if(!char.outfits){
+   char.outfits = []
+ }
+
+ char.outfits.push(outfit)
+
+ saveToStorage()
+ renderOutfits()
+
+ outfitInput.value = ""
+
+}
+
 
 /* =========================
    SAVE CHARACTER
