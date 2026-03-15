@@ -1,0 +1,23 @@
+{
+  "characters": [
+    {
+      "id": "riko",
+      "name": "Riko",
+      "age": 28,
+      "gender": "male",
+
+      "visual_dna": {
+        "hair": "short black",
+        "face": "sharp jawline",
+        "skin": "light tan"
+      },
+
+      "outfits": [],
+
+      "emotion_state": {
+        "calm": 0.5,
+        "confidence": 0.6
+      }
+    }
+  ]
+}
