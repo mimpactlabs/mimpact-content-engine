@@ -5,6 +5,21 @@ body {
   margin: auto;
 }
 
+.character-library {
+  background:#1a1a22;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:40px;
+}
+
+#characterList li{
+  padding:8px;
+  background:#222;
+  margin-bottom:6px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
 .hero {
   text-align: center;
   margin-bottom: 50px;
