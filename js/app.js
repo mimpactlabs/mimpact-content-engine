@@ -88,7 +88,6 @@ function refreshDropdown() {
 /* =========================
 Add Character
 ========================= */
-let characters = []
 
 function addCharacter(){
 
@@ -97,13 +96,15 @@ function addCharacter(){
  if(!name) return
 
  const newCharacter = {
-   id: Date.now(),
-   name: name
+   name: name,
+   timeline: [],
+   currentEmotion: "neutral"
  }
 
  characters.push(newCharacter)
 
- renderCharacters()
+ saveToStorage()
+ refreshDropdown()
 }
 
 function renderCharacters(){
