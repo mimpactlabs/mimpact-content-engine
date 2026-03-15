@@ -255,6 +255,8 @@ function loadCharacter(index) {
     const el = document.getElementById(id);
     if (el) el.value = char[id] || "";
   });
+   
+     renderOutfits()
 }
 
 /* =========================
