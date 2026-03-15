@@ -376,6 +376,27 @@ function buildVoiceLock(char) {
 }
 
 /* =========================
+   MODEL SPECIFIC PROMPT
+========================= */
+
+function applyModelStyle(prompt, model){
+
+  if(model === "midjourney"){
+    return prompt + " --ar 9:16 --style raw --v 6"
+  }
+
+  if(model === "sdxl"){
+    return prompt + ", ultra detailed, photorealistic, cinematic lighting"
+  }
+
+  if(model === "runway"){
+    return prompt + ", cinematic video shot, natural motion, film lighting"
+  }
+
+  return prompt
+}
+
+/* =========================
    GENERATE PROMPT
 ========================= */
 function generate() {
@@ -411,11 +432,15 @@ if(char.outfits && char.outfits.length > 0){
 
 const baseCharacter =
 `${char.name}, ${char.gender}, ${char.age} tahun, wearing ${outfitText}, emotion ${char.currentEmotion}`;
-  const finalPrompt =
-    `${baseCharacter}, ${sceneInput}, ${buildVisualLock()}, ${buildVoiceLock(char)}`;
+const model = document.getElementById("model")?.value
 
-  updateTimeline(char, sceneInput);
-  output.innerText = finalPrompt;
+let finalPrompt =
+`${baseCharacter}, ${sceneInput}, ${buildVisualLock()}, ${buildVoiceLock(char)}`
+
+finalPrompt = applyModelStyle(finalPrompt, model)
+
+updateTimeline(char, sceneInput)
+output.innerText = finalPrompt
 }
 
 /* =========================
