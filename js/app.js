@@ -427,7 +427,14 @@ function renderTimeline(){
 
 function buildVisualLock(){
 
- return "same exact face, no morphing, hyper realistic, cinematic lighting"
+ return `
+same exact face identity,
+no face morphing,
+consistent facial structure,
+consistent body proportion,
+cinematic lighting,
+ultra realistic photography
+`
 
 }
 
@@ -456,6 +463,29 @@ function applyModelStyle(prompt,model){
  }
 
  return prompt
+
+}
+
+/* =========================
+   CHARACTER DNA BUILDER
+========================= */
+
+function buildCharacterDNA(char){
+
+ if(!char) return ""
+
+ const dna = `
+identity locked character ${char.name},
+face structure ${char.face || ""},
+hair ${char.hair || ""},
+skin tone ${char.skin || ""},
+body type ${char.body || ""},
+visual style ${char.style || ""},
+personality archetype ${char.archetype || ""},
+consistent appearance across scenes
+`
+
+ return dna
 
 }
 
@@ -506,8 +536,10 @@ emotion ${char.currentEmotion}`
 
  const model = document.getElementById("model")?.value
 
- let finalPrompt =
-`${baseCharacter}, ${scene}, ${buildVisualLock()}, ${buildVoiceLock(char)}`
+const dna = buildCharacterDNA(char)
+
+let finalPrompt =
+`${dna}, ${baseCharacter}, ${scene}, ${buildVisualLock()}, ${buildVoiceLock(char)}`
 
  finalPrompt = applyModelStyle(finalPrompt, model)
 
