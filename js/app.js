@@ -343,9 +343,8 @@ function importCharacter(event) {
 /* =========================
    TIMELINE SYSTEM
 ========================= */
-updateTimeline(char, sceneInput)
-renderTimeline()
-output.innerText = finalPrompt{
+
+function updateTimeline(char, sceneInput) {
 
   if (!char.timeline) char.timeline = [];
 
