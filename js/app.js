@@ -1,33 +1,37 @@
 /* ======================================
-   MIMPACT LABS – AI CHARACTER ENGINE
-   CLEAN PRODUCTION VERSION
+MIMPACT LABS – AI CHARACTER ENGINE
+PRODUCTION CLEAN BUILD
 ====================================== */
 
 /* =========================
-   STORAGE
+STORAGE
 ========================= */
 
 function loadFromStorage(){
- try{
-  const data = localStorage.getItem("characters")
-  return data ? JSON.parse(data) : []
- }catch(e){
-  console.warn("Storage reset")
-  localStorage.removeItem("characters")
-  return []
- }
+try{
+const data = localStorage.getItem("characters")
+return data ? JSON.parse(data) : []
+}catch(e){
+console.warn("Storage reset")
+localStorage.removeItem("characters")
+return []
+}
 }
 
 let characters = loadFromStorage()
 let selectedIndex = null
 
 function saveToStorage(){
- localStorage.setItem("characters", JSON.stringify(characters))
+localStorage.setItem("characters", JSON.stringify(characters))
 }
 
 /* =========================
-   CLEAR FORM
+FORM HELPERS
 ========================= */
+
+function val(id){
+return document.getElementById(id)?.value?.trim() || ""
+}
 
 function clearForm(){
 
@@ -35,19 +39,20 @@ const fields=[
 "name","age","gender",
 "face","hair","skin","body",
 "outfit","style",
-"emotion","personality","archetype","mood"
+"emotion","personality","archetype","mood",
+"voiceModel","voiceStyle"
 ]
 
 fields.forEach(id=>{
- const el=document.getElementById(id)
- if(el) el.value=""
+const el=document.getElementById(id)
+if(el) el.value=""
 })
 
 selectedIndex=null
 }
 
 /* =========================
-   EMOTION DETECTOR
+EMOTION DETECTOR
 ========================= */
 
 function detectEmotion(scene){
@@ -65,7 +70,7 @@ return null
 }
 
 /* =========================
-   CHARACTER LIST
+CHARACTER LIST
 ========================= */
 
 function refreshDropdown(){
@@ -77,23 +82,23 @@ select.innerHTML=""
 
 characters.forEach((char,index)=>{
 
- const option=document.createElement("option")
+const option=document.createElement("option")
 
- option.value=index
- option.textContent=`${char.name || "No Name"} (${char.age || "-"} - ${char.gender || "-"})`
+option.value=index
+option.textContent=`${char.name || "No Name"} (${char.age || "-"} - ${char.gender || "-"})`
 
- select.appendChild(option)
+select.appendChild(option)
 
 })
 
 if(characters.length>0){
- select.value=characters.length-1
- loadCharacter(select.value)
+select.value=characters.length-1
+loadCharacter(select.value)
 }
 }
 
 /* =========================
-   ADD CHARACTER
+ADD CHARACTER
 ========================= */
 
 function addCharacter(){
@@ -102,9 +107,10 @@ const name=prompt("Masukkan nama karakter")
 if(!name) return
 
 const newChar={
- name:name,
- timeline:[],
- currentEmotion:"neutral"
+name:name,
+timeline:[],
+currentEmotion:"neutral",
+outfits:[]
 }
 
 characters.push(newChar)
@@ -114,20 +120,16 @@ refreshDropdown()
 }
 
 /* =========================
-   SAVE CHARACTER
+SAVE CHARACTER
 ========================= */
-
-function val(id){
- return document.getElementById(id)?.value?.trim() || ""
-}
 
 function saveCharacter(){
 
 const name = val("name")
 
 if(!name){
- alert("Nama karakter wajib diisi")
- return
+alert("Nama karakter wajib diisi")
+return
 }
 
 const emotionValue = val("emotion") || "neutral"
@@ -151,27 +153,30 @@ personality:val("personality"),
 archetype:val("archetype"),
 mood:val("mood"),
 
-voiceTone:"warm cinematic narrator",
-pitch:"medium-low stable pitch",
+voiceModel:val("voiceModel") || "male narrator",
+voiceStyle:val("voiceStyle") || "calm confident",
+voiceSpeed:"medium",
 
 timeline:[],
 currentEmotion:emotionValue,
 outfits:[]
+
 }
 
 if(selectedIndex!==null){
- characters[selectedIndex]=char
+characters[selectedIndex]=char
 }else{
- characters.push(char)
+characters.push(char)
 }
 
 saveToStorage()
 clearForm()
 refreshDropdown()
+
 }
 
 /* =========================
-   LOAD CHARACTER
+LOAD CHARACTER
 ========================= */
 
 function loadCharacter(index){
@@ -185,12 +190,13 @@ const fields=[
 "name","age","gender",
 "face","hair","skin","body",
 "outfit","style",
-"emotion","personality","archetype","mood"
+"emotion","personality","archetype","mood",
+"voiceModel","voiceStyle"
 ]
 
 fields.forEach(id=>{
- const el=document.getElementById(id)
- if(el) el.value=char[id]||""
+const el=document.getElementById(id)
+if(el) el.value=char[id]||""
 })
 
 renderOutfits()
@@ -198,7 +204,7 @@ renderTimeline()
 }
 
 /* =========================
-   DELETE CHARACTER
+DELETE CHARACTER
 ========================= */
 
 function deleteCharacter(){
@@ -211,10 +217,11 @@ characters.splice(selectedIndex,1)
 saveToStorage()
 clearForm()
 refreshDropdown()
+
 }
 
 /* =========================
-   OUTFIT SYSTEM
+OUTFIT SYSTEM
 ========================= */
 
 function addOutfit(){
@@ -226,8 +233,8 @@ const outfit=input.value.trim()
 if(!outfit) return
 
 if(selectedIndex===null){
- alert("Pilih karakter dulu")
- return
+alert("Pilih karakter dulu")
+return
 }
 
 const char=characters[selectedIndex]
@@ -240,6 +247,7 @@ saveToStorage()
 renderOutfits()
 
 input.value=""
+
 }
 
 function renderOutfits(){
@@ -255,27 +263,28 @@ const char=characters[selectedIndex]
 if(!char.outfits) return
 
 char.outfits.forEach(o=>{
- const li=document.createElement("li")
- li.textContent=o
- list.appendChild(li)
+const li=document.createElement("li")
+li.textContent=o
+list.appendChild(li)
 })
 }
 
 /* =========================
-   SMART OUTFIT PICKER
+SMART OUTFIT PICKER
 ========================= */
 
 function pickOutfit(char){
 
 if(!char.outfits || char.outfits.length===0)
- return char.outfit || ""
+return char.outfit || ""
 
 const index=Math.floor(Math.random()*char.outfits.length)
 return char.outfits[index]
+
 }
 
 /* =========================
-   TIMELINE MEMORY
+TIMELINE MEMORY
 ========================= */
 
 function updateTimeline(char,scene){
@@ -297,11 +306,8 @@ time:new Date().toISOString()
 })
 
 saveToStorage()
-}
 
-/* =========================
-   TIMELINE VIEW
-========================= */
+}
 
 function renderTimeline(){
 
@@ -317,88 +323,68 @@ if(!char.timeline) return
 
 char.timeline.forEach(t=>{
 
- const li=document.createElement("li")
+const li=document.createElement("li")
 
- li.textContent=`${t.scene} | ${t.emotionBefore} → ${t.emotionAfter}`
+li.textContent=`${t.scene} | ${t.emotionBefore} → ${t.emotionAfter}`
 
- list.appendChild(li)
+list.appendChild(li)
 
 })
 }
 
 /* =========================
-   SCENE MEMORY
-========================= */
-
-function buildSceneMemory(char){
-
-if(!char.timeline || char.timeline.length===0) return ""
-
-const last=char.timeline[char.timeline.length-1]
-
-return `previous emotional state ${last.emotionAfter}`
-}
-
-/* =========================
-   VISUAL LOCK
-========================= */
-
-function buildVisualLock(){
-
-return `
-same exact face identity,
-no face morphing,
-consistent facial structure,
-consistent body proportion,
-cinematic lighting,
-ultra realistic photography
-`
-}
-
-function buildVoiceLock(char){
- return `consistent voice tone ${char.voiceTone}, fixed pitch ${char.pitch}`
-}
-
-/* =========================
-   MODEL STYLE
-========================= */
-
-function applyModelStyle(prompt,model){
-
-if(model==="midjourney")
- return prompt+" --ar 9:16 --style raw --v 6"
-
-if(model==="sdxl")
- return prompt+", ultra detailed, photorealistic"
-
-if(model==="runway")
- return prompt+", cinematic video shot, natural motion"
-
-return prompt
-}
-
-/* =========================
-   CHARACTER DNA
+CHARACTER DNA
 ========================= */
 
 function buildCharacterDNA(char){
 
 if(!char) return ""
 
-return `
-identity locked character ${char.name},
+return `identity locked character ${char.name},
 face structure ${char.face || ""},
 hair ${char.hair || ""},
 skin tone ${char.skin || ""},
 body type ${char.body || ""},
 visual style ${char.style || ""},
 personality archetype ${char.archetype || ""},
-consistent appearance across scenes
-`
+consistent appearance across scenes`
+
 }
 
 /* =========================
-   CHARACTER RELATIONSHIP
+VOICE CHARACTER DNA
+========================= */
+
+function buildVoiceCharacter(char){
+
+if(!char) return ""
+
+return `character voice identity:
+voice model ${char.voiceModel},
+speaking style ${char.voiceStyle},
+speech speed ${char.voiceSpeed},
+emotion tone ${char.currentEmotion},
+consistent character voice`
+
+}
+
+/* =========================
+VISUAL LOCK
+========================= */
+
+function buildVisualLock(){
+
+return `same exact face identity,
+no face morphing,
+consistent facial structure,
+consistent body proportion,
+cinematic lighting,
+ultra realistic photography`
+
+}
+
+/* =========================
+RELATIONSHIP CONTEXT
 ========================= */
 
 function buildRelationshipContext(char){
@@ -411,10 +397,30 @@ Fatima:"wise emotional stabilizer"
 }
 
 return relations[char.name] || ""
+
 }
 
 /* =========================
-   GENERATE PROMPT
+MODEL STYLE
+========================= */
+
+function applyModelStyle(prompt,model){
+
+if(model==="midjourney")
+return prompt+" --ar 9:16 --style raw --v 6"
+
+if(model==="sdxl")
+return prompt+", ultra detailed, photorealistic"
+
+if(model==="runway")
+return prompt+", cinematic video shot, natural motion"
+
+return prompt
+
+}
+
+/* =========================
+PROMPT GENERATOR
 ========================= */
 
 function generate(){
@@ -427,27 +433,23 @@ if(!sceneEl||!output) return
 const scene=sceneEl.value.trim()
 
 if(!scene){
- output.innerText="Masukkan adegan terlebih dahulu"
- return
+output.innerText="Masukkan adegan terlebih dahulu"
+return
 }
 
 if(selectedIndex===null){
- output.innerText="Pilih karakter terlebih dahulu"
- return
+output.innerText="Pilih karakter terlebih dahulu"
+return
 }
 
 const char=characters[selectedIndex]
 
 if(!char.currentEmotion)
- char.currentEmotion=char.emotion||"neutral"
+char.currentEmotion=char.emotion||"neutral"
 
 const dna=buildCharacterDNA(char)
-
-const dnaOutput=document.getElementById("dnaOutput")
-if(dnaOutput) dnaOutput.innerText=dna
-
+const voiceDNA=buildVoiceCharacter(char)
 const relation=buildRelationshipContext(char)
-const memory=buildSceneMemory(char)
 
 const outfitText=pickOutfit(char)
 
@@ -468,11 +470,10 @@ let finalPrompt=
 
 `${dna},
 ${relation},
-${memory},
+${voiceDNA},
 ${baseCharacter},
 ${scene},
-${buildVisualLock()},
-${buildVoiceLock(char)}`
+${buildVisualLock()}`
 
 finalPrompt=applyModelStyle(finalPrompt,model)
 
@@ -480,10 +481,11 @@ updateTimeline(char,scene)
 renderTimeline()
 
 output.innerText=finalPrompt
+
 }
 
 /* =========================
-   INIT
+INIT
 ========================= */
 
 document.addEventListener("DOMContentLoaded",function(){
@@ -491,9 +493,9 @@ document.addEventListener("DOMContentLoaded",function(){
 const select=document.getElementById("characterSelect")
 
 if(select){
- select.addEventListener("change",function(){
-  loadCharacter(this.value)
- })
+select.addEventListener("change",function(){
+loadCharacter(this.value)
+})
 }
 
 refreshDropdown()
