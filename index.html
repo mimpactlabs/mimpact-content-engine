@@ -1,217 +1,268 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<link rel="icon" href="data:,">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mimpact Labs – AI Character Consistency Engine</title>
 
+<link rel="icon" href="data:,">
+
 <style>
+
 * { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #0f0f14;
-  color: #fff;
-  line-height: 1.6;
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:#0f0f14;
+  color:#fff;
+  line-height:1.6;
 }
 
-section {
-  padding: 80px 20px;
-  max-width: 1100px;
-  margin: auto;
+section{
+  padding:80px 20px;
+  max-width:1100px;
+  margin:auto;
 }
 
-h1 { font-size: 42px; margin-bottom: 20px; }
-h2 { font-size: 28px; margin-bottom: 20px; }
-p { color: #aaa; }
+h1{font-size:42px;margin-bottom:20px;}
+h2{font-size:28px;margin-bottom:20px;}
+p{color:#aaa;}
 
-.hero {
-  text-align: center;
-  padding-top: 120px;
+.hero{
+  text-align:center;
+  padding-top:120px;
 }
 
-.hero button {
-  margin-top: 30px;
-  padding: 14px 28px;
-  background: #00c3ff;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
+.hero button{
+  margin-top:30px;
+  padding:14px 28px;
+  background:#00c3ff;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-.features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
-  margin-top: 50px;
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:30px;
+  margin-top:50px;
 }
 
-.feature-box {
-  background: #1a1a22;
-  padding: 25px;
-  border-radius: 12px;
+.feature-box{
+  background:#1a1a22;
+  padding:25px;
+  border-radius:12px;
 }
 
-.tool {
-  background: #15151c;
-  padding: 60px 20px;
-  border-top: 1px solid #222;
+.tool{
+  background:#15151c;
+  padding:60px 20px;
+  border-top:1px solid #222;
 }
 
-input, textarea, select, button {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: none;
+input,textarea,select,button{
+  width:100%;
+  padding:10px;
+  margin-bottom:15px;
+  border-radius:6px;
+  border:none;
 }
 
-textarea { min-height: 100px; }
+textarea{min-height:100px;}
 
-button.generate {
-  background: #00ff9d;
-  font-weight: bold;
+button.generate{
+  background:#00ff9d;
+  font-weight:bold;
 }
 
-#output {
-  background: #222;
-  padding: 20px;
-  border-radius: 10px;
-  white-space: pre-wrap;
-  margin-top: 20px;
+#output{
+  background:#222;
+  padding:20px;
+  border-radius:10px;
+  white-space:pre-wrap;
+  margin-top:20px;
 }
 
-footer {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-  border-top: 1px solid #222;
+ul{
+  padding-left:20px;
 }
+
+footer{
+  text-align:center;
+  padding:40px;
+  color:#666;
+  border-top:1px solid #222;
+}
+
 </style>
 </head>
 
 <body>
 
-  
 <!-- HERO -->
 <section class="hero">
-  <h1>🧠 AI Character Consistency Engine</h1>
-  <p>Buat dan pertahankan karakter AI yang konsisten untuk gambar, video, cerita, dan dialog.</p>
-  <button onclick="document.getElementById('toolSection').scrollIntoView({behavior:'smooth'})">
-    🚀 Coba Sekarang
-  </button>
+
+<h1>🧠 AI Character Consistency Engine</h1>
+
+<p>
+Buat dan pertahankan karakter AI yang konsisten
+untuk gambar, video, cerita, dan dialog.
+</p>
+
+<button type="button"
+onclick="document.getElementById('toolSection').scrollIntoView({behavior:'smooth'})">
+🚀 Coba Sekarang
+</button>
+
 </section>
 
 <!-- FEATURES -->
 <section>
-  <h2>Kenapa Menggunakan Engine Ini?</h2>
 
-  <div class="features">
-    <div class="feature-box">
-      <h3>🔒 Face Lock System</h3>
-      <p>Menjaga wajah tetap identik meskipun adegan berubah.</p>
-    </div>
+<h2>Kenapa Menggunakan Engine Ini?</h2>
 
-    <div class="feature-box">
-      <h3>🎭 Outfit Variation</h3>
-      <p>Variasi pakaian tanpa merusak identitas karakter.</p>
-    </div>
+<div class="features">
 
-    <div class="feature-box">
-      <h3>🎬 Multi Mode</h3>
-      <p>Support Image, Video Prompt, Story, dan Roleplay Chat.</p>
-    </div>
+<div class="feature-box">
+<h3>🔒 Face Lock System</h3>
+<p>Menjaga wajah tetap identik meskipun adegan berubah.</p>
+</div>
 
-    <div class="feature-box">
-      <h3>⚡ Instan & Tanpa Login</h3>
-      <p>Langsung pakai. Semua data tersimpan di browser Anda.</p>
-    </div>
-  </div>
+<div class="feature-box">
+<h3>🎭 Outfit Variation</h3>
+<p>Variasi pakaian tanpa merusak identitas karakter.</p>
+</div>
+
+<div class="feature-box">
+<h3>🎬 Multi Mode</h3>
+<p>Support Image, Video Prompt, Story, dan Roleplay Chat.</p>
+</div>
+
+<div class="feature-box">
+<h3>⚡ Instan & Tanpa Login</h3>
+<p>Langsung pakai. Semua data tersimpan di browser Anda.</p>
+</div>
+
+</div>
 </section>
 
 <!-- CHARACTER LIBRARY -->
 <section>
+
 <h2>Character Library</h2>
-<button onclick="addCharacter()">+ Add Character</button>
+
+<button type="button" onclick="addCharacter()">+ Add Character</button>
+
 <ul id="characterList"></ul>
+
 </section>
-  
+
 <!-- TOOL -->
 <section class="tool" id="toolSection">
-  <h2>🛠 Buat Karakter</h2>
 
-  <input id="name" placeholder="Nama Karakter">
-  <input id="age" placeholder="Usia">
-  <input id="gender" placeholder="Jenis Kelamin">
-  <input id="face" placeholder="Deskripsi Wajah">
-  <input id="hair" placeholder="Deskripsi Rambut">
-  <input id="outfit" placeholder="Pakaian Standar">
-  <input id="extraOutfit" placeholder="Tambahkan variasi pakaian">
-<button onclick="addOutfit()">Tambah Outfit</button>
+<h2>🛠 Buat Karakter</h2>
+
+<input id="name" placeholder="Nama Karakter">
+<input id="age" placeholder="Usia">
+<input id="gender" placeholder="Jenis Kelamin">
+<input id="face" placeholder="Deskripsi Wajah">
+<input id="hair" placeholder="Deskripsi Rambut">
+
+<input id="outfit" placeholder="Pakaian Standar">
+
+<input id="extraOutfit" placeholder="Tambahkan variasi pakaian">
+<button type="button" onclick="addOutfit()">Tambah Outfit</button>
 
 <ul id="outfitList"></ul>
-  <input id="style" placeholder="Gaya Visual">
 
-  <h3>🧠 Emotional State</h3>
-  <input id="emotion" placeholder="happy, angry, nervous">
-  <input id="personality" placeholder="confident, introvert, dominant">
-  <input id="mood" placeholder="calm, tense, excited">
+<input id="style" placeholder="Gaya Visual">
 
-  <button onclick="saveCharacter()">Simpan Karakter</button>
+<h3>🧠 Emotional State</h3>
 
-  <h3>🧬 Pilih Karakter</h3>
-  <select id="characterSelect"></select>
-  <button onclick="deleteCharacter()">Hapus Karakter</button>
+<input id="emotion" placeholder="happy, angry, nervous">
+<input id="personality" placeholder="confident, introvert, dominant">
+<input id="mood" placeholder="calm, tense, excited">
 
-  <button onclick="exportCharacter()">Export Character</button>
-  <button onclick="exportAllCharacters()">Export All</button>
+<button type="button" onclick="saveCharacter()">Simpan Karakter</button>
 
-  <input type="file" id="importFile" accept=".json"
-         onchange="importCharacter(event)" hidden>
+<h3>🧬 Pilih Karakter</h3>
 
-  <button onclick="document.getElementById('importFile').click()">
-    Import Character
-  </button>
+<select id="characterSelect"></select>
 
-  <h3>🎛 Mode</h3>
-  <select id="mode">
-    <option value="image">Gambar AI</option>
-    <option value="video">Video AI</option>
-    <option value="story">Story</option>
-    <option value="chat">Dialogue</option>
-  </select>
+<button type="button" onclick="deleteCharacter()">Hapus Karakter</button>
 
-  <h3>🎨 Model AI</h3>
-  <select id="model">
-    <option value="midjourney">Midjourney</option>
-    <option value="sdxl">SDXL</option>
-    <option value="runway">Runway</option>
-  </select>
+<button type="button" onclick="exportCharacter()">Export Character</button>
 
-  <textarea id="scene" placeholder="Tulis adegan di sini..."></textarea>
+<button type="button" onclick="exportAllCharacters()">Export All</button>
 
-  <label>
-    <input type="checkbox" id="outfitLock"> Aktifkan Variasi Pakaian
-  </label>
+<input
+type="file"
+id="importFile"
+accept=".json"
+hidden
+onchange="importCharacter(event)"
+>
 
-  <input id="outfitVariation" placeholder="Detail variasi pakaian">
+<button
+type="button"
+onclick="document.getElementById('importFile').click()">
+Import Character
+</button>
 
-  <button class="generate" onclick="generate()">✨ Generate Prompt</button>
+<h3>🎛 Mode</h3>
 
-  <div id="output"></div>
-</section>
+<select id="mode">
+<option value="image">Gambar AI</option>
+<option value="video">Video AI</option>
+<option value="story">Story</option>
+<option value="chat">Dialogue</option>
+</select>
 
-  <h3>🎬 Character Timeline</h3>
+<h3>🎨 Model AI</h3>
+
+<select id="model">
+<option value="midjourney">Midjourney</option>
+<option value="sdxl">SDXL</option>
+<option value="runway">Runway</option>
+</select>
+
+<textarea
+id="scene"
+placeholder="Tulis adegan di sini..."
+></textarea>
+
+<label>
+<input type="checkbox" id="outfitLock">
+Aktifkan Variasi Pakaian
+</label>
+
+<input id="outfitVariation" placeholder="Detail variasi pakaian">
+
+<button
+class="generate"
+type="button"
+onclick="generate()">
+✨ Generate Prompt
+</button>
+
+<div id="output"></div>
+
+<h3>🎬 Character Timeline</h3>
+
 <ul id="timelineList"></ul>
 
+</section>
+
 <footer>
-  © 2026 Mimpact Labs – AI Character Engine
+© 2026 Mimpact Labs – AI Character Engine
 </footer>
 
-<script src="/mimpact-content-engine/js/app.js"></script>
+<script src="js/app.js"></script>
+
 </body>
 </html>
