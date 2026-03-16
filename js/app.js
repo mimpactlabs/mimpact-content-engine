@@ -498,8 +498,15 @@ function generate(){
   outfitText = char.outfits[0]
  }
 
- const base=
- `${char.name}, ${char.gender}, ${char.age} tahun, wearing ${outfitText}, emotion ${char.currentEmotion}`
+const baseCharacter =
+`${char.name}, ${char.gender}, ${char.age} tahun,
+${char.body} body,
+${char.skin} skin,
+${char.face},
+${char.hair},
+archetype ${char.archetype},
+wearing ${outfitText},
+emotion ${char.currentEmotion}`
 
  const model=document.getElementById("model").value
 
