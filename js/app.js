@@ -31,10 +31,12 @@ function saveToStorage(){
 
 function clearForm(){
 
- const fields = [
-  "name","age","gender","face","hair",
-  "outfit","style","emotion","personality","mood"
- ]
+const fields = [
+"name","age","gender",
+"face","hair","skin","body",
+"outfit","style",
+"emotion","personality","archetype","mood"
+]
 
  fields.forEach(id=>{
   const el = document.getElementById(id)
@@ -131,6 +133,24 @@ function saveCharacter(){
 
  const char = {
 
+name: nameEl.value.trim(),
+age: document.getElementById("age")?.value.trim(),
+gender: document.getElementById("gender")?.value.trim(),
+
+face: document.getElementById("face")?.value.trim(),
+hair: document.getElementById("hair")?.value.trim(),
+skin: document.getElementById("skin")?.value.trim(),
+body: document.getElementById("body")?.value.trim(),
+
+outfit: document.getElementById("outfit")?.value.trim(),
+style: document.getElementById("style")?.value.trim(),
+
+emotion: emotionValue,
+personality: document.getElementById("personality")?.value.trim(),
+archetype: document.getElementById("archetype")?.value.trim(),
+mood: document.getElementById("mood")?.value.trim(),
+    
+<!-- end
   name:name,
   age:document.getElementById("age").value,
   gender:document.getElementById("gender").value,
@@ -141,7 +161,8 @@ function saveCharacter(){
   emotion:emotion,
   personality:document.getElementById("personality").value,
   mood:document.getElementById("mood").value,
-
+end -->
+    
   voiceTone:"warm cinematic narrator",
   pitch:"medium-low stable pitch",
 
