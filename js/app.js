@@ -122,17 +122,17 @@ function addCharacter(){
 
 function saveCharacter() {
 
-  const nameEl = document.getElementById("name");
+  const nameEl = document.getElementById("name")
 
-  const name = nameEl.value.trim();
+  const name = nameEl.value.trim()
 
   if (!name) {
-    alert("Nama karakter wajib diisi.");
+    alert("Nama karakter wajib diisi.")
     return;
   }
 
   const emotionValue =
-    document.getElementById("emotion")?.value.trim() || "neutral";
+    document.getElementById("emotion")?.value.trim() || "neutral"
 
  const char = {
 
