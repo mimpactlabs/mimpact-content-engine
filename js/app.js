@@ -120,16 +120,19 @@ function addCharacter(){
    SAVE CHARACTER
 ========================= */
 
-function saveCharacter(){
+function saveCharacter() {
 
- const name = document.getElementById("name").value.trim()
+  const nameEl = document.getElementById("name");
 
- if(!name){
-  alert("Nama wajib diisi")
-  return
- }
+  const name = nameEl.value.trim();
 
- const emotion = document.getElementById("emotion").value.trim() || "neutral"
+  if (!name) {
+    alert("Nama karakter wajib diisi.");
+    return;
+  }
+
+  const emotionValue =
+    document.getElementById("emotion")?.value.trim() || "neutral";
 
  const char = {
 
