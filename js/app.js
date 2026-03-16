@@ -149,22 +149,7 @@ emotion: emotionValue,
 personality: document.getElementById("personality")?.value.trim(),
 archetype: document.getElementById("archetype")?.value.trim(),
 mood: document.getElementById("mood")?.value.trim(),
-    
-/*
-<!-- end
-  name:name,
-  age:document.getElementById("age").value,
-  gender:document.getElementById("gender").value,
-  face:document.getElementById("face").value,
-  hair:document.getElementById("hair").value,
-  outfit:document.getElementById("outfit").value,
-  style:document.getElementById("style").value,
-  emotion:emotion,
-  personality:document.getElementById("personality").value,
-  mood:document.getElementById("mood").value,
-end -->
 
-*/
     
   voiceTone:"warm cinematic narrator",
   pitch:"medium-low stable pitch",
