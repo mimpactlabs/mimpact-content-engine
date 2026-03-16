@@ -1,6 +1,6 @@
 /* ======================================
    MIMPACT LABS – AI CHARACTER ENGINE
-   CLEAN STABLE VERSION
+   CLEAN PRODUCTION VERSION
 ====================================== */
 
 /* =========================
@@ -44,7 +44,6 @@ fields.forEach(id=>{
 })
 
 selectedIndex=null
-
 }
 
 /* =========================
@@ -91,7 +90,6 @@ if(characters.length>0){
  select.value=characters.length-1
  loadCharacter(select.value)
 }
-
 }
 
 /* =========================
@@ -101,7 +99,6 @@ if(characters.length>0){
 function addCharacter(){
 
 const name=prompt("Masukkan nama karakter")
-
 if(!name) return
 
 const newChar={
@@ -114,53 +111,52 @@ characters.push(newChar)
 
 saveToStorage()
 refreshDropdown()
-
 }
 
 /* =========================
    SAVE CHARACTER
 ========================= */
 
+function val(id){
+ return document.getElementById(id)?.value?.trim() || ""
+}
+
 function saveCharacter(){
 
-const nameEl=document.getElementById("name")
-if(!nameEl) return
-
-const name=nameEl.value.trim()
+const name = val("name")
 
 if(!name){
  alert("Nama karakter wajib diisi")
  return
 }
 
-const emotionValue=
-document.getElementById("emotion")?.value.trim() || "neutral"
+const emotionValue = val("emotion") || "neutral"
 
 const char={
 
 name:name,
-age:document.getElementById("age")?.value.trim(),
-gender:document.getElementById("gender")?.value.trim(),
+age:val("age"),
+gender:val("gender"),
 
-face:document.getElementById("face")?.value.trim(),
-hair:document.getElementById("hair")?.value.trim(),
-skin:document.getElementById("skin")?.value.trim(),
-body:document.getElementById("body")?.value.trim(),
+face:val("face"),
+hair:val("hair"),
+skin:val("skin"),
+body:val("body"),
 
-outfit:document.getElementById("outfit")?.value.trim(),
-style:document.getElementById("style")?.value.trim(),
+outfit:val("outfit"),
+style:val("style"),
 
 emotion:emotionValue,
-personality:document.getElementById("personality")?.value.trim(),
-archetype:document.getElementById("archetype")?.value.trim(),
-mood:document.getElementById("mood")?.value.trim(),
+personality:val("personality"),
+archetype:val("archetype"),
+mood:val("mood"),
 
 voiceTone:"warm cinematic narrator",
 pitch:"medium-low stable pitch",
 
 timeline:[],
-currentEmotion:emotionValue
-
+currentEmotion:emotionValue,
+outfits:[]
 }
 
 if(selectedIndex!==null){
@@ -172,7 +168,6 @@ if(selectedIndex!==null){
 saveToStorage()
 clearForm()
 refreshDropdown()
-
 }
 
 /* =========================
@@ -200,7 +195,6 @@ fields.forEach(id=>{
 
 renderOutfits()
 renderTimeline()
-
 }
 
 /* =========================
@@ -210,7 +204,6 @@ renderTimeline()
 function deleteCharacter(){
 
 if(selectedIndex===null) return
-
 if(!confirm("Hapus karakter?")) return
 
 characters.splice(selectedIndex,1)
@@ -218,7 +211,6 @@ characters.splice(selectedIndex,1)
 saveToStorage()
 clearForm()
 refreshDropdown()
-
 }
 
 /* =========================
@@ -245,11 +237,9 @@ if(!char.outfits) char.outfits=[]
 char.outfits.push(outfit)
 
 saveToStorage()
-
 renderOutfits()
 
 input.value=""
-
 }
 
 function renderOutfits(){
@@ -262,97 +252,26 @@ list.innerHTML=""
 if(selectedIndex===null) return
 
 const char=characters[selectedIndex]
-
 if(!char.outfits) return
 
 char.outfits.forEach(o=>{
-
  const li=document.createElement("li")
  li.textContent=o
  list.appendChild(li)
-
 })
-
 }
 
 /* =========================
-   EXPORT
+   SMART OUTFIT PICKER
 ========================= */
 
-function downloadJSON(data,filename){
+function pickOutfit(char){
 
-const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"})
+if(!char.outfits || char.outfits.length===0)
+ return char.outfit || ""
 
-const url=URL.createObjectURL(blob)
-
-const a=document.createElement("a")
-
-a.href=url
-a.download=filename
-a.click()
-
-URL.revokeObjectURL(url)
-
-}
-
-function exportCharacter(){
-
-if(selectedIndex===null){
- alert("Pilih karakter")
- return
-}
-
-downloadJSON(characters[selectedIndex],characters[selectedIndex].name+".json")
-
-}
-
-function exportAllCharacters(){
-
-if(!characters.length){
- alert("Belum ada karakter")
- return
-}
-
-downloadJSON(characters,"mimpact_backup.json")
-
-}
-
-/* =========================
-   IMPORT
-========================= */
-
-function importCharacter(event){
-
-const file=event.target.files[0]
-if(!file) return
-
-const reader=new FileReader()
-
-reader.onload=function(e){
-
- try{
-
-  const data=JSON.parse(e.target.result)
-
-  if(Array.isArray(data)){
-   data.forEach(c=>characters.push(c))
-  }else{
-   characters.push(data)
-  }
-
-  saveToStorage()
-  refreshDropdown()
-
-  alert("Import berhasil")
-
- }catch{
-  alert("File tidak valid")
- }
-
-}
-
-reader.readAsText(file)
-
+const index=Math.floor(Math.random()*char.outfits.length)
+return char.outfits[index]
 }
 
 /* =========================
@@ -363,23 +282,21 @@ function updateTimeline(char,scene){
 
 if(!char.timeline) char.timeline=[]
 
-const before=char.currentEmotion||"neutral"
+const before=char.currentEmotion || "neutral"
 
 const detected=detectEmotion(scene)
-
 if(detected) char.currentEmotion=detected
 
 char.timeline.push({
 
- scene:scene,
- emotionBefore:before,
- emotionAfter:char.currentEmotion,
- time:new Date().toISOString()
+scene:scene,
+emotionBefore:before,
+emotionAfter:char.currentEmotion,
+time:new Date().toISOString()
 
 })
 
 saveToStorage()
-
 }
 
 /* =========================
@@ -407,7 +324,19 @@ char.timeline.forEach(t=>{
  list.appendChild(li)
 
 })
+}
 
+/* =========================
+   SCENE MEMORY
+========================= */
+
+function buildSceneMemory(char){
+
+if(!char.timeline || char.timeline.length===0) return ""
+
+const last=char.timeline[char.timeline.length-1]
+
+return `previous emotional state ${last.emotionAfter}`
 }
 
 /* =========================
@@ -424,29 +353,28 @@ consistent body proportion,
 cinematic lighting,
 ultra realistic photography
 `
-
 }
 
 function buildVoiceLock(char){
-
-return `consistent voice tone ${char.voiceTone}, fixed pitch ${char.pitch}`
-
+ return `consistent voice tone ${char.voiceTone}, fixed pitch ${char.pitch}`
 }
 
 /* =========================
-   MODEL PROMPT STYLE
+   MODEL STYLE
 ========================= */
 
 function applyModelStyle(prompt,model){
 
-if(model==="midjourney") return prompt+" --ar 9:16 --style raw --v 6"
+if(model==="midjourney")
+ return prompt+" --ar 9:16 --style raw --v 6"
 
-if(model==="sdxl") return prompt+", ultra detailed, photorealistic"
+if(model==="sdxl")
+ return prompt+", ultra detailed, photorealistic"
 
-if(model==="runway") return prompt+", cinematic video shot, natural motion"
+if(model==="runway")
+ return prompt+", cinematic video shot, natural motion"
 
 return prompt
-
 }
 
 /* =========================
@@ -467,7 +395,22 @@ visual style ${char.style || ""},
 personality archetype ${char.archetype || ""},
 consistent appearance across scenes
 `
+}
 
+/* =========================
+   CHARACTER RELATIONSHIP
+========================= */
+
+function buildRelationshipContext(char){
+
+const relations={
+Riko:"ambitious affiliate protagonist",
+Arga:"competitive rival energy",
+Gins:"silent strategist observer",
+Fatima:"wise emotional stabilizer"
+}
+
+return relations[char.name] || ""
 }
 
 /* =========================
@@ -495,20 +438,18 @@ if(selectedIndex===null){
 
 const char=characters[selectedIndex]
 
+if(!char.currentEmotion)
+ char.currentEmotion=char.emotion||"neutral"
+
 const dna=buildCharacterDNA(char)
 
 const dnaOutput=document.getElementById("dnaOutput")
 if(dnaOutput) dnaOutput.innerText=dna
 
-if(!char.currentEmotion){
- char.currentEmotion=char.emotion||"neutral"
-}
+const relation=buildRelationshipContext(char)
+const memory=buildSceneMemory(char)
 
-let outfitText=char.outfit||""
-
-if(char.outfits&&char.outfits.length>0){
- outfitText=char.outfits[0]
-}
+const outfitText=pickOutfit(char)
 
 const baseCharacter=
 
@@ -524,7 +465,14 @@ emotion ${char.currentEmotion}`
 const model=document.getElementById("model")?.value
 
 let finalPrompt=
-`${dna}, ${baseCharacter}, ${scene}, ${buildVisualLock()}, ${buildVoiceLock(char)}`
+
+`${dna},
+${relation},
+${memory},
+${baseCharacter},
+${scene},
+${buildVisualLock()},
+${buildVoiceLock(char)}`
 
 finalPrompt=applyModelStyle(finalPrompt,model)
 
@@ -532,7 +480,6 @@ updateTimeline(char,scene)
 renderTimeline()
 
 output.innerText=finalPrompt
-
 }
 
 /* =========================
