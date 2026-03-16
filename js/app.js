@@ -465,49 +465,56 @@ function applyModelStyle(prompt,model){
 
 function generate(){
 
- const scene=document.getElementById("scene").value.trim()
- const output=document.getElementById("output")
+ const sceneEl = document.getElementById("scene")
+ const output = document.getElementById("output")
+
+ if(!sceneEl || !output) return
+
+ const scene = sceneEl.value.trim()
 
  if(!scene){
-  output.innerText="Masukkan adegan"
+  output.innerText = "Masukkan adegan terlebih dahulu"
   return
  }
 
- if(selectedIndex===null){
-  output.innerText="Pilih karakter"
+ if(selectedIndex === null){
+  output.innerText = "Pilih karakter terlebih dahulu"
   return
  }
 
- const char=characters[selectedIndex]
+ const char = characters[selectedIndex]
+
+ if(!char.currentEmotion){
+  char.currentEmotion = char.emotion || "neutral"
+ }
 
  let outfitText = char.outfit || ""
 
- if(char.outfits && char.outfits.length>0){
+ if(char.outfits && char.outfits.length > 0){
   outfitText = char.outfits[0]
  }
 
-const baseCharacter =
+ const baseCharacter =
 `${char.name}, ${char.gender}, ${char.age} tahun,
-${char.body} body,
-${char.skin} skin,
-${char.face},
-${char.hair},
-archetype ${char.archetype},
+${char.body || ""} body,
+${char.skin || ""} skin,
+${char.face || ""},
+${char.hair || ""},
+archetype ${char.archetype || ""},
 wearing ${outfitText},
 emotion ${char.currentEmotion}`
 
- const model=document.getElementById("model").value
+ const model = document.getElementById("model")?.value
 
- let prompt=
- `${base}, ${scene}, ${buildVisualLock()}, ${buildVoiceLock(char)}`
+ let finalPrompt =
+`${baseCharacter}, ${scene}, ${buildVisualLock()}, ${buildVoiceLock(char)}`
 
- prompt=applyModelStyle(prompt,model)
+ finalPrompt = applyModelStyle(finalPrompt, model)
 
- updateTimeline(char,scene)
-
+ updateTimeline(char, scene)
  renderTimeline()
 
- output.innerText=prompt
+ output.innerText = finalPrompt
 
 }
 
