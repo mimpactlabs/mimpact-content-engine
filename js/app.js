@@ -8,21 +8,21 @@
 ========================= */
 
 function loadFromStorage(){
-  try{
-    const data = localStorage.getItem("characters")
-    return data ? JSON.parse(data) : []
-  }catch(e){
-    console.warn("Storage error reset")
-    localStorage.removeItem("characters")
-    return []
-  }
+ try{
+  const data = localStorage.getItem("characters")
+  return data ? JSON.parse(data) : []
+ }catch(e){
+  console.warn("Storage reset")
+  localStorage.removeItem("characters")
+  return []
+ }
 }
 
 let characters = loadFromStorage()
 let selectedIndex = null
 
 function saveToStorage(){
-  localStorage.setItem("characters", JSON.stringify(characters))
+ localStorage.setItem("characters", JSON.stringify(characters))
 }
 
 /* =========================
@@ -31,19 +31,20 @@ function saveToStorage(){
 
 function clearForm(){
 
-const fields = [
+const fields=[
 "name","age","gender",
 "face","hair","skin","body",
 "outfit","style",
 "emotion","personality","archetype","mood"
 ]
 
- fields.forEach(id=>{
-  const el = document.getElementById(id)
-  if(el) el.value=""
- })
+fields.forEach(id=>{
+ const el=document.getElementById(id)
+ if(el) el.value=""
+})
 
- selectedIndex=null
+selectedIndex=null
+
 }
 
 /* =========================
@@ -52,16 +53,16 @@ const fields = [
 
 function detectEmotion(scene){
 
- const text = scene.toLowerCase()
+const text = scene.toLowerCase()
 
- if(text.includes("marah") || text.includes("angry")) return "angry"
- if(text.includes("sedih") || text.includes("cry")) return "sad"
- if(text.includes("happy") || text.includes("bahagia")) return "happy"
- if(text.includes("romantis") || text.includes("love")) return "romantic"
- if(text.includes("takut") || text.includes("dark")) return "fearful"
- if(text.includes("shock") || text.includes("terkejut")) return "shocked"
+if(text.includes("marah")||text.includes("angry")) return "angry"
+if(text.includes("sedih")||text.includes("cry")) return "sad"
+if(text.includes("happy")||text.includes("bahagia")) return "happy"
+if(text.includes("romantis")||text.includes("love")) return "romantic"
+if(text.includes("takut")||text.includes("dark")) return "fearful"
+if(text.includes("shock")||text.includes("terkejut")) return "shocked"
 
- return null
+return null
 }
 
 /* =========================
@@ -70,26 +71,26 @@ function detectEmotion(scene){
 
 function refreshDropdown(){
 
- const select = document.getElementById("characterSelect")
- if(!select) return
+const select=document.getElementById("characterSelect")
+if(!select) return
 
- select.innerHTML=""
+select.innerHTML=""
 
- characters.forEach((char,index)=>{
+characters.forEach((char,index)=>{
 
-  const option=document.createElement("option")
+ const option=document.createElement("option")
 
-  option.value=index
-  option.textContent=`${char.name || "No Name"} (${char.age || "-"} - ${char.gender || "-"})`
+ option.value=index
+ option.textContent=`${char.name || "No Name"} (${char.age || "-"} - ${char.gender || "-"})`
 
-  select.appendChild(option)
+ select.appendChild(option)
 
- })
+})
 
- if(characters.length>0){
-  select.value=characters.length-1
-  loadCharacter(select.value)
- }
+if(characters.length>0){
+ select.value=characters.length-1
+ loadCharacter(select.value)
+}
 
 }
 
@@ -99,20 +100,20 @@ function refreshDropdown(){
 
 function addCharacter(){
 
- const name = prompt("Masukkan nama karakter")
+const name=prompt("Masukkan nama karakter")
 
- if(!name) return
+if(!name) return
 
- const newChar = {
-  name:name,
-  timeline:[],
-  currentEmotion:"neutral"
- }
+const newChar={
+ name:name,
+ timeline:[],
+ currentEmotion:"neutral"
+}
 
- characters.push(newChar)
+characters.push(newChar)
 
- saveToStorage()
- refreshDropdown()
+saveToStorage()
+refreshDropdown()
 
 }
 
@@ -120,57 +121,57 @@ function addCharacter(){
    SAVE CHARACTER
 ========================= */
 
-function saveCharacter() {
+function saveCharacter(){
 
-  const nameEl = document.getElementById("name")
+const nameEl=document.getElementById("name")
+if(!nameEl) return
 
-  const name = nameEl.value.trim()
+const name=nameEl.value.trim()
 
-  if (!name) {
-    alert("Nama karakter wajib diisi.")
-    return;
-  }
+if(!name){
+ alert("Nama karakter wajib diisi")
+ return
+}
 
-  const emotionValue =
-    document.getElementById("emotion")?.value.trim() || "neutral"
+const emotionValue=
+document.getElementById("emotion")?.value.trim() || "neutral"
 
- const char = {
+const char={
 
-name: nameEl.value.trim(),
-age: document.getElementById("age")?.value.trim(),
-gender: document.getElementById("gender")?.value.trim(),
+name:name,
+age:document.getElementById("age")?.value.trim(),
+gender:document.getElementById("gender")?.value.trim(),
 
-face: document.getElementById("face")?.value.trim(),
-hair: document.getElementById("hair")?.value.trim(),
-skin: document.getElementById("skin")?.value.trim(),
-body: document.getElementById("body")?.value.trim(),
+face:document.getElementById("face")?.value.trim(),
+hair:document.getElementById("hair")?.value.trim(),
+skin:document.getElementById("skin")?.value.trim(),
+body:document.getElementById("body")?.value.trim(),
 
-outfit: document.getElementById("outfit")?.value.trim(),
-style: document.getElementById("style")?.value.trim(),
+outfit:document.getElementById("outfit")?.value.trim(),
+style:document.getElementById("style")?.value.trim(),
 
-emotion: emotionValue,
-personality: document.getElementById("personality")?.value.trim(),
-archetype: document.getElementById("archetype")?.value.trim(),
-mood: document.getElementById("mood")?.value.trim(),
+emotion:emotionValue,
+personality:document.getElementById("personality")?.value.trim(),
+archetype:document.getElementById("archetype")?.value.trim(),
+mood:document.getElementById("mood")?.value.trim(),
 
-    
-  voiceTone:"warm cinematic narrator",
-  pitch:"medium-low stable pitch",
+voiceTone:"warm cinematic narrator",
+pitch:"medium-low stable pitch",
 
-  timeline:[],
-  currentEmotion:emotion
+timeline:[],
+currentEmotion:emotionValue
 
- }
+}
 
- if(selectedIndex!==null){
-  characters[selectedIndex]=char
- }else{
-  characters.push(char)
- }
+if(selectedIndex!==null){
+ characters[selectedIndex]=char
+}else{
+ characters.push(char)
+}
 
- saveToStorage()
- clearForm()
- refreshDropdown()
+saveToStorage()
+clearForm()
+refreshDropdown()
 
 }
 
@@ -180,23 +181,25 @@ mood: document.getElementById("mood")?.value.trim(),
 
 function loadCharacter(index){
 
- selectedIndex = Number(index)
+selectedIndex=Number(index)
 
- const char = characters[selectedIndex]
- if(!char) return
+const char=characters[selectedIndex]
+if(!char) return
 
- const fields=[
-  "name","age","gender","face","hair",
-  "outfit","style","emotion","personality","mood"
- ]
+const fields=[
+"name","age","gender",
+"face","hair","skin","body",
+"outfit","style",
+"emotion","personality","archetype","mood"
+]
 
- fields.forEach(id=>{
-  const el=document.getElementById(id)
-  if(el) el.value = char[id] || ""
- })
+fields.forEach(id=>{
+ const el=document.getElementById(id)
+ if(el) el.value=char[id]||""
+})
 
- renderOutfits()
- renderTimeline()
+renderOutfits()
+renderTimeline()
 
 }
 
@@ -206,15 +209,15 @@ function loadCharacter(index){
 
 function deleteCharacter(){
 
- if(selectedIndex===null) return
+if(selectedIndex===null) return
 
- if(!confirm("Hapus karakter?")) return
+if(!confirm("Hapus karakter?")) return
 
- characters.splice(selectedIndex,1)
+characters.splice(selectedIndex,1)
 
- saveToStorage()
- clearForm()
- refreshDropdown()
+saveToStorage()
+clearForm()
+refreshDropdown()
 
 }
 
@@ -224,56 +227,51 @@ function deleteCharacter(){
 
 function addOutfit(){
 
- const input=document.getElementById("extraOutfit")
+const input=document.getElementById("extraOutfit")
+if(!input) return
 
- if(!input) return
+const outfit=input.value.trim()
+if(!outfit) return
 
- const outfit=input.value.trim()
+if(selectedIndex===null){
+ alert("Pilih karakter dulu")
+ return
+}
 
- if(!outfit) return
+const char=characters[selectedIndex]
 
- if(selectedIndex===null){
-  alert("Pilih karakter dulu")
-  return
- }
+if(!char.outfits) char.outfits=[]
 
- const char = characters[selectedIndex]
+char.outfits.push(outfit)
 
- if(!char.outfits) char.outfits=[]
+saveToStorage()
 
- char.outfits.push(outfit)
+renderOutfits()
 
- saveToStorage()
-
- renderOutfits()
-
- input.value=""
+input.value=""
 
 }
 
 function renderOutfits(){
 
- const list=document.getElementById("outfitList")
+const list=document.getElementById("outfitList")
+if(!list) return
 
- if(!list) return
+list.innerHTML=""
 
- list.innerHTML=""
+if(selectedIndex===null) return
 
- if(selectedIndex===null) return
+const char=characters[selectedIndex]
 
- const char=characters[selectedIndex]
+if(!char.outfits) return
 
- if(!char.outfits) return
+char.outfits.forEach(o=>{
 
- char.outfits.forEach(o=>{
+ const li=document.createElement("li")
+ li.textContent=o
+ list.appendChild(li)
 
-  const li=document.createElement("li")
-
-  li.textContent=o
-
-  list.appendChild(li)
-
- })
+})
 
 }
 
@@ -283,39 +281,39 @@ function renderOutfits(){
 
 function downloadJSON(data,filename){
 
- const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"})
+const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"})
 
- const url=URL.createObjectURL(blob)
+const url=URL.createObjectURL(blob)
 
- const a=document.createElement("a")
+const a=document.createElement("a")
 
- a.href=url
- a.download=filename
- a.click()
+a.href=url
+a.download=filename
+a.click()
 
- URL.revokeObjectURL(url)
+URL.revokeObjectURL(url)
 
 }
 
 function exportCharacter(){
 
- if(selectedIndex===null){
-  alert("Pilih karakter")
-  return
- }
+if(selectedIndex===null){
+ alert("Pilih karakter")
+ return
+}
 
- downloadJSON(characters[selectedIndex],characters[selectedIndex].name+".json")
+downloadJSON(characters[selectedIndex],characters[selectedIndex].name+".json")
 
 }
 
 function exportAllCharacters(){
 
- if(!characters.length){
-  alert("Belum ada karakter")
-  return
- }
+if(!characters.length){
+ alert("Belum ada karakter")
+ return
+}
 
- downloadJSON(characters,"mimpact_backup.json")
+downloadJSON(characters,"mimpact_backup.json")
 
 }
 
@@ -325,42 +323,35 @@ function exportAllCharacters(){
 
 function importCharacter(event){
 
- const file = event.target.files[0]
+const file=event.target.files[0]
+if(!file) return
 
- if(!file) return
+const reader=new FileReader()
 
- const reader=new FileReader()
+reader.onload=function(e){
 
- reader.onload=function(e){
+ try{
 
-  try{
+  const data=JSON.parse(e.target.result)
 
-   const data=JSON.parse(e.target.result)
-
-   if(Array.isArray(data)){
-
-    data.forEach(c=>characters.push(c))
-
-   }else{
-
-    characters.push(data)
-
-   }
-
-   saveToStorage()
-   refreshDropdown()
-
-   alert("Import berhasil")
-
-  }catch{
-
-   alert("File tidak valid")
-
+  if(Array.isArray(data)){
+   data.forEach(c=>characters.push(c))
+  }else{
+   characters.push(data)
   }
 
+  saveToStorage()
+  refreshDropdown()
+
+  alert("Import berhasil")
+
+ }catch{
+  alert("File tidak valid")
  }
 
- reader.readAsText(file)
+}
+
+reader.readAsText(file)
 
 }
 
@@ -370,24 +361,24 @@ function importCharacter(event){
 
 function updateTimeline(char,scene){
 
- if(!char.timeline) char.timeline=[]
+if(!char.timeline) char.timeline=[]
 
- const before = char.currentEmotion || "neutral"
+const before=char.currentEmotion||"neutral"
 
- const detected = detectEmotion(scene)
+const detected=detectEmotion(scene)
 
- if(detected) char.currentEmotion=detected
+if(detected) char.currentEmotion=detected
 
- char.timeline.push({
+char.timeline.push({
 
-  scene:scene,
-  emotionBefore:before,
-  emotionAfter:char.currentEmotion,
-  time:new Date().toISOString()
+ scene:scene,
+ emotionBefore:before,
+ emotionAfter:char.currentEmotion,
+ time:new Date().toISOString()
 
- })
+})
 
- saveToStorage()
+saveToStorage()
 
 }
 
@@ -397,27 +388,25 @@ function updateTimeline(char,scene){
 
 function renderTimeline(){
 
- const list=document.getElementById("timelineList")
+const list=document.getElementById("timelineList")
+if(!list) return
 
- if(!list) return
+list.innerHTML=""
 
- list.innerHTML=""
+if(selectedIndex===null) return
 
- if(selectedIndex===null) return
+const char=characters[selectedIndex]
+if(!char.timeline) return
 
- const char=characters[selectedIndex]
+char.timeline.forEach(t=>{
 
- if(!char.timeline) return
+ const li=document.createElement("li")
 
- char.timeline.forEach(t=>{
+ li.textContent=`${t.scene} | ${t.emotionBefore} → ${t.emotionAfter}`
 
-  const li=document.createElement("li")
+ list.appendChild(li)
 
-  li.textContent=`${t.scene} | ${t.emotionBefore} → ${t.emotionAfter}`
-
-  list.appendChild(li)
-
- })
+})
 
 }
 
@@ -427,7 +416,7 @@ function renderTimeline(){
 
 function buildVisualLock(){
 
- return `
+return `
 same exact face identity,
 no face morphing,
 consistent facial structure,
@@ -440,7 +429,7 @@ ultra realistic photography
 
 function buildVoiceLock(char){
 
- return `consistent voice tone ${char.voiceTone}, fixed pitch ${char.pitch}`
+return `consistent voice tone ${char.voiceTone}, fixed pitch ${char.pitch}`
 
 }
 
@@ -450,31 +439,25 @@ function buildVoiceLock(char){
 
 function applyModelStyle(prompt,model){
 
- if(model==="midjourney"){
-  return prompt+" --ar 9:16 --style raw --v 6"
- }
+if(model==="midjourney") return prompt+" --ar 9:16 --style raw --v 6"
 
- if(model==="sdxl"){
-  return prompt+", ultra detailed, photorealistic"
- }
+if(model==="sdxl") return prompt+", ultra detailed, photorealistic"
 
- if(model==="runway"){
-  return prompt+", cinematic video shot, natural motion"
- }
+if(model==="runway") return prompt+", cinematic video shot, natural motion"
 
- return prompt
+return prompt
 
 }
 
 /* =========================
-   CHARACTER DNA BUILDER
+   CHARACTER DNA
 ========================= */
 
 function buildCharacterDNA(char){
 
- if(!char) return ""
+if(!char) return ""
 
- const dna = `
+return `
 identity locked character ${char.name},
 face structure ${char.face || ""},
 hair ${char.hair || ""},
@@ -485,8 +468,6 @@ personality archetype ${char.archetype || ""},
 consistent appearance across scenes
 `
 
- return dna
-
 }
 
 /* =========================
@@ -495,63 +476,62 @@ consistent appearance across scenes
 
 function generate(){
 
-const dnaOutput = document.getElementById("dnaOutput")
-if(dnaOutput){
- dnaOutput.innerText = dna
+const sceneEl=document.getElementById("scene")
+const output=document.getElementById("output")
+
+if(!sceneEl||!output) return
+
+const scene=sceneEl.value.trim()
+
+if(!scene){
+ output.innerText="Masukkan adegan terlebih dahulu"
+ return
 }
-   
- const sceneEl = document.getElementById("scene")
- const output = document.getElementById("output")
 
- if(!sceneEl || !output) return
+if(selectedIndex===null){
+ output.innerText="Pilih karakter terlebih dahulu"
+ return
+}
 
- const scene = sceneEl.value.trim()
+const char=characters[selectedIndex]
 
- if(!scene){
-  output.innerText = "Masukkan adegan terlebih dahulu"
-  return
- }
+const dna=buildCharacterDNA(char)
 
- if(selectedIndex === null){
-  output.innerText = "Pilih karakter terlebih dahulu"
-  return
- }
+const dnaOutput=document.getElementById("dnaOutput")
+if(dnaOutput) dnaOutput.innerText=dna
 
- const char = characters[selectedIndex]
+if(!char.currentEmotion){
+ char.currentEmotion=char.emotion||"neutral"
+}
 
- if(!char.currentEmotion){
-  char.currentEmotion = char.emotion || "neutral"
- }
+let outfitText=char.outfit||""
 
- let outfitText = char.outfit || ""
+if(char.outfits&&char.outfits.length>0){
+ outfitText=char.outfits[0]
+}
 
- if(char.outfits && char.outfits.length > 0){
-  outfitText = char.outfits[0]
- }
+const baseCharacter=
 
- const baseCharacter =
 `${char.name}, ${char.gender}, ${char.age} tahun,
-${char.body || ""} body,
-${char.skin || ""} skin,
-${char.face || ""},
-${char.hair || ""},
-archetype ${char.archetype || ""},
+${char.body||""} body,
+${char.skin||""} skin,
+${char.face||""},
+${char.hair||""},
+archetype ${char.archetype||""},
 wearing ${outfitText},
 emotion ${char.currentEmotion}`
 
- const model = document.getElementById("model")?.value
+const model=document.getElementById("model")?.value
 
-const dna = buildCharacterDNA(char)
-
-let finalPrompt =
+let finalPrompt=
 `${dna}, ${baseCharacter}, ${scene}, ${buildVisualLock()}, ${buildVoiceLock(char)}`
 
- finalPrompt = applyModelStyle(finalPrompt, model)
+finalPrompt=applyModelStyle(finalPrompt,model)
 
- updateTimeline(char, scene)
- renderTimeline()
+updateTimeline(char,scene)
+renderTimeline()
 
- output.innerText = finalPrompt
+output.innerText=finalPrompt
 
 }
 
@@ -561,14 +541,14 @@ let finalPrompt =
 
 document.addEventListener("DOMContentLoaded",function(){
 
- const select=document.getElementById("characterSelect")
+const select=document.getElementById("characterSelect")
 
- if(select){
-  select.addEventListener("change",function(){
-   loadCharacter(this.value)
-  })
- }
+if(select){
+ select.addEventListener("change",function(){
+  loadCharacter(this.value)
+ })
+}
 
- refreshDropdown()
+refreshDropdown()
 
 })
