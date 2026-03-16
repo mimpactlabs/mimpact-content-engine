@@ -443,6 +443,9 @@ updateTimeline(char, sceneInput)
 output.innerText = finalPrompt
 }
 
+<h3>🎬 Character Timeline</h3>
+<ul id="timelineList"></ul>
+
 /* =========================
    INIT
 ========================= */
