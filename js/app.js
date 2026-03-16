@@ -495,6 +495,11 @@ consistent appearance across scenes
 
 function generate(){
 
+const dnaOutput = document.getElementById("dnaOutput")
+if(dnaOutput){
+ dnaOutput.innerText = dna
+}
+   
  const sceneEl = document.getElementById("scene")
  const output = document.getElementById("output")
 
