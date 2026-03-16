@@ -443,7 +443,36 @@ updateTimeline(char, sceneInput)
 output.innerText = finalPrompt
 }
 
+/* =========================
+   TIMELINE VIEWER
+========================= */
 
+function renderTimeline(){
+
+ const list = document.getElementById("timelineList")
+
+ if(!list) return
+
+ list.innerHTML = ""
+
+ if(selectedIndex === null) return
+
+ const char = characters[selectedIndex]
+
+ if(!char.timeline) return
+
+ char.timeline.forEach(t => {
+
+   const li = document.createElement("li")
+
+   li.textContent =
+   `${t.scene} | ${t.emotionBefore} → ${t.emotionAfter}`
+
+   list.appendChild(li)
+
+ })
+
+}
 
 /* =========================
    INIT
