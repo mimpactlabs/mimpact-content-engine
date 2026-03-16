@@ -150,6 +150,7 @@ personality: document.getElementById("personality")?.value.trim(),
 archetype: document.getElementById("archetype")?.value.trim(),
 mood: document.getElementById("mood")?.value.trim(),
     
+/*
 <!-- end
   name:name,
   age:document.getElementById("age").value,
@@ -162,6 +163,8 @@ mood: document.getElementById("mood")?.value.trim(),
   personality:document.getElementById("personality").value,
   mood:document.getElementById("mood").value,
 end -->
+
+*/
     
   voiceTone:"warm cinematic narrator",
   pitch:"medium-low stable pitch",
