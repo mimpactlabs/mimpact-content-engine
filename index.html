@@ -4,99 +4,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Mimpact Labs – AI Character Consistency Engine</title>
 
 <link rel="icon" href="data:,">
 
 <style>
 
-* { box-sizing: border-box; }
+*{box-sizing:border-box;}
 
 body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:#0f0f14;
-  color:#fff;
-  line-height:1.6;
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#0f0f14;
+color:#fff;
+line-height:1.6;
 }
 
 section{
-  padding:80px 20px;
-  max-width:1100px;
-  margin:auto;
+padding:80px 20px;
+max-width:1100px;
+margin:auto;
 }
 
 h1{font-size:42px;margin-bottom:20px;}
 h2{font-size:28px;margin-bottom:20px;}
+h3{margin-top:30px}
+
 p{color:#aaa;}
 
 .hero{
-  text-align:center;
-  padding-top:120px;
+text-align:center;
+padding-top:120px;
 }
 
 .hero button{
-  margin-top:30px;
-  padding:14px 28px;
-  background:#00c3ff;
-  border:none;
-  border-radius:8px;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
+margin-top:30px;
+padding:14px 28px;
+background:#00c3ff;
+border:none;
+border-radius:8px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
 }
 
 .features{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:30px;
-  margin-top:50px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+margin-top:50px;
 }
 
 .feature-box{
-  background:#1a1a22;
-  padding:25px;
-  border-radius:12px;
+background:#1a1a22;
+padding:25px;
+border-radius:12px;
 }
 
 .tool{
-  background:#15151c;
-  padding:60px 20px;
-  border-top:1px solid #222;
+background:#15151c;
+padding:60px 20px;
+border-top:1px solid #222;
+}
+
+label{
+font-size:14px;
+color:#ccc;
+display:block;
+margin-bottom:4px;
 }
 
 input,textarea,select,button{
-  width:100%;
-  padding:10px;
-  margin-bottom:15px;
-  border-radius:6px;
-  border:none;
+width:100%;
+padding:10px;
+margin-bottom:15px;
+border-radius:6px;
+border:none;
 }
 
-textarea{min-height:100px;}
+textarea{
+min-height:100px;
+}
 
 button.generate{
-  background:#00ff9d;
-  font-weight:bold;
+background:#00ff9d;
+font-weight:bold;
 }
 
 #output{
-  background:#222;
-  padding:20px;
-  border-radius:10px;
-  white-space:pre-wrap;
-  margin-top:20px;
+background:#222;
+padding:20px;
+border-radius:10px;
+white-space:pre-wrap;
+margin-top:20px;
+}
+
+#dnaOutput{
+background:#1b1b1b;
+padding:15px;
+border-radius:10px;
+white-space:pre-wrap;
 }
 
 ul{
-  padding-left:20px;
+padding-left:20px;
 }
 
 footer{
-  text-align:center;
-  padding:40px;
-  color:#666;
-  border-top:1px solid #222;
+text-align:center;
+padding:40px;
+color:#666;
+border-top:1px solid #222;
 }
 
 </style>
@@ -114,12 +133,14 @@ Buat dan pertahankan karakter AI yang konsisten
 untuk gambar, video, cerita, dan dialog.
 </p>
 
-<button type="button"
+<button
+type="button"
 onclick="document.getElementById('toolSection').scrollIntoView({behavior:'smooth'})">
 🚀 Coba Sekarang
 </button>
 
 </section>
+
 
 <!-- FEATURES -->
 <section>
@@ -151,6 +172,7 @@ onclick="document.getElementById('toolSection').scrollIntoView({behavior:'smooth
 </div>
 </section>
 
+
 <!-- CHARACTER LIBRARY -->
 <section>
 
@@ -162,49 +184,65 @@ onclick="document.getElementById('toolSection').scrollIntoView({behavior:'smooth
 
 </section>
 
+
 <!-- TOOL -->
 <section class="tool" id="toolSection">
 
 <h2>🛠 Buat Karakter</h2>
- >> Nama 
+
+<label>Nama</label>
 <input id="name" placeholder="Nama Karakter" autocomplete="name">
- >> Umur
-<input id="age" placeholder="Usia" autocomplete="bday-year">
- >> Gender
-<input id="gender" placeholder="Jenis Kelamin" autocomplete="sex">
- >> Bentuk Wajah
-<input id="face" placeholder="Deskripsi Wajah" autocomplete="off">
- >> Model Rambut
-<input id="hair" placeholder="Deskripsi Rambut" autocomplete="off">
- >> Skin Tone
-<input id="skin" placeholder="Skin tone (fair, tan, olive)" autocomplete="off">
- >> Body style
-<input id="body" placeholder="Body style (lean, athletic, slim)" autocomplete="off">
- >> Pakaian Standar 
-<input id="outfit" placeholder="Pakaian Standar" autocomplete="off">
- >> Tambahkan Variasi Pakaian 
-<input id="extraOutfit" placeholder="Tambahkan variasi pakaian" autocomplete="off">
+
+<label>Umur</label>
+<input id="age" placeholder="Usia">
+
+<label>Gender</label>
+<input id="gender" placeholder="Jenis Kelamin">
+
+<label>Bentuk Wajah</label>
+<input id="face" placeholder="Deskripsi Wajah">
+
+<label>Model Rambut</label>
+<input id="hair" placeholder="Deskripsi Rambut">
+
+<label>Skin Tone</label>
+<input id="skin" placeholder="Skin tone (fair, tan, olive)">
+
+<label>Body Style</label>
+<input id="body" placeholder="Body style (lean, athletic, slim)">
+
+<label>Pakaian Standar</label>
+<input id="outfit" placeholder="Pakaian Standar">
+
+<label>Variasi Pakaian</label>
+<input id="extraOutfit" placeholder="Tambahkan variasi pakaian">
+
 <button type="button" onclick="addOutfit()">Tambah Outfit</button>
 
 <ul id="outfitList"></ul>
- >> Gaya Visual 
-<input id="style" placeholder="Gaya Visual" autocomplete="off">
+
+<label>Gaya Visual</label>
+<input id="style" placeholder="Gaya Visual">
 
 <h2>🧠 Emotional State</h2>
 
-  >> Emotion 
-<input id="emotion" placeholder="happy, angry, nervous" autocomplete="off">
-  >> Personality 
-<input id="personality" placeholder="confident, introvert, dominant" autocomplete="off">
-  >> Character Archetype 
-  <input id="archetype" placeholder="Character archetype (leader, rival, mentor)" autocomplete="off">
-  >> Mood 
-<input id="mood" placeholder="calm, tense, excited" autocomplete="off">
+<label>Emotion</label>
+<input id="emotion" placeholder="happy, angry, nervous">
+
+<label>Personality</label>
+<input id="personality" placeholder="confident, introvert, dominant">
+
+<label>Character Archetype</label>
+<input id="archetype" placeholder="leader, rival, mentor">
+
+<label>Mood</label>
+<input id="mood" placeholder="calm, tense, excited">
 
 <button type="button" onclick="saveCharacter()">Simpan Karakter</button>
 
+
 <h2>🧬 Pilih Karakter</h2>
-  >> Nama Karakter
+
 <select id="characterSelect"></select>
 
 <button type="button" onclick="deleteCharacter()">Hapus Karakter</button>
@@ -227,6 +265,7 @@ onclick="document.getElementById('importFile').click()">
 Import Character
 </button>
 
+
 <h3>🎛 Mode</h3>
 
 <select id="mode">
@@ -236,6 +275,7 @@ Import Character
 <option value="chat">Dialogue</option>
 </select>
 
+
 <h3>🎨 Model AI</h3>
 
 <select id="model">
@@ -244,17 +284,22 @@ Import Character
 <option value="runway">Runway</option>
 </select>
 
+
 <textarea
 id="scene"
-placeholder="Tulis adegan di sini..."
-></textarea>
+placeholder="Tulis adegan di sini...">
+</textarea>
+
 
 <label>
 <input type="checkbox" id="outfitLock">
 Aktifkan Variasi Pakaian
 </label>
 
-<input id="outfitVariation" placeholder="Detail variasi pakaian">
+<input
+id="outfitVariation"
+placeholder="Detail variasi pakaian">
+
 
 <button
 class="generate"
@@ -263,20 +308,22 @@ onclick="generate()">
 ✨ Generate Prompt
 </button>
 
+
 <div id="output"></div>
 
 <h3>Character DNA</h3>
 <div id="dnaOutput"></div>
 
 <h3>🎬 Character Timeline</h3>
-
 <ul id="timelineList"></ul>
 
 </section>
 
+
 <footer>
 © 2026 Mimpact Labs – AI Character Engine
 </footer>
+
 
 <script src="js/app.js"></script>
 
