@@ -1,6 +1,6 @@
 /* ======================================
 MIMPACT LABS – AI CHARACTER ENGINE
-LEVEL 3 CLEAN STABLE (NO ERROR)
+LEVEL 3 CLEAN STABLE (NO ERROR FIXED)
 ====================================== */
 
 /* =========================
@@ -184,6 +184,10 @@ function addOutfit(){
   const valOut=input.value.trim()
   if(!valOut) return
 
+  if(!characters[selectedIndex].outfits){
+    characters[selectedIndex].outfits=[]
+  }
+
   characters[selectedIndex].outfits.push(valOut)
 
   input.value=""
@@ -200,7 +204,10 @@ function renderOutfits(){
 
   if(selectedIndex===null) return
 
-  characters[selectedIndex].outfits.forEach(o=>{
+  const c = characters[selectedIndex]
+  if(!c.outfits) return
+
+  c.outfits.forEach(o=>{
     const li=document.createElement("li")
     li.textContent=o
     list.appendChild(li)
@@ -221,7 +228,9 @@ function detectEmotion(text){
 
 function updateTimeline(c,scene){
 
-  const before=c.currentEmotion
+  if(!c.timeline) c.timeline=[]
+
+  const before=c.currentEmotion || "neutral"
 
   const detected=detectEmotion(scene)
   if(detected) c.currentEmotion=detected
@@ -244,7 +253,10 @@ function renderTimeline(){
 
   if(selectedIndex===null) return
 
-  characters[selectedIndex].timeline.forEach(t=>{
+  const c = characters[selectedIndex]
+  if(!c.timeline) return
+
+  c.timeline.forEach(t=>{
     const li=document.createElement("li")
     li.textContent=`${t.scene} | ${t.before} → ${t.after}`
     list.appendChild(li)
@@ -267,7 +279,7 @@ function getPhysics(m){
     light:"floating soft movement",
     medium:"natural motion",
     heavy:"strong impact heavy weight"
-  }[m]
+  }[m] || "natural motion"
 }
 
 function getCamera(e){
@@ -304,45 +316,62 @@ GENERATE
 
 function generate(){
 
-  const scene=val("scene")
-  if(!scene) return alert("Isi scene")
+  const scene = val("scene")
+  if(!scene) return alert("Isi scene dulu")
 
-  if(selectedIndex===null) return alert("Pilih karakter")
+  if(selectedIndex === null) return alert("Pilih karakter")
 
-  const c=characters[selectedIndex]
+  const c = characters[selectedIndex]
+  if(!c.currentEmotion) c.currentEmotion = "neutral"
 
-  const secondIndex=Number(document.getElementById("characterSelect2")?.value)
-  const c2=characters[secondIndex]
+  const secondIndex = Number(document.getElementById("characterSelect2")?.value)
+  const c2 = characters[secondIndex]
 
-  const interactionType=val("interactionType")
+  const interactionType = val("interactionType")
+  const interaction = getInteractionStyle(interactionType)
+  const dominance = getDominance(c, c2)
 
-  const interaction=getInteractionStyle(interactionType)
-  const dominance=getDominance(c,c2)
+  const lock = document.getElementById("outfitLock")?.checked
 
-  const material=val("materialType") || detectMaterial(scene)
-  const physics=getPhysics(material)
-  const camera=getCamera(c.currentEmotion)
+  let outfitMain = c.outfit
+  if(!lock && c.outfits?.length){
+    outfitMain = c.outfits[Math.floor(Math.random()*c.outfits.length)]
+  }
 
-  let secondChar=""
+  let outfitSecond = ""
+  if(c2){
+    outfitSecond = c2.outfit
+    if(!lock && c2.outfits?.length){
+      outfitSecond = c2.outfits[Math.floor(Math.random()*c2.outfits.length)]
+    }
+  }
 
-  if(c2 && secondIndex!==selectedIndex){
-    secondChar=`
+  const memory = c.timeline?.slice(-2).map(t=>t.scene).join(", ")
+
+  const material = val("materialType") || detectMaterial(scene)
+  const physics = getPhysics(material)
+  const camera = getCamera(c.currentEmotion)
+
+  let secondBlock = ""
+
+  if(c2 && secondIndex !== selectedIndex){
+    secondBlock = `
 SECOND CHARACTER:
 ${c2.name}, ${c2.gender}, ${c2.age}
 ${c2.face}, ${c2.hair}, ${c2.body}
-wearing ${c2.outfit}
+wearing ${outfitSecond}
 emotion ${c2.currentEmotion}
 `
   }
 
-  const prompt=`
+  let prompt = `
 MAIN CHARACTER:
 ${c.name}, ${c.gender}, ${c.age}
 ${c.face}, ${c.hair}, ${c.body}
-wearing ${c.outfit}
+wearing ${outfitMain}
 emotion ${c.currentEmotion}
 
-${secondChar}
+${secondBlock}
 
 INTERACTION:
 ${interaction}
@@ -351,17 +380,26 @@ ${dominance}
 SCENE:
 ${scene}
 
+PREVIOUS CONTEXT:
+${memory || "none"}
+
 material: ${material}
 physics: ${physics}
 camera: ${camera}
-
-cinematic, ultra realistic
 `
 
-  updateTimeline(c,scene)
+  const model = val("model")
+
+  if(model === "midjourney") prompt += "\n--ar 9:16 --style raw --v 6"
+  if(model === "sdxl") prompt += "\n, ultra detailed, 8k, photorealistic"
+  if(model === "runway") prompt += "\n, cinematic video shot, natural motion"
+
+  prompt += "\ncinematic, ultra realistic, consistent character"
+
+  updateTimeline(c, scene)
   renderTimeline()
 
-  document.getElementById("output").innerText=prompt
+  document.getElementById("output").innerText = prompt
 }
 
 /* =========================
