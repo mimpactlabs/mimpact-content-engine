@@ -1,6 +1,6 @@
 /* ======================================
 MIMPACT LABS – AI CHARACTER ENGINE
-CLEAN STABLE BUILD (BEGINNER SAFE)
+LEVEL 2 (PHYSICS + MOTION) CLEAN BUILD
 ====================================== */
 
 /* =========================
@@ -34,7 +34,6 @@ function val(id){
 }
 
 function clearForm(){
-
   const fields=[
     "name","age","gender",
     "face","hair","skin","body",
@@ -56,7 +55,6 @@ EMOTION DETECTOR
 ========================= */
 
 function detectEmotion(scene){
-
   const text = scene.toLowerCase()
 
   const map = {
@@ -82,7 +80,6 @@ MATERIAL DETECTOR
 ========================= */
 
 function detectMaterialFromScene(scene){
-
   const text = scene.toLowerCase()
 
   const map = {
@@ -101,6 +98,56 @@ function detectMaterialFromScene(scene){
 }
 
 /* =========================
+PHYSICS ENGINE
+========================= */
+
+function getPhysicsBehavior(material){
+  const physics = {
+    light: "floating, slow motion, soft movement, affected by wind",
+    medium: "natural movement, balanced weight",
+    heavy: "heavy weight, slow acceleration, strong impact"
+  }
+
+  return physics[material] || physics.medium
+}
+
+/* =========================
+CAMERA ENGINE
+========================= */
+
+function getCameraMotion(emotion){
+  const cameraMap = {
+    angry: "handheld shaky camera, aggressive close up",
+    sad: "slow zoom in, emotional cinematic",
+    happy: "smooth tracking shot, bright tone",
+    romantic: "soft focus, cinematic dolly",
+    fearful: "tight frame, suspense push",
+    shocked: "quick zoom, sudden movement"
+  }
+
+  return cameraMap[emotion] || "cinematic natural camera"
+}
+
+/* =========================
+ACTION GENERATOR
+========================= */
+
+function generateAction(scene, emotion){
+
+  const text = scene.toLowerCase()
+
+  if(text.includes("lari")) return "running fast"
+  if(text.includes("jalan")) return "walking naturally"
+  if(text.includes("duduk")) return "sitting calmly"
+  if(text.includes("jatuh")) return "falling with impact"
+
+  if(emotion==="angry") return "aggressive movement"
+  if(emotion==="sad") return "slow weak movement"
+
+  return "natural movement"
+}
+
+/* =========================
 CHARACTER LIST
 ========================= */
 
@@ -114,17 +161,17 @@ function refreshDropdown(){
   characters.forEach((char,index)=>{
     const option=document.createElement("option")
     option.value=index
-    option.textContent=`${char.name || "No Name"}`
+    option.textContent=char.name || "No Name"
     select.appendChild(option)
   })
 
   if(characters.length>0){
 
-    if(selectedIndex !== null){
-      select.value = selectedIndex
+    if(selectedIndex!==null){
+      select.value=selectedIndex
     }else{
-      selectedIndex = 0
-      select.value = 0
+      selectedIndex=0
+      select.value=0
     }
 
     loadCharacter(select.value)
@@ -157,35 +204,29 @@ SAVE
 
 function saveCharacter(){
 
-  const name = val("name")
+  const name=val("name")
   if(!name){
     alert("Nama wajib diisi")
     return
   }
 
   const emotionValue = val("emotion") || "neutral"
+  const existing = selectedIndex!==null ? characters[selectedIndex] : {}
 
-  const existing = selectedIndex !== null ? characters[selectedIndex] : {}
-
-  const char = {
-
+  const char={
     name:name,
     age:val("age"),
     gender:val("gender"),
-
     face:val("face"),
     hair:val("hair"),
     skin:val("skin"),
     body:val("body"),
-
     outfit:val("outfit"),
     style:val("style"),
-
     emotion:emotionValue,
     personality:val("personality"),
     archetype:val("archetype"),
     mood:val("mood"),
-
     voiceModel:val("voiceModel") || "male narrator",
     voiceStyle:val("voiceStyle") || "calm confident",
     voiceSpeed:"medium",
@@ -193,11 +234,10 @@ function saveCharacter(){
     timeline: existing.timeline || [],
     currentEmotion: existing.currentEmotion || emotionValue,
     outfits: existing.outfits || []
-
   }
 
-  if(selectedIndex !== null){
-    characters[selectedIndex] = char
+  if(selectedIndex!==null){
+    characters[selectedIndex]=char
   }else{
     characters.push(char)
   }
@@ -213,9 +253,9 @@ LOAD
 
 function loadCharacter(index){
 
-  selectedIndex = Number(index)
+  selectedIndex=Number(index)
 
-  const char = characters[selectedIndex]
+  const char=characters[selectedIndex]
   if(!char) return
 
   const fields=[
@@ -228,75 +268,11 @@ function loadCharacter(index){
 
   fields.forEach(id=>{
     const el=document.getElementById(id)
-    if(el) el.value = char[id] || ""
+    if(el) el.value=char[id]||""
   })
 
   renderOutfits()
   renderTimeline()
-}
-
-/* =========================
-DELETE
-========================= */
-
-function deleteCharacter(){
-
-  if(selectedIndex===null) return
-  if(!confirm("Hapus karakter?")) return
-
-  characters.splice(selectedIndex,1)
-
-  saveToStorage()
-  clearForm()
-  refreshDropdown()
-}
-
-/* =========================
-OUTFIT
-========================= */
-
-function addOutfit(){
-
-  const input=document.getElementById("extraOutfit")
-  if(!input) return
-
-  const outfit=input.value.trim()
-  if(!outfit) return
-
-  if(selectedIndex===null){
-    alert("Pilih karakter dulu")
-    return
-  }
-
-  const char=characters[selectedIndex]
-
-  if(!char.outfits) char.outfits=[]
-
-  char.outfits.push(outfit)
-
-  saveToStorage()
-  renderOutfits()
-
-  input.value=""
-}
-
-function renderOutfits(){
-
-  const list=document.getElementById("outfitList")
-  if(!list) return
-
-  list.innerHTML=""
-
-  if(selectedIndex===null) return
-
-  const char=characters[selectedIndex]
-  if(!char.outfits) return
-
-  char.outfits.forEach(o=>{
-    const li=document.createElement("li")
-    li.textContent=o
-    list.appendChild(li)
-  })
 }
 
 /* =========================
@@ -305,15 +281,13 @@ TIMELINE
 
 function updateTimeline(char,scene){
 
-  if(!char.timeline) char.timeline=[]
-
   const before=char.currentEmotion || "neutral"
 
   const detected=detectEmotion(scene)
   if(detected) char.currentEmotion=detected
 
   char.timeline.push({
-    scene:scene,
+    scene,
     emotionBefore:before,
     emotionAfter:char.currentEmotion,
     time:new Date().toISOString()
@@ -342,7 +316,7 @@ function renderTimeline(){
 }
 
 /* =========================
-PROMPT GENERATOR
+PROMPT GENERATOR (FINAL)
 ========================= */
 
 function generate(){
@@ -350,7 +324,7 @@ function generate(){
   const sceneEl=document.getElementById("scene")
   const output=document.getElementById("output")
 
-  if(!sceneEl||!output) return
+  if(!sceneEl || !output) return
 
   const scene=sceneEl.value.trim()
 
@@ -368,22 +342,32 @@ function generate(){
   if(!char) return
 
   const material = detectMaterialFromScene(scene)
+  const physics = getPhysicsBehavior(material)
+  const emotion = char.currentEmotion || char.emotion || "neutral"
+  const camera = getCameraMotion(emotion)
+  const action = generateAction(scene, emotion)
 
   const prompt = `
 ${char.name}, ${char.gender}, ${char.age} tahun,
 ${char.body}, ${char.skin}, ${char.face}, ${char.hair},
+
 wearing ${char.outfit},
-emotion ${char.currentEmotion},
+emotion ${emotion},
+
+action: ${action},
 scene: ${scene},
+
 material: ${material},
-cinematic, ultra realistic
+physics: ${physics},
+camera: ${camera},
+
+cinematic, ultra realistic, high detail
 `
 
   updateTimeline(char,scene)
   renderTimeline()
 
   output.innerText=prompt
-
   console.log("Generated:", prompt)
 }
 
