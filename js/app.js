@@ -1,6 +1,6 @@
 /* ======================================
 MIMPACT LABS – AI CHARACTER ENGINE
-CLEAN FULL STABLE BUILD (NO ERROR)
+LEVEL 3 CLEAN STABLE (NO ERROR)
 ====================================== */
 
 /* =========================
@@ -11,7 +11,6 @@ function loadFromStorage(){
   try{
     return JSON.parse(localStorage.getItem("characters")) || []
   }catch(e){
-    console.warn("Reset storage")
     localStorage.removeItem("characters")
     return []
   }
@@ -25,7 +24,7 @@ function save(){
 }
 
 /* =========================
-HELPERS
+HELPER
 ========================= */
 
 function val(id){
@@ -33,7 +32,7 @@ function val(id){
 }
 
 /* =========================
-CHARACTER LIST (UI)
+CHARACTER UI
 ========================= */
 
 function renderCharacterList(){
@@ -43,43 +42,51 @@ function renderCharacterList(){
   list.innerHTML = ""
 
   characters.forEach((c,i)=>{
-    const li = document.createElement("li")
-    li.textContent = c.name || "No Name"
-    li.onclick = ()=>loadCharacter(i)
+    const li=document.createElement("li")
+    li.textContent=c.name || "No Name"
+    li.onclick=()=>loadCharacter(i)
     list.appendChild(li)
   })
 }
 
 function refreshDropdown(){
 
-  const select = document.getElementById("characterSelect")
-  if(!select) return
+  const select=document.getElementById("characterSelect")
+  const select2=document.getElementById("characterSelect2")
 
-  select.innerHTML = ""
+  if(select){
+    select.innerHTML=""
+    characters.forEach((c,i)=>{
+      const opt=document.createElement("option")
+      opt.value=i
+      opt.textContent=c.name
+      select.appendChild(opt)
+    })
+  }
 
-  characters.forEach((c,i)=>{
-    const opt = document.createElement("option")
-    opt.value = i
-    opt.textContent = c.name || "No Name"
-    select.appendChild(opt)
-  })
+  if(select2){
+    select2.innerHTML=""
+    characters.forEach((c,i)=>{
+      const opt=document.createElement("option")
+      opt.value=i
+      opt.textContent=c.name
+      select2.appendChild(opt)
+    })
+  }
 
   if(characters.length){
-    if(selectedIndex === null){
-      selectedIndex = 0
-    }
-    select.value = selectedIndex
+    if(selectedIndex===null) selectedIndex=0
+    if(select) select.value=selectedIndex
     loadCharacter(selectedIndex)
   }
 }
 
 /* =========================
-ADD / SAVE / LOAD / DELETE
+CRUD CHARACTER
 ========================= */
 
 function addCharacter(){
-
-  const name = prompt("Masukkan nama karakter")
+  const name=prompt("Nama karakter?")
   if(!name) return
 
   characters.push({
@@ -96,44 +103,35 @@ function addCharacter(){
 
 function saveCharacter(){
 
-  const name = val("name")
-  if(!name) return alert("Nama wajib diisi")
+  const name=val("name")
+  if(!name) return alert("Nama wajib")
 
-  const old = selectedIndex !== null ? characters[selectedIndex] : {}
+  const old = selectedIndex!==null ? characters[selectedIndex] : {}
 
-  const char = {
-
+  const c={
     name,
     age:val("age"),
     gender:val("gender"),
-
     face:val("face"),
     hair:val("hair"),
     skin:val("skin"),
     body:val("body"),
-
     outfit:val("outfit"),
     style:val("style"),
-
-    emotion:val("emotion") || "neutral",
+    emotion:val("emotion")||"neutral",
     personality:val("personality"),
     archetype:val("archetype"),
     mood:val("mood"),
 
-    voiceModel:val("voiceModel") || "male narrator",
-    voiceStyle:val("voiceStyle") || "calm confident",
-    voiceSpeed:document.getElementById("voiceSpeed")?.value || "medium",
-
-    timeline: old.timeline || [],
-    currentEmotion: old.currentEmotion || "neutral",
-    outfits: old.outfits || []
-
+    timeline:old.timeline||[],
+    currentEmotion:old.currentEmotion||"neutral",
+    outfits:old.outfits||[]
   }
 
-  if(selectedIndex !== null){
-    characters[selectedIndex] = char
+  if(selectedIndex!==null){
+    characters[selectedIndex]=c
   }else{
-    characters.push(char)
+    characters.push(c)
   }
 
   save()
@@ -143,26 +141,17 @@ function saveCharacter(){
 
 function loadCharacter(i){
 
-  selectedIndex = Number(i)
+  selectedIndex=Number(i)
 
-  const c = characters[selectedIndex]
+  const c=characters[selectedIndex]
   if(!c) return
 
-  const fields=[
-    "name","age","gender",
-    "face","hair","skin","body",
-    "outfit","style",
-    "emotion","personality","archetype","mood",
-    "voiceModel","voiceStyle"
-  ]
+  const fields=["name","age","gender","face","hair","skin","body","outfit","style","emotion","personality","archetype","mood"]
 
   fields.forEach(id=>{
-    const el = document.getElementById(id)
-    if(el) el.value = c[id] || ""
+    const el=document.getElementById(id)
+    if(el) el.value=c[id]||""
   })
-
-  const voiceSpeed = document.getElementById("voiceSpeed")
-  if(voiceSpeed) voiceSpeed.value = c.voiceSpeed || "medium"
 
   renderOutfits()
   renderTimeline()
@@ -170,11 +159,11 @@ function loadCharacter(i){
 
 function deleteCharacter(){
 
-  if(selectedIndex === null) return
+  if(selectedIndex===null) return
   if(!confirm("Hapus karakter?")) return
 
   characters.splice(selectedIndex,1)
-  selectedIndex = null
+  selectedIndex=null
 
   save()
   refreshDropdown()
@@ -182,44 +171,38 @@ function deleteCharacter(){
 }
 
 /* =========================
-OUTFIT SYSTEM
+OUTFIT
 ========================= */
 
 function addOutfit(){
 
-  if(selectedIndex === null){
-    alert("Pilih karakter dulu")
-    return
-  }
+  if(selectedIndex===null) return alert("Pilih karakter")
 
-  const input = document.getElementById("extraOutfit")
+  const input=document.getElementById("extraOutfit")
   if(!input) return
 
-  const value = input.value.trim()
-  if(!value) return
+  const valOut=input.value.trim()
+  if(!valOut) return
 
-  characters[selectedIndex].outfits.push(value)
+  characters[selectedIndex].outfits.push(valOut)
 
-  input.value = ""
+  input.value=""
   save()
   renderOutfits()
 }
 
 function renderOutfits(){
 
-  const list = document.getElementById("outfitList")
+  const list=document.getElementById("outfitList")
   if(!list) return
 
-  list.innerHTML = ""
+  list.innerHTML=""
 
-  if(selectedIndex === null) return
+  if(selectedIndex===null) return
 
-  const c = characters[selectedIndex]
-  if(!c || !c.outfits) return
-
-  c.outfits.forEach(o=>{
-    const li = document.createElement("li")
-    li.textContent = o
+  characters[selectedIndex].outfits.forEach(o=>{
+    const li=document.createElement("li")
+    li.textContent=o
     list.appendChild(li)
   })
 }
@@ -229,27 +212,24 @@ TIMELINE
 ========================= */
 
 function detectEmotion(text){
-  text = text.toLowerCase()
-
+  text=text.toLowerCase()
   if(text.includes("marah")) return "angry"
   if(text.includes("sedih")) return "sad"
-  if(text.includes("bahagia") || text.includes("happy")) return "happy"
-
+  if(text.includes("happy")) return "happy"
   return null
 }
 
 function updateTimeline(c,scene){
 
-  const before = c.currentEmotion || "neutral"
+  const before=c.currentEmotion
 
-  const detected = detectEmotion(scene)
-  if(detected) c.currentEmotion = detected
+  const detected=detectEmotion(scene)
+  if(detected) c.currentEmotion=detected
 
   c.timeline.push({
     scene,
     before,
-    after:c.currentEmotion,
-    time:new Date().toISOString()
+    after:c.currentEmotion
   })
 
   save()
@@ -257,80 +237,119 @@ function updateTimeline(c,scene){
 
 function renderTimeline(){
 
-  const list = document.getElementById("timelineList")
+  const list=document.getElementById("timelineList")
   if(!list) return
 
-  list.innerHTML = ""
+  list.innerHTML=""
 
-  if(selectedIndex === null) return
+  if(selectedIndex===null) return
 
-  const c = characters[selectedIndex]
-  if(!c.timeline) return
-
-  c.timeline.forEach(t=>{
-    const li = document.createElement("li")
-    li.textContent = `${t.scene} | ${t.before} → ${t.after}`
+  characters[selectedIndex].timeline.forEach(t=>{
+    const li=document.createElement("li")
+    li.textContent=`${t.scene} | ${t.before} → ${t.after}`
     list.appendChild(li)
   })
 }
 
 /* =========================
-PHYSICS ENGINE
+PHYSICS + CAMERA
 ========================= */
 
 function detectMaterial(scene){
-
-  const text = scene.toLowerCase()
-
-  if(text.includes("daun") || text.includes("kertas")) return "light"
-  if(text.includes("besi") || text.includes("batu")) return "heavy"
-
+  const text=scene.toLowerCase()
+  if(text.includes("daun")) return "light"
+  if(text.includes("besi")) return "heavy"
   return "medium"
 }
 
 function getPhysics(m){
   return {
-    light:"floating, soft movement",
+    light:"floating soft movement",
     medium:"natural motion",
-    heavy:"strong impact, heavy weight"
+    heavy:"strong impact heavy weight"
   }[m]
 }
 
 function getCamera(e){
   return {
     angry:"shaky close up",
-    sad:"slow zoom cinematic",
-    happy:"smooth tracking shot"
-  }[e] || "cinematic camera"
+    sad:"slow zoom",
+    happy:"smooth cinematic"
+  }[e] || "cinematic"
 }
 
 /* =========================
-PROMPT GENERATOR
+INTERACTION ENGINE
+========================= */
+
+function getInteractionStyle(type){
+  return {
+    dialogue:"natural conversation",
+    conflict:"tense confrontation",
+    romantic:"soft emotional interaction",
+    team:"cooperative movement"
+  }[type] || ""
+}
+
+function getDominance(c1,c2){
+  if(!c1||!c2) return ""
+  if(c1.archetype==="leader") return `${c1.name} dominant`
+  if(c2.archetype==="leader") return `${c2.name} dominant`
+  return "balanced interaction"
+}
+
+/* =========================
+GENERATE
 ========================= */
 
 function generate(){
 
-  const scene = val("scene")
-  if(!scene) return alert("Isi adegan dulu")
+  const scene=val("scene")
+  if(!scene) return alert("Isi scene")
 
-  if(selectedIndex === null){
-    return alert("Pilih karakter dulu")
+  if(selectedIndex===null) return alert("Pilih karakter")
+
+  const c=characters[selectedIndex]
+
+  const secondIndex=Number(document.getElementById("characterSelect2")?.value)
+  const c2=characters[secondIndex]
+
+  const interactionType=val("interactionType")
+
+  const interaction=getInteractionStyle(interactionType)
+  const dominance=getDominance(c,c2)
+
+  const material=val("materialType") || detectMaterial(scene)
+  const physics=getPhysics(material)
+  const camera=getCamera(c.currentEmotion)
+
+  let secondChar=""
+
+  if(c2 && secondIndex!==selectedIndex){
+    secondChar=`
+SECOND CHARACTER:
+${c2.name}, ${c2.gender}, ${c2.age}
+${c2.face}, ${c2.hair}, ${c2.body}
+wearing ${c2.outfit}
+emotion ${c2.currentEmotion}
+`
   }
 
-  const c = characters[selectedIndex]
-
-  const material = val("materialType") || detectMaterial(scene)
-  const physics = getPhysics(material)
-  const camera = getCamera(c.currentEmotion)
-
-  const prompt = `
+  const prompt=`
+MAIN CHARACTER:
 ${c.name}, ${c.gender}, ${c.age}
 ${c.face}, ${c.hair}, ${c.body}
-
 wearing ${c.outfit}
 emotion ${c.currentEmotion}
 
-scene: ${scene}
+${secondChar}
+
+INTERACTION:
+${interaction}
+${dominance}
+
+SCENE:
+${scene}
 
 material: ${material}
 physics: ${physics}
@@ -342,64 +361,7 @@ cinematic, ultra realistic
   updateTimeline(c,scene)
   renderTimeline()
 
-  document.getElementById("output").innerText = prompt
-}
-
-/* =========================
-EXPORT / IMPORT
-========================= */
-
-function exportCharacter(){
-  if(selectedIndex === null) return
-
-  const data = JSON.stringify(characters[selectedIndex],null,2)
-  downloadJSON(data,"character.json")
-}
-
-function exportAllCharacters(){
-  const data = JSON.stringify(characters,null,2)
-  downloadJSON(data,"characters.json")
-}
-
-function downloadJSON(data,filename){
-  const blob = new Blob([data],{type:"application/json"})
-  const url = URL.createObjectURL(blob)
-
-  const a = document.createElement("a")
-  a.href = url
-  a.download = filename
-  a.click()
-
-  URL.revokeObjectURL(url)
-}
-
-function importCharacter(e){
-
-  const file = e.target.files[0]
-  if(!file) return
-
-  const reader = new FileReader()
-
-  reader.onload = function(event){
-    try{
-      const data = JSON.parse(event.target.result)
-
-      if(Array.isArray(data)){
-        characters = characters.concat(data)
-      }else{
-        characters.push(data)
-      }
-
-      save()
-      refreshDropdown()
-      renderCharacterList()
-
-    }catch{
-      alert("File tidak valid")
-    }
-  }
-
-  reader.readAsText(file)
+  document.getElementById("output").innerText=prompt
 }
 
 /* =========================
@@ -408,7 +370,7 @@ INIT
 
 document.addEventListener("DOMContentLoaded",function(){
 
-  const select = document.getElementById("characterSelect")
+  const select=document.getElementById("characterSelect")
 
   if(select){
     select.addEventListener("change",e=>{
